@@ -1,14 +1,85 @@
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
+<p>
+FastProtein
+
+FastProtein is a integrated Pipeline ...
+
+
+1 - Installation
+
+1.1 - With Docker locally 
+
+```bash
+git clone https://github.com/bioinformatics-ufsc/FastProtein
+cd FastProtein/docker
+docker build -t fastprotein:latest .
+
+# run this command to access the volume shared
+docker run -it --name FastProtein -p 5000:5000 -v /Users/renato/Documents/GitHub/bioinfo/fast-protein/example:/fastprotein FastProtein:latest /bin/bash;
+```
+
+Starting docker for the first time
+
+\<local dir\> - local directory shared between user's machine and FastProtein Docker (Don't change docker path)
+
+```bash
+docker run -it --name FastProtein -p 5000:5000 -v <local dir>:/fastprotein fastprotein:latest /bin/bash;
+
+```
+#Starting docker 
+
+```bash
+docker exec -it FastProtein /bin/bash;
+```
+
+#Execution
+```bash
+fastprotein -h
+```
+
+#Simplest execution
+```bash
+fastprotein -i input.fasta -o /fastprotein/test
+```
+
+#Running remote blast, local blast with custom db and InterPro
+```bash
+fastprotein -i input.fasta -s animal --interpro --remote-blast --local-blast db.fasta
+```
+
+1.1.2 - Starting a local web server
+Inside FastProtein container, execute
+```bash
+./server.sh
+```
+Pre-configurated ip is: 127.0.0.1, and exposed port is 5000.
+Just open the following link in a browser and FastProtein local service is up and running
+
+http://127.0.0.1:5000/
+
+Results will be redirect to directory `/fastproteins/runs`
+
+1.2 Biolib
+
+FastProtein has an online service for small datasets or even example of generated results
+This service is available at:
+
+https://biolib.com/UFSC/FastProtein/
+
+1.2.1 Running Biolib locally by terminal
+
+```bash
+biolib run UFSC/FastProtein -h
+```
+
+Due to Biolib sintax, flags (--interpro / --remote-blast) needed a true/false value in command line as in 
+following example
+```bash
+biolib run UFSC/FastProtein -i input.fasta --interpro true --remote-blast true
+```
+</p>
 
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
+[![LinkedIn][biolib-shield]][biolib-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -17,10 +88,10 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a> -->
 
-  <h3 align="center">Best-README-Template</h3>
+  <h3 align="center">FastProtein</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    An automated pipeline for proteomic analysis
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
     <br />
@@ -106,7 +177,7 @@ To get a local copy up and running follow these simple example steps.
 This is an example of how to list things you need to use the software and how to install them.
 
 - npm
-  ```sh
+  ```bash
   npm install npm@latest -g
   ```
 
@@ -185,9 +256,11 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+Lab. Bioinformática
+- [@labioinfoufsc](https://www.instagram.com/labioinfoufsc/)
+- labioinfo.genome@gmail.com
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Project Link: [GitHub](https://github.com/bioinformatics-ufsc/FastProtein)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -211,6 +284,10 @@ Use this space to list resources you find helpful and would like to give credit 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
+[biolib-url]: https://biolib.com/ufsc/FastProtein
+[biolib-shield]: https://img.shields.io/badge/Online%20Server-BioLib-brightgreen
+
+
 [contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
 [contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
@@ -221,8 +298,6 @@ Use this space to list resources you find helpful and would like to give credit 
 [issues-url]: https://github.com/othneildrew/Best-README-Template/issues
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
 [license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
 [product-screenshot]: images/screenshot.png
 [next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [next-url]: https://nextjs.org/
