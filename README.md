@@ -237,6 +237,7 @@ biolib run UFSC/FastProtein --help
 ```
 
 BioLib has a specific syntax and the flags `--interpro` and `--remote-blast` needed a `true` or `false` value in the command line. 
+The default BioLib output is `biolib_results/` in the current folder
 Check the Example:
 
 ```bash
