@@ -46,7 +46,6 @@
         <li><a href="#biolib">BioLib</a></li>
       </ul>
     </li>
-    <li><a href="#license">License</a></li>
     <li><a href="#contact-info">Contact Info</a></li>
     <li><a href="#citation-and-acknowledgments">Citation and Acknowledgments</a></li>
   </ol>
@@ -105,10 +104,13 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 [python-url]: https://www.python.org
 [python-shield]: https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white
 
-- [![Debian][debian-shield]][debian-url]
-- [![Docker][docker-shield]][docker-url]
-- [![Java][java-shield]][java-url]
-- [![Python][python-shield]][python-url]
+[![Debian][debian-shield]][debian-url]
+
+[![Docker][docker-shield]][docker-url]
+
+[![Java][java-shield]][java-url]
+
+[![Python][python-shield]][python-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -213,14 +215,6 @@ Example:
 ```bash
 biolib run UFSC/FastProtein -i input.fasta --interpro true --remote-blast true
 ```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- LICENSE --------------------------------------------------------------- -->
-
-## **License**
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
