@@ -58,6 +58,7 @@
 > _Developed by Renato Simões, PhD - <renato.simoes@ifsc.edu.br>_
 
 # TODO terminar descrição do Fast (incluir workflow)
+
 FastProtein is a integrated pipeline...
 
 FastProtein was tested in Unix-based systems and supports Docker and BioLib execution.
@@ -67,33 +68,53 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 #TODO FIX BACK TO TOP
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## **Expected Results**
+---
+
+## **Output Results**
 
  <!-- TODO mudar arquivo de resultados -->
- 
-> _Example: [fastprotein_results.zip](https://github.com/simoesrenato/bioinfo/tree/master/fast-protein/example/fastprotein_results.zip)_
+
+### FastProtein can evaluate multiple protein parameters in a single run. As output, user obtain a table with:
+<p>&ensp;</p>
 
 - **ID:** Protein ID from your FASTA file
+
 - **Length:** The length of the protein sequence
+
 - **kDa:** Molecular mass in kilodaltons
+
 - **Isoelectric Point:** Isoelectric point of the full protein sequence
+
 - **Hydropathy:** Hydropathy index of the full protein sequence
+
 - **Aromaticity:** Aromaticity index of the full protein sequence
+
 - **Membrane Evidence:** We provide in silico evidence of proteins related to the membrane
+
 - **Subcellular Localization Prediction:** Prediction of the protein's subcellular localization using [WoLF PSORT](https://wolfpsort.hgc.jp)
+
 - **Prediction of Transmembrane Helices in Proteins:** Prediction of transmembrane helices in proteins using [TMHMM-2.0c](https://services.healthtech.dtu.dk/service.php?TMHMM-2.0) and [Phobius](https://phobius.sbc.su.se)
 - **Prediction of Signal Peptides:** Prediction of signal peptides using [SignalP-5](https://services.healthtech.dtu.dk/service.php?SignalP-5.0) and [Phobius](https://phobius.sbc.su.se)
+
 - **GPI-Anchored Proteins:** Prediction of GPI-anchored proteins using [PredGPI](https://github.com/BolognaBiocomp/predgpi)
+
 - **Endoplasmic Reticulum Retention Total:** Total number of domains found with an endoplasmic reticulum retention signal - [E.R Retention Domain](https://prosite.expasy.org/PDOC00014)
+
 - **Endoplasmic Reticulum Retention Domains:** Endoplasmic reticulum retention domains found with peptide and position
+
 - **N-Glycosylation Total:** Total number of N-glycosylation domains found - [N-Glyc Domain](https://prosite.expasy.org/PDOC00001)
+
 - **N-Glycosylation Domains:** N-glycosylation domains found with peptide and position
+
 - **Header:** Protein header
+
 - **Gene Ontology, Panther, and Pfam:** Protein function and annotation using [InterProScan5](https://www.ebi.ac.uk/interpro)
+
 - **Sequence:** Protein sequence
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+---
 ## **Technologies**
 
 <!--
@@ -166,7 +187,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    cd FastProtein/docker
    docker build -t fastprotein:latest .
    ```
-
+#
 ### **Controlling Docker container**
    ```bash
    # Step 1 - Create a local directory that will be used to exchange files with Docker (example fastprotein/ inside user home)
@@ -202,7 +223,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE ----------------------------------------------------------------- -->
-
+---
 ## **Usage**
 ### **FastProtein Web Server**
 
@@ -221,7 +242,7 @@ A list of zip files is showed in the web page.
   </a>
 </p>
 
-
+#
 ### **Using via docker container (local)**
 
 ```bash
@@ -233,7 +254,7 @@ docker exec -it FastProtein fastprotein -h
 ##        result_test - local inside the container with the results (/fastprotein/result_test is linked with the local folder ~/fastprotein/result_test)
 docker exec -it FastProtein fastprotein -i /example/input.fasta --local-blast /example/db.fasta -o result_test
 ```
-
+#
 #### **Using inside the docker container**
 
 ```bash
@@ -257,12 +278,11 @@ fastprotein -i /example/input.fasta -s animal --interpro --remote-blast --local-
 ```
 ---
 
-
 ### **BioLib**
 
 FastProtein has an online service for small datasets or even example of generated results
 
-This service is available at: (<a href="https://biolib.com/UFSC/FastProtein" target='_blank'>https://biolib.com/UFSC/FastProtein</a>) <>
+This service is available at: (<a href="https://biolib.com/UFSC/FastProtein" target='_blank'>https://biolib.com/UFSC/FastProtein</a>)
 
 #### **Running BioLib locally using the command line**
 
@@ -276,6 +296,8 @@ pip3 install -U pybiolib
 biolib run UFSC/FastProtein --help
 ```
 
+<p>&ensp;</p>
+
 BioLib has a specific syntax and the flags `--interpro` and `--remote-blast` needed a `true` or `false` value in the command line. 
 The default BioLib output is `biolib_results/` in the current folder
 Check the Example:
@@ -287,7 +309,7 @@ biolib run UFSC/FastProtein -i input.fasta --interpro true --remote-blast true
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
-
+---
 ## **Contact Info**
 
 
@@ -342,6 +364,9 @@ biolib run UFSC/FastProtein -i input.fasta --interpro true --remote-blast true
 [![github][github-shield]][github-url]
 
 -->
+
+<p>&ensp;</p>
+
 ### **Project Links:**
 <p align="center">
   <a href="https://biolib.com/ufsc/FastProtein">
@@ -356,7 +381,7 @@ biolib run UFSC/FastProtein -i input.fasta --interpro true --remote-blast true
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS ------------------------------------------------------- -->
-
+---
 ## **Citation and Acknowledgments**
 
 This software was developed using Java 17 (please cite [BioJava](https://biojava.org)) and Python 3.
