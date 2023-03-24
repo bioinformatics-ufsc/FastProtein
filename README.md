@@ -1,9 +1,11 @@
 <!-- MARKDOWN LINKS & IMAGES ----------------------------------------------- -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[![MIT License][license-shield]][license-url]
+[![License][apache-shield]][apache-url]
 [![BioLib][biolib-shield]][biolib-url]
 
+[apache-url]: https://opensource.org/licenses/Apache-2.0
+[apache-shield]: https://img.shields.io/badge/License-Apache_2.0-blue.svg
 [biolib-url]: https://biolib.com/ufsc/FastProtein
 [biolib-shield]: https://img.shields.io/badge/Online%20Server-BioLib-brightgreen
 
@@ -56,6 +58,7 @@
 
 > _Developed by Renato Simões, PhD - <renato.simoes@ifsc.edu.br>_
 
+# TODO terminar descrição do Fast (incluir workflow)
 FastProtein is a integrated pipeline...
 
 FastProtein was tested in Unix-based systems and supports Docker and BioLib execution.
@@ -66,6 +69,8 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 ## **Expected Results**
 
+ <!-- TODO mudar arquivo de resultados -->
+ 
 > _Example: [fastprotein_results.zip](https://github.com/simoesrenato/bioinfo/tree/master/fast-protein/example/fastprotein_results.zip)_
 
 - **ID:** Protein ID from your FASTA file
@@ -91,8 +96,8 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 ## **Technologies**
 
-[linux-url]: https://www.debian.org
-[linux-shield]: https://img.shields.io/badge/Linux-E34F26?style=for-the-badge&logo=linux&logoColor=black
+[debian-url]: https://www.debian.org
+[debian-shield]: https://img.shields.io/badge/Debian-A81D33?style=for-the-badge&logo=debian&logoColor=white
 [docker-url]: https://www.docker.com/
 [docker-shield]: https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
 [java-url]: https://www.java.com
@@ -100,7 +105,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 [python-url]: https://www.python.org
 [python-shield]: https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white
 
-- [![Linux][linux-shield]][linux-url]
+- [![Debian][debian-shield]][debian-url]
 - [![Docker][docker-shield]][docker-url]
 - [![Java][java-shield]][java-url]
 - [![Python][python-shield]][python-url]
@@ -110,7 +115,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 <!-- GETTING STARTED ------------------------------------------------------- -->
 
 ## **Prerequisites**
-
+ <!-- TODO ver pre requisitos -->
 - Docker
 
 ## **Installation**
@@ -223,16 +228,20 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## **Contact Info**
 
-Lab. Bioinformática
+[Lab. Bioinformática](https://bioinformatica.ufsc.br) (UFSC)
 
-- [@labioinfoufsc](https://www.instagram.com/labioinfoufsc)
-- <labioinfo.genome@gmail.com>
+[gmail-url]: mailto:labioinfo.genome@gmail.com
+[gmail-shield]: https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white
+[ig-url]: https://www.instagram.com/labioinfoufsc
+[ig-shield]: https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white
+
+[![Instagram][ig-shield]][ig-url]
+[![Gmail][gmail-shield]][gmail-url]
 
 Project Links:
 
 - [GitHub](https://github.com/bioinformatics-ufsc/FastProtein)
 - [BioLib](https://biolib.com/ufsc/FastProtein)
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS ------------------------------------------------------- -->
