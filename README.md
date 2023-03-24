@@ -156,7 +156,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    # If you want to STOP the container, the command is:
    docker stop FastProtein
    # If you want to START the container, the command is:
-   docker stop FastProtein
+   docker start FastProtein
    # To check if your container is running, the command is:
    docker ps | grep FastProtein
    # If you want to enter inside the container, the command is:
