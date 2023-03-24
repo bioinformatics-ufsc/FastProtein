@@ -167,6 +167,19 @@ FastProtein use a suite of softwares, please cite them:
 
 - InterProScan5 [Blum et al., 2020](https://doi.org/10.1093/nar/gkaa977)
 
+### **Technologies**
+
+[docker-url]: https://www.docker.com/
+[docker-shield]: https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
+[java-url]: https://www.java.com
+[java-shield]: https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white
+[python-url]: https://www.python.org
+[python-shield]: https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white
+
+- [![Docker][docker-shield]][docker-url]
+- [![Java][java-shield]][java-url]
+- [![Python][python-shield]][python-url]
+
 
 </p>
 
@@ -193,14 +206,51 @@ FastProtein use a suite of softwares, please cite them:
   </p>
 </div>
 
+- [FastProtein 1.0](#fastprotein-10)
+    - [_A fast and easy way to know more about your proteins :)_](#a-fast-and-easy-way-to-know-more-about-your-proteins-)
+    - [Information that you will find here:](#information-that-you-will-find-here)
+  - [Output example](#output-example)
+  - [License](#license)
+- [1 - Installation](#1---installation)
+  - [1.1 - With Docker locally](#11---with-docker-locally)
+    - [Starting docker](#starting-docker)
+    - [Execution](#execution)
+    - [Simplest execution](#simplest-execution)
+      - [Running remote blast, local blast with custom db and InterPro](#running-remote-blast-local-blast-with-custom-db-and-interpro)
+  - [1.1.2 - Starting a local web server](#112---starting-a-local-web-server)
+    - [1.2 Biolib](#12-biolib)
+    - [1.2.1 Running Biolib locally by terminal](#121-running-biolib-locally-by-terminal)
+- [2 - Workflow](#2---workflow)
+- [3 - Output](#3---output)
+- [4 - Citation](#4---citation)
+    - [**Technologies**](#technologies)
+  - [**About FastProtein**](#about-fastprotein)
+  - [**Expected Results**](#expected-results)
+  - [**Technologies**](#technologies-1)
+  - [**Prerequisites**](#prerequisites)
+  - [**Installation**](#installation)
+    - [**With Docker (Local)**](#with-docker-local)
+  - [**Usage**](#usage)
+    - [**Starting Docker**](#starting-docker-1)
+      - [**Execution**](#execution-1)
+      - [**Simplest Execution**](#simplest-execution-1)
+      - [**Running remote BLAST, local BLASST with custom database and InterPro**](#running-remote-blast-local-blasst-with-custom-database-and-interpro)
+    - [**Starting Local Web Server**](#starting-local-web-server)
+    - [**BioLib**](#biolib)
+      - [**Running BioLib locally using the command line**](#running-biolib-locally-using-the-command-line)
+  - [**License**](#license-1)
+  - [**Contact Info**](#contact-info)
+  - [**Citation and Acknowledgments**](#citation-and-acknowledgments)
+
+
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
+      <a href="#about-fastprotein">About FastProtein</a>
       <ul>
-        <li><a href="#built-with">Built With</a></li>
+        <li><a href="#expected-results">Output</a></li>
       </ul>
     </li>
     <li>
@@ -221,7 +271,6 @@ FastProtein use a suite of softwares, please cite them:
 
 ## **About FastProtein**
 > *Developed by Renato Simões, PhD - <renato.simoes@ifsc.edu.br>*
-<!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
 FastProtein is a integrated pipeline...
 
@@ -241,10 +290,10 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 - **Hydropathy:** Hydropathy index of the full protein sequence
 - **Aromaticity:** Aromaticity index of the full protein sequence
 - **Membrane Evidence:** We provide in silico evidence of proteins related to the membrane
-- **Subcellular Localization Prediction:** Prediction of the protein's subcellular localization using [WoLF PSORT](https://wolfpsort.hgc.jp/)
-- **Prediction of Transmembrane Helices in Proteins:** Prediction of transmembrane helices in proteins using [TMHMM-2.0c](https://services.healthtech.dtu.dk/service.php?TMHMM-2.0) and [Phobius](https://phobius.sbc.su.se/)
-- **Prediction of Signal Peptides:** Prediction of signal peptides using [SignalP-5](https://services.healthtech.dtu.dk/service.php?SignalP-5.0) and [Phobius](https://phobius.sbc.su.se/)
-- **GPI-Anchored Proteins:** Prediction of GPI-anchored proteins using [PredGPI](https://github.com/BolognaBiocomp/predgpi/)
+- **Subcellular Localization Prediction:** Prediction of the protein's subcellular localization using [WoLF PSORT](https://wolfpsort.hgc.jp)
+- **Prediction of Transmembrane Helices in Proteins:** Prediction of transmembrane helices in proteins using [TMHMM-2.0c](https://services.healthtech.dtu.dk/service.php?TMHMM-2.0) and [Phobius](https://phobius.sbc.su.se)
+- **Prediction of Signal Peptides:** Prediction of signal peptides using [SignalP-5](https://services.healthtech.dtu.dk/service.php?SignalP-5.0) and [Phobius](https://phobius.sbc.su.se)
+- **GPI-Anchored Proteins:** Prediction of GPI-anchored proteins using [PredGPI](https://github.com/BolognaBiocomp/predgpi)
 - **Endoplasmic Reticulum Retention Total:** Total number of domains found with an endoplasmic reticulum retention signal - [E.R Retention Domain](https://prosite.expasy.org/PDOC00014)
 - **Endoplasmic Reticulum Retention Domains:** Endoplasmic reticulum retention domains found with peptide and position
 - **N-Glycosylation Total:** Total number of N-glycosylation domains found - [N-Glyc Domain](https://prosite.expasy.org/PDOC00001)
@@ -255,8 +304,10 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### **Technologies**
+## **Technologies**
 
+[linux-url]: https://www.debian.org
+[linux-shield]: https://img.shields.io/badge/Linux-E34F26?style=for-the-badge&logo=linux&logoColor=black
 [docker-url]: https://www.docker.com/
 [docker-shield]: https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
 [java-url]: https://www.java.com
@@ -264,30 +315,22 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 [python-url]: https://www.python.org
 [python-shield]: https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white
 
+- [![Linux][linux-shield]][linux-url]
 - [![Docker][docker-shield]][docker-url]
 - [![Java][java-shield]][java-url]
 - [![Python][python-shield]][python-url]
-
-<!-- debian
-biojava
-biolib -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 
-## **Getting Started**
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### **Prerequisites**
+## **Prerequisites**
 
 - Docker
 
-### **Installation**
+## **Installation**
 
-#### **With Docker (Local)**
+### **With Docker (Local)**
 
 1. Clone the repository
     ```bash
@@ -314,14 +357,66 @@ To get a local copy up and running follow these simple example steps.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- USAGE EXAMPLES -->
-
 ## **Usage**
 
+### **Starting Docker** 
 
+```bash
+docker exec -it FastProtein /bin/bash;
+```
 
-### **Starting Docker**
+#### **Execution**
 
+```bash
+fastprotein -h
+```
+
+#### **Simplest Execution**
+
+```bash
+fastprotein -i input.fasta -o /fastprotein/test
+```
+
+#### **Running remote BLAST, local BLASST with custom database and InterPro**
+
+```bash
+fastprotein -i input.fasta -s animal --interpro --remote-blast --local-blast db.fasta
+```
+
+---
+### **Starting Local Web Server**
+
+Inside the FastProtein container, execute:
+
+```bash
+./server.sh
+```
+
+Default IP is 127.0.0.1 and exposed port is 5000.
+
+Just open the following link in a browser and FastProtein local service will be up and running: <http://127.0.0.1:5000>
+
+Results will be redirect to directory `/fastproteins/runs`.
+
+### **BioLib**
+
+FastProtein has an online service for small datasets or even example of generated results
+
+This service is available at: <https://biolib.com/ufsc/FastProtein>
+
+#### **Running BioLib locally using the command line**
+
+```bash
+biolib run UFSC/FastProtein -h
+```
+
+BioLib has a specific syntax and the flags `--interpro` and `--remote-blast` needed a `true` or `false` value in the command line.
+
+Example:
+
+```bash
+biolib run UFSC/FastProtein -i input.fasta --interpro true --remote-blast true
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
