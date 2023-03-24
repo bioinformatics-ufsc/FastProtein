@@ -104,6 +104,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 [python-url]: https://www.python.org
 [python-shield]: https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white
 
+
 [![Debian][debian-shield]][debian-url]
 
 [![Docker][docker-shield]][docker-url]
@@ -169,17 +170,16 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 ## **Usage**
 
-### **Starting Local Web Server**
-<p align="right">Access the address (<a href="http://127.0.0.1" target='_blank'>127.0.0.1</a>) using your preferred browser. </p>
+### **FastProtein Web Server**
 
 <p>Default IP is 127.0.0.1 and exposed port is 5000.
 
-Just open the following link in a browser and FastProtein local service will be up and running: <http://127.0.0.1:5000>
+Just open the following link in a browser and FastProtein local service will be up and running: (<a href="http://127.0.0.1:5000" target='_blank'>127.0.0.1:5000</a>)
 
 Results will be redirect to directory `/fastproteins/runs` linked with the local folder `~/fastproteins/runs`.
+A list of zip files is showed in the web page.
+  
 </p>
-### **FastProtein web**
-
 
 
 ### **Using via docker container (local)**
