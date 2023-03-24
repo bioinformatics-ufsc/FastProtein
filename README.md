@@ -208,15 +208,13 @@ fastprotein -i /example/input.fasta
 ##
 ## Complete execution (with InterproScan and Remote Blast using uniprotkb_swissprot as database)
 ## PS: The Remote Blast executes protein by protein, which makes the process slower (2-4min per protein). 
-       It is recommended to use the --local-blast instead. However, both can be executed, and the result is displayed in separate columns.
+##       It is recommended to use the --local-blast instead. However, both can be executed, and the result is displayed in separate columns.
 fastprotein -i /example/input.fasta --local-blast /example/db.fasta --interpro --remote-blast -o result_test --zip
-```
-
-#### **Running remote BLAST, local BLAST with custom database and InterPro**
-```bash
+##
+## Running remote BLAST, local BLAST with custom database and InterPro**
+##
 fastprotein -i /example/input.fasta -s animal --interpro --remote-blast --local-blast /example/db.fasta
 ```
-
 ---
 
 
@@ -232,7 +230,9 @@ Alternatively, you can run FastProtein via biolib through the command line. To d
 Required python 3 and pip3.
 
 ```bash
+##Installing BioLib
 pip3 install -U pybiolib
+##Running help
 biolib run UFSC/FastProtein --help
 ```
 
