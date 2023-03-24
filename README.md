@@ -96,6 +96,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 ## **Technologies**
 
+<!--
 [debian-url]: https://www.debian.org
 [debian-shield]: https://img.shields.io/badge/Debian-A81D33?style=for-the-badge&logo=debian&logoColor=white
 [docker-url]: https://www.docker.com/
@@ -113,6 +114,33 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 [![Java][java-shield]][java-url]
 
 [![Python][python-shield]][python-url]
+-->
+<p align="center">
+  <a href="https://www.debian.org">
+    <img src="https://img.shields.io/badge/Debian-A81D33?style=for-the-badge&logo=debian&logoColor=white" width="100" height="30"/>
+  </a><a>&ensp;</a>
+  <a href="https://www.docker.com/">
+    <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" width="100" height="30"/>
+  </a><a>&ensp;</a>
+    <a href="https://www.python.org">
+    <img src="https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white" width="100" height="30"/>
+</p>
+<p align="center">  
+  </a><a>&ensp;</a>
+    <a href="https://www.java.com">
+    <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white" width="100" height="30"/>
+  </a><a>&ensp;</a>
+    <a href="https://biojava.org/">
+    <img src="https://biojava.org/images/logo/logo_800.png" width="100" height="30"/>
+  </a><a>&ensp;</a>
+    <a href="https://biolib.com/">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDx2Oto5TiJ0WjidYTHUJ819-cnPaZZiX8yVsa8dXxSaMlsv7D" width="100" height="30"/>
+  </a><a>&ensp;</a>
+</p>
+<!--blank line-->
+<p>&ensp;</p>
+
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -163,10 +191,13 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    docker ps | grep FastProtein
    # If you want to enter inside the container, the command is:
    docker exec -it FastProtein /bin/bash 
-   # To copy files between docker and host without using volume, use this:
-   docker cp <id_docker>:/docker_path_file <host_path_file>
-   #
-   ```
+  # To exchange files between the host and the container without using a volume, use the command:
+  # docker cp <local_file> <container_id>:<container_file>
+  # Eg: copy a fasta file test/human.fasta to /fastprotein (or other directory if you need)
+  docker cp test/human.fasta FastProtein:/fastprotein
+  # Eg: copy the folder runs from container to local runs folder
+  docker cp FastProtein:/fastprotein/runs ./runs
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -276,16 +307,17 @@ biolib run UFSC/FastProtein -i input.fasta --interpro true --remote-blast true
 
 <p align="center">
   <a href="https://bioinformatica.ufsc.br">
-    <img src="https://bioinformatica.ufsc.br/files/2020/02/cropped-Logo-V-C.png" width="130" height="120"/>
+    <img src="https://bioinformatica.paginas.ufsc.br/files/2012/03/Logo-H-C-e1582133841295.png" width="300" height="120"/>
   </a><a>&ensp;</a>
   <a href="https://www.ifsc.edu.br/">
-    <img src="https://www.ifsc.edu.br/image/layout_set_logo?img_id=902745&t=1677950696306" width="300" height="120"/>
+    <img src="https://www.colegioweb.com.br/wp-content/uploads/2016/10/Instituto-Federal-de-Santa-Catarina-abre-inscri%C3%A7%C3%B5es-para-o-vestibular-2-1024x342.png" width="300" height="120"/>
   </a><a>&ensp;</a>
   <a href="https://ufsc.br/">
     <img src="https://bioinformatica.ufsc.br/wp-content/themes/brasilGovInterno/img/brasao_site_ufsc.svg?ver=1679517588" width="100" height="120"/>
   </a><a>&ensp;</a>
 </p>
 
+<!--blank line-->
 <p>&ensp;</p>
 
 <p align="center">
