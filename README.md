@@ -64,6 +64,7 @@ FastProtein was tested in Unix-based systems and supports Docker and BioLib exec
 
 If you have questions, suggestions or difficulties regarding the pipeline, please do not hesitate to contact our team here on GitHub or by [email](labioinfo.genome@gmail.com).
 
+#TODO FIX BACK TO TOP
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## **Expected Results**
@@ -162,6 +163,9 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    docker ps | grep FastProtein
    # If you want to enter inside the container, the command is:
    docker exec -it FastProtein /bin/bash 
+   # To copy files between docker and host without using volume, use this:
+   docker cp <id_docker>:/docker_path_file <host_path_file>
+   #
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -250,20 +254,66 @@ biolib run UFSC/FastProtein -i input.fasta --interpro true --remote-blast true
 
 ## **Contact Info**
 
-[Lab. Bioinformática](https://bioinformatica.ufsc.br) (UFSC)
 
+[ufsc-url]: https://ufsc.br/
+[ufsc-shield]: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flogodownload.org%2Fwp-content%2Fuploads%2F2015%2F02%2Fufsc-logo-1-140x140.png&f=1&nofb=1&ipt=211156b56538b57afb3fbfab6e4c96c77572f6d1ff3daa8a0240ff714352c390&ipo=images
+[ifsc-url]: https://www.ifsc.edu.br/
+[ifsc-shield]: https://www.ifsc.edu.br/image/layout_set_logo?img_id=902745&t=1677950696306
+[bioinfo-url]: https://bioinformatica.ufsc.br
+[bioinfo-shield]: https://bioinformatica.ufsc.br/files/2020/02/cropped-Logo-V-C.png
+[ig-url]: https://www.instagram.com/labioinfoufsc
+[ig-shield]: https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white
 [gmail-url]: mailto:labioinfo.genome@gmail.com
 [gmail-shield]: https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white
 [ig-url]: https://www.instagram.com/labioinfoufsc
 [ig-shield]: https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white
 
-[![Instagram][ig-shield]][ig-url]
-[![Gmail][gmail-shield]][gmail-url]
+<!---
+[![ufsc][ufsc-shield]][ufsc-url] 
+[![ifsc][ifsc-shield]][ifsc-url] 
+[![bioinfo][bioinfo-shield]][bioinfo-url] 
+-->
 
-Project Links:
+<p align="center">
+  <a href="https://bioinformatica.ufsc.br">
+    <img src="https://bioinformatica.ufsc.br/files/2020/02/cropped-Logo-V-C.png" width="100" height="100"/>
+  </a>
+  <a href="https://www.ifsc.edu.br/">
+    <img src="https://www.ifsc.edu.br/image/layout_set_logo?img_id=902745&t=1677950696306" width="300" height="100"/>
+  </a>
+  <a href="https://ufsc.br/">
+    <img src="https://bioinformatica.ufsc.br/wp-content/themes/brasilGovInterno/img/brasao_site_ufsc.svg?ver=1679517588" width="100" height="100"/>
+  </a>
+</p>
 
-- [GitHub](https://github.com/bioinformatics-ufsc/FastProtein)
-- [BioLib](https://biolib.com/ufsc/FastProtein)
+<p align="center">
+  <a href="mailto:labioinfo.genome@gmail.com">
+    <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" width="90" height="30"/>
+  </a>
+  <a href="https://www.instagram.com/labioinfoufsc">
+    <img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white" width="100" height="30"/>
+  </a>
+</p>
+
+
+<!--
+[github-url]: https://github.com/bioinformatics-ufsc/FastProtein
+[github-shield]:https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white
+
+[![github][github-shield]][github-url]
+
+-->
+### **Project Links:**
+<p align="center">
+  <a href="https://biolib.com/ufsc/FastProtein">
+    <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F51168%3Fs%3D200%26v%3D4&f=1&nofb=1&ipt=4dce28babba31bf34b7b7e72629ef9169d8bb49487f030e6978adb1df8b5facb&ipo=images" width="80" height="80"/>
+  </a>
+  <a href="https://github.com/bioinformatics-ufsc/FastProtein">
+    <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" width="100" height="30"/>
+  </a>
+</p>
+
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS ------------------------------------------------------- -->
