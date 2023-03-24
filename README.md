@@ -276,15 +276,17 @@ biolib run UFSC/FastProtein -i input.fasta --interpro true --remote-blast true
 
 <p align="center">
   <a href="https://bioinformatica.ufsc.br">
-    <img src="https://bioinformatica.ufsc.br/files/2020/02/cropped-Logo-V-C.png" width="100" height="100"/>
-  </a>
+    <img src="https://bioinformatica.ufsc.br/files/2020/02/cropped-Logo-V-C.png" width="130" height="120"/>
+  </a><a>&ensp;</a>
   <a href="https://www.ifsc.edu.br/">
-    <img src="https://www.ifsc.edu.br/image/layout_set_logo?img_id=902745&t=1677950696306" width="300" height="100"/>
-  </a>
+    <img src="https://www.ifsc.edu.br/image/layout_set_logo?img_id=902745&t=1677950696306" width="300" height="120"/>
+  </a><a>&ensp;</a>
   <a href="https://ufsc.br/">
-    <img src="https://bioinformatica.ufsc.br/wp-content/themes/brasilGovInterno/img/brasao_site_ufsc.svg?ver=1679517588" width="100" height="100"/>
-  </a>
+    <img src="https://bioinformatica.ufsc.br/wp-content/themes/brasilGovInterno/img/brasao_site_ufsc.svg?ver=1679517588" width="100" height="120"/>
+  </a><a>&ensp;</a>
 </p>
+
+<p>&ensp;</p>
 
 <p align="center">
   <a href="mailto:labioinfo.genome@gmail.com">
