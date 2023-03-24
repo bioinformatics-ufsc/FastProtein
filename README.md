@@ -244,9 +244,11 @@ Project Links:
 
 This software was developed using Java 17 (please cite [BioJava](https://biojava.org)) and Python 3.
 
-FastProtein also uses a suite of softwares, please cite them:
+Please cite us: 
 
-- [WoLF PSORT](https://wolfpsort.hgc.jp)
+FastProtein also uses a suite of softwares, please cite them too:
+
+- WoLF PSORT - [Horton et al., 2007](https://doi.org/10.1093/nar/gkm259)
 - TMHMM-2.0 - [Krogh et al., 2001](https://doi.org/10.1006/jmbi.2000.4315)
 - Phobius - [Käll et al., 2004](http://dx.doi.org/10.1016/j.jmb.2004.03.016)
 - SignalP-5 - [Armenteros et al., 2019](https://doi.org/10.1038/s41587-019-0036-z)
