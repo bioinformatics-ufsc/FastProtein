@@ -204,7 +204,6 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 <!-- USAGE ----------------------------------------------------------------- -->
 
 ## **Usage**
-
 ### **FastProtein Web Server**
 
 <p>Default IP is 127.0.0.1 and exposed port is 5000.
@@ -213,9 +212,13 @@ Just open the following link in a browser and FastProtein local service will be 
 
 Results will be redirect to directory `/fastproteins/runs` linked with the local folder `~/fastproteins/runs`.
 A list of zip files is showed in the web page.
-  
-</p>
 
+<p align="center">
+  <a>
+    <img src=".img/screen.png" width="800" height="500"/>
+  </a>
+</p>
+</p>
 
 ### **Using via docker container (local)**
 
