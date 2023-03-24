@@ -212,13 +212,15 @@ Just open the following link in a browser and FastProtein local service will be 
 
 Results will be redirect to directory `/fastproteins/runs` linked with the local folder `~/fastproteins/runs`.
 A list of zip files is showed in the web page.
+</p>
 
+### **Server Screen**
 <p align="center">
   <a>
     <img src=".img/screen.png" width="800" height="500"/>
   </a>
 </p>
-</p>
+
 
 ### **Using via docker container (local)**
 
@@ -310,10 +312,10 @@ biolib run UFSC/FastProtein -i input.fasta --interpro true --remote-blast true
 
 <p align="center">
   <a href="https://bioinformatica.ufsc.br">
-    <img src="https://bioinformatica.paginas.ufsc.br/files/2012/03/Logo-H-C-e1582133841295.png" width="300" height="120"/>
+    <img src="https://bioinformatica.paginas.ufsc.br/files/2012/03/Logo-H-C-e1582133841295.png" width="300" height="100"/>
   </a><a>&ensp;</a>
   <a href="https://www.ifsc.edu.br/">
-    <img src="https://www.colegioweb.com.br/wp-content/uploads/2016/10/Instituto-Federal-de-Santa-Catarina-abre-inscri%C3%A7%C3%B5es-para-o-vestibular-2-1024x342.png" width="300" height="120"/>
+    <img src="https://www.colegioweb.com.br/wp-content/uploads/2016/10/Instituto-Federal-de-Santa-Catarina-abre-inscri%C3%A7%C3%B5es-para-o-vestibular-2-1024x342.png" width="300" height="100"/>
   </a><a>&ensp;</a>
   <a href="https://ufsc.br/">
     <img src="https://bioinformatica.ufsc.br/wp-content/themes/brasilGovInterno/img/brasao_site_ufsc.svg?ver=1679517588" width="100" height="120"/>
