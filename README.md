@@ -342,33 +342,45 @@ In the FastProtein container, it is possible to run the software used within the
 </tr>
 <tr>
 <td>WoLFPSORT</td>
-<td>docker exec -it FastProtein2 wolfpsort animal /example/input.fasta > wolfpsort.out</td>
+<td> ```bash
+  docker exec -it FastProtein2 wolfpsort animal /example/input.fasta > wolfpsort.out
+  ```</td>
 <td>Host</td>
 </tr>
 <tr>
 <td>SignalP5</td>
-<td>docker exec -it FastProtein2 signalp -fasta /example/input.fasta -stdout > signalp.out</td>
+<td> ```bash
+  docker exec -it FastProtein2 signalp -fasta /example/input.fasta -stdout > signalp.out
+  ```</td>
   <td>Host</td>
 </tr>
 <tr>
 <td>Phobius</td>
-<td>docker exec -it FastProtein2 phobius -short /example/input.fasta > phobius.out</td>
+<td> ```bash
+  docker exec -it FastProtein2 phobius -short /example/input.fasta > phobius.out
+  ```</td>
 <td>Host</td>
 </tr>
 <tr>
 <td>TMHMM2</td>
-<td>docker exec -it FastProtein2 tmhmm2 /example/input.fasta > tmhmm2.out</td>
+<td> ```bash
+  docker exec -it FastProtein2 tmhmm2 /example/input.fasta > tmhmm2.out
+  ```</td>
 <td>Host</td>
 </tr>
 <tr>
 <td>PredGPI</td>
-<td>docker exec -it FastProtein2 sh -c "predgpi /example/input.fasta predgpi.out ; cat predgpi.out ; rm predgpi.out" > predgpi.out</td>
-<td>Host</td>  
+<td> ```bash
+  docker exec -it FastProtein2 sh -c "predgpi /example/input.fasta predgpi.out ; cat predgpi.out" > predgpi.out
+  ```</td>
+<td>Container (Shared folder) & Host</td>  
 </tr>
 <tr>
 <td>InterProScan5</td>
-<td>docker exec -it FastProtein sh -c "interproscan -i /example/input.fasta -f tsv -o interpro.out --goterms ; cat interpro.out ; rm interpro.out" > interpro.out</td>
-<td>
+<td> ```bash
+  docker exec -it FastProtein interproscan -i /example/input.fasta -f tsv -o interpro.out --goterms
+  ```</td>
+<td>Container (Shared folder)</td>
 </tr>
 </table>
 
