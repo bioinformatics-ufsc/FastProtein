@@ -334,55 +334,20 @@ It is possible to see all the commands running using the flag -log ALL in comman
 ##Use your FastProtein container as your Bioinformatic tools
 In the FastProtein container, it is possible to run the software used within the pipeline as follows:
 
-<table>
-<tr>
-<td>Software</td>
-<td>Command</td>
-<td>File destination</td>
-</tr>
-<tr>
-<td>WoLFPSORT</td>
-<td> ```bash
+```bash
+  ## WoLFPSORT (output = <local_execution>/wolfsort.tou)
   docker exec -it FastProtein2 wolfpsort animal /example/input.fasta > wolfpsort.out
-  ```</td>
-<td>Host</td>
-</tr>
-<tr>
-<td>SignalP5</td>
-<td> ```bash
+  ## SignalP5 (output = <local_execution>/signalp.out)
   docker exec -it FastProtein2 signalp -fasta /example/input.fasta -stdout > signalp.out
-  ```</td>
-  <td>Host</td>
-</tr>
-<tr>
-<td>Phobius</td>
-<td> ```bash
+  ##Phobius (output = <local_execution>/phobius.out)
   docker exec -it FastProtein2 phobius -short /example/input.fasta > phobius.out
-  ```</td>
-<td>Host</td>
-</tr>
-<tr>
-<td>TMHMM2</td>
-<td> ```bash
+  #TMHMM2 (output = <local_execution>/tmhmm.out)
   docker exec -it FastProtein2 tmhmm2 /example/input.fasta > tmhmm2.out
-  ```</td>
-<td>Host</td>
-</tr>
-<tr>
-<td>PredGPI</td>
-<td> ```bash
+  #PredGPI (output = <local_execution>/predgpi.out and <shared_folder>/predgpi.out)
   docker exec -it FastProtein2 sh -c "predgpi /example/input.fasta predgpi.out ; cat predgpi.out" > predgpi.out
-  ```</td>
-<td>Container (Shared folder) & Host</td>  
-</tr>
-<tr>
-<td>InterProScan5</td>
-<td> ```bash
+  #InterProScan5 (output = <shared_folder>/interpro.out)
   docker exec -it FastProtein interproscan -i /example/input.fasta -f tsv -o interpro.out --goterms
-  ```</td>
-<td>Container (Shared folder)</td>
-</tr>
-</table>
+```
 
 <b>Remember, the results are stored INSIDE the docker and will reflect in your local folder only if the output is set to <i>/fastprotein/</i></b>
 
