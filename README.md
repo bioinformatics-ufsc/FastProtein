@@ -338,41 +338,38 @@ In the FastProtein container, it is possible to run the software used within the
 <tr>
 <td>Software</td>
 <td>Command</td>
+<td>File destination</td>
 </tr>
 <tr>
 <td>WoLFPSORT</td>
-<td>Command</td>
+<td>docker exec -it FastProtein2 wolfpsort animal /example/input.fasta > wolfpsort.out</td>
+<td>Host</td>
 </tr>
 <tr>
 <td>SignalP5</td>
-<td>Command</td>
+<td>docker exec -it FastProtein2 signalp -fasta /example/input.fasta -stdout > signalp.out</td>
+  <td>Host</td>
 </tr>
 <tr>
 <td>Phobius</td>
-<td>Command</td>
+<td>docker exec -it FastProtein2 phobius -short /example/input.fasta > phobius.out</td>
+<td>Host</td>
 </tr>
 <tr>
 <td>TMHMM2</td>
-<td>Command</td>
+<td>docker exec -it FastProtein2 tmhmm2 /example/input.fasta > tmhmm2.out</td>
+<td>Host</td>
 </tr>
 <tr>
 <td>PredGPI</td>
-<td>Command</td>
+<td>docker exec -it FastProtein2 sh -c "predgpi /example/input.fasta predgpi.out ; cat predgpi.out ; rm predgpi.out" > predgpi.out</td>
+<td>Host</td>  
 </tr>
 <tr>
 <td>InterProScan5</td>
-<td>Command</td>
+<td>docker exec -it FastProtein sh -c "interproscan -i /example/input.fasta -f tsv -o interpro.out --goterms ; cat interpro.out ; rm interpro.out" > interpro.out</td>
+<td>
 </tr>
-
-<tr>
-<td>Blastp</td>
-<td>Command</td>
-</tr>
-<tr>
-<td>MakeblastDB</td>
-<td>Command</td>
-</tr>
-
 </table>
 
 <b>Remember, the results are stored INSIDE the docker and will reflect in your local folder only if the output is set to <i>/fastprotein/</i></b>
