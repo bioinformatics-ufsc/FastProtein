@@ -335,7 +335,7 @@ It is possible to see all the commands running using the flag -log ALL in comman
 In the FastProtein container, it is possible to run the software used within the pipeline as follows:
 
 ```bash
-  ## WoLFPSORT (output = <local_execution>/wolfsort.tou)
+  ## WoLFPSORT (output = <local_execution>/wolfsort.out)
   docker exec -it FastProtein2 wolfpsort animal /example/input.fasta > wolfpsort.out
   ## SignalP5 (output = <local_execution>/signalp.out)
   docker exec -it FastProtein2 signalp -fasta /example/input.fasta -stdout > signalp.out
@@ -379,13 +379,13 @@ In the FastProtein container, it is possible to run the software used within the
 
 <p align="center">
   <a href="https://bioinformatica.ufsc.br">
-    <img src="https://bioinformatica.paginas.ufsc.br/files/2012/03/Logo-H-C-e1582133841295.png" width="300" height="100"/>
+    <img src=".img/labioinfo.png" width="300" height="100"/>
   </a><a>&ensp;</a>
   <a href="https://www.ifsc.edu.br/">
-    <img src="https://www.colegioweb.com.br/wp-content/uploads/2016/10/Instituto-Federal-de-Santa-Catarina-abre-inscri%C3%A7%C3%B5es-para-o-vestibular-2-1024x342.png" width="300" height="100"/>
+    <img src="./ifsc.png" width="300" height="100"/>
   </a><a>&ensp;</a>
   <a href="https://ufsc.br/">
-    <img src="https://bioinformatica.ufsc.br/wp-content/themes/brasilGovInterno/img/brasao_site_ufsc.svg?ver=1679517588" width="100" height="120"/>
+    <img src="./img/ufsc.svg" width="100" height="120"/>
   </a><a>&ensp;</a>
 </p>
 
