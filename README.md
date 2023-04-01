@@ -314,7 +314,7 @@ Required python 3 and pip3.
 ```bash
 ##Installing BioLib before Run
 pip3 install -U pybiolib
-##Running help
+##Running help - This process will download a customized docker image in your host (~50GB) to execute FastProtein
 biolib run UFSC/FastProtein --help
 ```
 
