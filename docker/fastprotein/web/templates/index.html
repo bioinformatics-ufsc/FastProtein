@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <title>FastProtein - Proteomic Information</title>
+    <script>
+        function showBlastPanel(check) {
+            var blastInputs = document.getElementById("blast-inputs");
+            console.log('mudou de valor ' + check.checked)
+            if (check.checked) {
+                blastInputs.style.display = "block";
+            } else {
+                blastInputs.style.display = "none";
+            }
+        }
+    </script>
+
+</head>
+
+<body>
+<div class="container">
+    <br>
+    <br>
+
+    <div class="row  align-items-start">
+        <div class="col-6">
+            <div class="card mb-4" style="width: 40rem;">
+                <h5 class="card-header">FastProtein - 1.0</h5>
+                <div class="card-body">
+                    <form class="row gx-3 gy-2 align-items-center" action="/upload" method="POST"
+                          enctype="multipart/form-data">
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label" for="run-name">Your run name:</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="run-name" id="run-name" value='fastprotein'>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="fasta" class="col-sm-4 col-form-label">FASTA file to process
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="file" class="form-control" id="fasta" name="fasta"
+                                       placeholder="FASTA file to process">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="subcell" class="col-sm-4 col-form-label">Subcellular prediction organism
+                                (WolfPSORT)
+                            </label>
+                            <div class="col-sm-5">
+                                <select class="form-select" id="subcell" name="subcell"
+                                        aria-label="Default select example">
+                                    <option value="animal" selected>Animal</option>
+                                    <option value="fungi">Fungi</option>
+                                    <option value="plant">Plant</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="form-check-label col-sm-10" for="interpro">
+                                Interproscan search</label>
+                            <div class="form-check form-switch col-sm-2">
+                                <input class="form-check-input" type="checkbox" id="interpro" name="interpro">
+                            </div>
+
+                        </div>
+
+                        <p/>
+
+                        <h6>BLAST Search</h6>
+                        <p>PS: The first hit will be displayed in separate columns and associated with the query</p>
+                        <div class="row mb-3">
+                            <label for="fastaBlast" class="col-sm-4 col-form-label">Local BLAST (fast) FASTA to
+                                query:
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="file" class="form-control" id="fastaBlast" name="fastaBlast"
+                                       placeholder="FASTA file to process">
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-3">
+                            <input type="submit" class='btn btn-primary' value="Run!">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row align-items-start">
+                <div class="col-6">
+                    <div class="card mb-4" style="width: 40rem;">
+                        <h5 class="card-header">Technologies</h5>
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col"><img src="{{ url_for('static', filename='img/java.png') }}"
+                                                      class="img-fluid  "></div>
+                                <div class="col"><img src="{{ url_for('static', filename='img/debian.png') }}"
+                                                      class="img-fluid  "></div>
+                                <div class="col"><img src="{{ url_for('static', filename='img/docker.png') }}"
+                                                      class="img-fluid  "></div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col"><img src="{{ url_for('static', filename='img/python.png') }}"
+                                                      class="img-fluid  "></div>
+                                <div class="col"><img src="{{ url_for('static', filename='img/biojava.png') }}"
+                                                      class="img-fluid  "></div>
+
+                                <div class="col"><img src="{{ url_for('static', filename='img/biolib.png') }}"
+                                                      class="img-fluid  "></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-start">
+                <div class="col-6">
+                    <div class="card " style="width: 40rem;">
+                        <h5 class="card-header">Links</h5>
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-2">
+                                    <img src="{{ url_for('static', filename='img/biolib.png') }}"
+                                         class="img-fluid ">
+                                </div>
+                                <div class="col-10"><a href="https://biolib.com/simoesrenato/" target="_blank">FastProtein
+                                    in Biolib</a>
+                                </div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-sm-2">
+                                    <img src="{{ url_for('static', filename='img/github.png') }}"
+                                         class="img-fluid ">
+                                </div>
+                                <div class="col-10">
+                                    <a href="https://github.com/bioinformatics-ufsc/FastProtein" target="_blank">FastProtein
+                                        in GitHub</a>
+                                </div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="row">
+                                    Correspondence and Technical Support: <a href="mailto:renato.simoes@ifsc.edu.br">Professor
+                                    Renato
+                                    Simões</a>
+
+
+                                </div>
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <img src="{{ url_for('static', filename='img/ifsc.png') }}"
+                                             class="img-fluid">
+                                    </div>
+                                    <div class="col">
+                                        <img src="{{ url_for('static', filename='img/ufsc.png') }}"
+                                             class="img-fluid">
+                                    </div>
+                                    <div class="col">
+                                        <img src="{{ url_for('static', filename='img/lab.png') }}"
+                                             class="img-fluid">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row align-items-start">
+        <div class="col">
+            <div class="card mb-4" style="width: 40rem;">
+                <h5 class="card-header">Previous runs</h5>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Date</th>
+                        <th>Download</th>
+                        <th>Remove</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for file in files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.date }}</td>
+                        <td>
+                            <a href="{{ url_for('runs.static', filename=file.path) }}">
+                                <img src="{{ url_for('static', filename='img/down.png') }}" alt="Download">
+                            </a>
+                        </td>
+                        <td>
+                            <form action="{{ url_for('remove_file') }}" method="POST">
+                                <input type="image" src="{{ url_for('static', filename='img/del.png') }}" alt="Remove"
+                                       onclick="return confirm('Are you sure you want to remove this file?')">
+                                <input type="hidden" name="filename" value="{{ file.path }}">
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+biolib_version: 2
+
+modules:
+  main:
+    image: 'local-docker://biolib/fastprotein:latest'
+    command: java -cp FastProtein.jar br.edu.ifsc.bioinfo.fast.BiolibMain
+    working_directory: /home/biolib/
+    input_files:
+      - COPY / /home/biolib/
+    output_files:
+      - COPY /home/biolib/ /
+    source_files:
+      - COPY / /home/biolib/
+
+arguments:
+  -
+    default_value: input.fasta
+    description: 'FASTA file to process '
+    key: --input
+    required: true
+    type: file
+  -
+    key: --subcell
+    description: 'Subcellular prediction organism (WolfPSORT)'
+    default_value: 'animal'
+    type: dropdown
+    options:
+      'Animal': 'animal'
+      'Plant': 'plant'
+      'Fungi': 'fungi'
+      'No prediction': 'none'
+    required: false
+  -
+    key: --signalp
+    description: 'Signal peptides prediction organism (SignalP-5)'
+    default_value: 'euk'
+    type: hidden
+    options:
+        'Eukarya': 'euk'
+        'Archaea': 'arch'
+        'Gram-positive': 'gram_pos'
+        'Gram-negative': 'gram_neg'
+    required: false
+  -
+    key: --interpro
+    description: 'Do you want to perform InterproScan (slow)? (For big dataset (100+ proteins),
+                  we recommend to run in terminal, it may cause timeout)'
+    default_value: 'true'
+    type: radio
+    required: false
+    options:
+      'Yes': 'true'
+      'No': 'false'
+
+  -
+    description: 'Do you want to perform a Local BLAST? Inform here your FASTA for DB'
+    key: --db_blast
+    required: false
+    type: file
+
+  -
+    description: 'Interproscan home'
+    default_value: '/bioinformatic/interproscan-5.61-93.0'
+    key: --interpro_home
+    required: false
+    type: hidden
+
+
+main_output_file: /fastprotein/output-biolib.md
+remote_hosts:
+  - 'www.ebi.ac.uk'

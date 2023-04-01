@@ -1,0 +1,14 @@
+GO	Description	Total
+GO:0042555	MCM complex	9
+GO:0005634	nucleus	7
+GO:0005737	cytoplasm	4
+GO:0016020	membrane	4
+GO:0000408	EKC/KEOPS complex	3
+GO:0000015	phosphopyruvate hydratase complex	3
+GO:0009986	cell surface	3
+GO:0005739	mitochondrion	3
+GO:0072669	tRNA-splicing ligase complex	3
+GO:0000974	Prp19 complex	2
+GO:0045261	proton-transporting ATP synthase complex, catalytic core F(1)	2
+GO:0009331	glycerol-3-phosphate dehydrogenase complex	1
+GO:0005852	eukaryotic translation initiation factor 3 complex	1

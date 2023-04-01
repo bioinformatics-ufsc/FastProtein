@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>br.edu.ifsc.bioinfo</groupId>
+    <artifactId>FastProtein</artifactId>
+    <version>1.0</version>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <docker.container>FastProteinTest</docker.container>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>biojava-core</artifactId>
+            <version>7.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>biojava-aa-prop</artifactId>
+            <version>7.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>biojava-ontology</artifactId>
+            <version>7.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.20.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.20.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>4.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>net.steppschuh.markdowngenerator</groupId>
+            <artifactId>markdowngenerator</artifactId>
+            <version>1.3.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.biojava</groupId>
+            <artifactId>biojava-ws</artifactId>
+            <version>6.0.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>tech.tablesaw</groupId>
+            <artifactId>tablesaw-core</artifactId>
+            <version>0.43.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.javadev</groupId>
+            <artifactId>underscore</artifactId>
+            <version>1.80</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.knowm.xchart</groupId>
+            <artifactId>xchart</artifactId>
+            <version>3.8.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.vladsch.flexmark</groupId>
+            <artifactId>flexmark-all</artifactId>
+            <version>0.36.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sourceforge.jexcelapi</groupId>
+            <artifactId>jxl</artifactId>
+            <version>2.6.12</version>
+        </dependency>
+
+    </dependencies>
+    
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <index>true</index>
+                                <manifest>
+                                    <mainClass>br.edu.ifsc.bioinfo.fast.Main</mainClass>
+                                </manifest>
+                                <manifestEntries>
+                                    <Multi-Release>true</Multi-Release>
+                                </manifestEntries>
+                                <manifestSections>
+                                    <manifestSection>
+                                        <name>FastProtein</name>
+                                        <manifestEntries>
+                                            <Project-Name>${project.artifactId}</Project-Name>
+                                            <Project-Version>${project.version}</Project-Version>
+                                        </manifestEntries>
+                                    </manifestSection>
+                                </manifestSections>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            
+                            <!--transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>br.edu.ifsc.bioinfo.fast.Main</mainClass>
+                                    <manifestEntries>
+                                        <Multi-Release>true</Multi-Release>
+                                    </manifestEntries>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers-->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>copy-jar-to-docker</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <target>
+                                <!-- copy jar file to docker container - PLEASE CHANGE the variavel docker.container
+                                 if you want a deploy without recreate the container-->
+                                <exec executable="docker">
+                                    <arg value="cp"/>
+                                    <arg value="target/FastProtein-1.0-jar-with-dependencies.jar"/>
+                                    <arg value="${docker.container}:/bioinformatic/fastprotein/bin/FastProtein.jar"/>
+                                </exec>
+                                <!-- copy jar file to the root docker folder -->
+                                <exec executable="cp">
+                                    <arg value="-p"/>
+                                    <arg value="target/FastProtein-1.0-jar-with-dependencies.jar"/>
+                                    <arg value="docker/fastprotein/bin/FastProtein.jar"/>
+                                </exec>
+
+                                <!-- Files to biolib environment-->
+                                <exec executable="cp">
+                                    <arg value="target/FastProtein-1.0-jar-with-dependencies.jar"/>
+                                    <arg value="biolib/FastProtein.jar"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <name>FastProtein</name>
+</project>

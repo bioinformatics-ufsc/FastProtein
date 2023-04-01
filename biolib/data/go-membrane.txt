@@ -1,0 +1,9 @@
+GO:0016021=integral component of membrane
+GO:0016020=membrane
+GO:0030117=membrane coat
+GO:0005886=plasma membrane
+GO:0005887=integral component of plasma membrane
+GO:0019867=outer membrane
+GO:0045121=membrane raft
+GO:0030119=AP-type membrane coat adaptor complex
+GO:0046658=anchored component of plasma membrane

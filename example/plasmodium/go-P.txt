@@ -1,0 +1,65 @@
+GO	Description	Total
+GO:0032508	DNA duplex unwinding	9
+GO:0006270	DNA replication initiation	9
+GO:0006351	DNA-templated transcription	7
+GO:0006096	glycolytic process	6
+GO:0006099	tricarboxylic acid cycle	6
+GO:0006260	DNA replication	6
+GO:0006508	proteolysis	6
+GO:0006281	DNA repair	4
+GO:0006164	purine nucleotide biosynthetic process	4
+GO:0006400	tRNA modification	4
+GO:0006265	DNA topological change	4
+GO:0006002	fructose 6-phosphate metabolic process	3
+GO:0006259	DNA metabolic process	3
+GO:0001510	RNA methylation	3
+GO:0006807	nitrogen compound metabolic process	3
+GO:0001717	conversion of seryl-tRNAsec to selenocys-tRNAsec	3
+GO:0006388	tRNA splicing, via endonucleolytic cleavage and ligation	3
+GO:0006537	glutamate biosynthetic process	3
+GO:0030488	tRNA methylation	3
+GO:0008654	phospholipid biosynthetic process	3
+GO:0006396	RNA processing	3
+GO:0009107	lipoate biosynthetic process	3
+GO:0002949	tRNA threonylcarbamoyladenosine modification	3
+GO:0032259	methylation	3
+GO:0034470	ncRNA processing	2
+GO:0006284	base-excision repair	2
+GO:0006285	base-excision repair, AP site formation	2
+GO:0016925	protein sumoylation	2
+GO:0046654	tetrahydrofolate biosynthetic process	2
+GO:0006006	glucose metabolic process	2
+GO:0015986	proton motive force-driven ATP synthesis	2
+GO:0007021	tubulin complex assembly	2
+GO:0008033	tRNA processing	2
+GO:0006098	pentose-phosphate shunt	2
+GO:1902600	proton transmembrane transport	2
+GO:0007023	post-chaperonin tubulin folding pathway	2
+GO:0043039	tRNA aminoacylation	2
+GO:0006139	nucleobase-containing compound metabolic process	2
+GO:0006730	one-carbon metabolic process	2
+GO:0046034	ATP metabolic process	2
+GO:0016567	protein ubiquitination	2
+GO:0006468	protein phosphorylation	2
+GO:0006302	double-strand break repair	2
+GO:0000398	mRNA splicing, via spliceosome	2
+GO:0016072	rRNA metabolic process	2
+GO:0006419	alanyl-tRNA aminoacylation	2
+GO:0006231	dTMP biosynthetic process	2
+GO:0006308	DNA catabolic process	2
+GO:0016226	iron-sulfur cluster assembly	2
+GO:0036211	protein modification process	1
+GO:0006364	rRNA processing	1
+GO:0006488	dolichol-linked oligosaccharide biosynthetic process	1
+GO:0043631	RNA polyadenylation	1
+GO:0006801	superoxide metabolic process	1
+GO:0022900	electron transport chain	1
+GO:0046168	glycerol-3-phosphate catabolic process	1
+GO:0006072	glycerol-3-phosphate metabolic process	1
+GO:0007165	signal transduction	1
+GO:0005975	carbohydrate metabolic process	1
+GO:0006629	lipid metabolic process	1
+GO:0031123	RNA 3'-end processing	1
+GO:0031167	rRNA methylation	1
+GO:0009060	aerobic respiration	1
+GO:0035600	tRNA methylthiolation	1

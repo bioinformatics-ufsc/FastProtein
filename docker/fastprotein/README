@@ -1,0 +1,10 @@
+#How to run basic FastProtein
+fastprotein -i input.fasta
+
+#How to run FastProtein with Interpro
+fastprotein -i input.fasta -ipr true
+
+#How to run FastProtein with LocalBlast
+fastprotein -i input.fasta -lb db.fasta
+#See more arguments in
+fastprotein -h

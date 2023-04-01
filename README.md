@@ -254,6 +254,7 @@ docker exec -it FastProtein fastprotein -h
 ##        result_test - local inside the container with the results (/fastprotein/result_test is linked with the local folder ~/fastprotein/result_test)
 docker exec -it FastProtein fastprotein -i /example/input.fasta --local-blast /example/db.fasta -o result_test
 ```
+
 #
 #### **Using inside the docker container**
 
