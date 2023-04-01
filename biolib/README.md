@@ -23,15 +23,17 @@
 - Gene Ontology, Panther, and Pfam: Analysis of protein function and annotation using [InterproScan5](https://www.ebi.ac.uk/interpro/).
 - Sequence: Protein sequence.
 
-## Output example
-[fastprotein_results.zip](https://github.com/simoesrenato/bioinfo/tree/master/fast-protein/example/fastprotein_results.zip)
+### Output example
 
+[Plasmodiu vivax example](https://github.com/bioinformatics-ufsc/FastProtein/raw/main/example/plasmodium.zip)
 
 This software was developed in Java 17 (please cite [BioJava](https://biojava.org/)) and Python 3.
 
-Check the [source code](https://github.com/simoesrenato/bioinfo/tree/master/fast-protein) 
-Developed by PhD. Renato Simoes - renato.simoes@ifsc.edu.br
+Check the [source code](https://github.com/bioinformatics-ufsc/FastProtein) 
 
-## License
+Questions - PhD. Renato Simões - renato.simoes@ifsc.edu.br
 
-MIT
+### License
+
+[Apache 2.0](https://opensource.org/license/apache-2-0/)
+
