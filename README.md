@@ -173,7 +173,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 ## **Installation**
 
-### **To create a local image Docker (optional)**
+### **If you want to create a local image Docker from scratch (optional)**
 
 1. Clone the repository
 
@@ -185,25 +185,46 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
    ```bash
    cd FastProtein/docker
-   docker build -t fastprotein:latest .
+   docker build -t bioinfoufsc/fastprotein:latest .
    ```
 #
-### **Controlling Docker container**
+
+### **Get a image from DockerHub (recommended)**
+
+1. Pull a image to host
+```bash
+   docker pull bioinfoufsc/fastprotein:latest
+```
+
+### **Controlling Docker container (mandatory)**
+    
    ```bash
    # Step 1 - Create a local directory that will be used to exchange files with Docker (example fastprotein/ inside user home)
    #          ~/fastprotein is the work directory
    #          ~/fastprotein/runs the directory that stores the FastProtein web server requests
    #          
-   mkdir -p ~/fastprotein/runs
-   # Step 2 - Create a container named FastProtein that will have the volume associated with the locally created directory. 
+   mkdir -p <your_home>/fastprotein/runs
+   
+   # Step 2 - File sharing - If you are using MacOS you have to share your folder before go to Step 3
+   <p align="center">
+      <a>
+      <img src=".img/filesharing.png" width="800" height="500"/>
+    </a>
+    </p>
+   
+   # Step 3 - Create a container named FastProtein that will have the volume associated with the locally created directory. 
    #          Port 5000 is used to access the FastProtein web server.
-   #          PS 1: if you mounted local image, remove the user 'bioinfoufsc/'
-   #          PS 2: this command is executed only one time
-   docker run -d -it --name FastProtein -p 5000:5000 -v ~/fastprotein:/fastprotein bioinfoufsc/fastprotein:latest
-   #
+   #          PS 1: this command is executed only one time and it will create and start your container
+   docker run -d -it --name FastProtein -p 5000:5000 -v <your_home>/fastprotein:/fastprotein bioinfoufsc/fastprotein:latest
+   
+   # Step 3 - InterProScan installation
+   #          This step may take ~1 hour total
+   docker exec -it FastProtein interpro_install
+   
    # The 'docker run' command starts the container for the first time. 
    # If everything runs without errors, open a browser and go to 127.0.0.1:5000 to access the FastProtein web.
-   #
+   
+   # The following commands are for you to learn how to control a Docker container.
    # If you want to STOP the container, the command is:
    docker stop FastProtein
    # If you want to START the container, the command is:
@@ -214,9 +235,9 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    docker exec -it FastProtein /bin/bash 
   # To exchange files between the host and the container without using a volume, use the command:
   # docker cp <local_file> <container_id>:<container_file>
-  # Eg: copy a fasta file test/human.fasta to /fastprotein (or other directory if you need)
+  # E.g: copy a fasta file test/human.fasta to /fastprotein (or other directory if you need)
   docker cp test/human.fasta FastProtein:/fastprotein
-  # Eg: copy the folder runs from container to local runs folder
+  # E.g: copy the folder runs from container to local runs folder
   docker cp FastProtein:/fastprotein/runs ./runs
 ```
 
@@ -252,11 +273,11 @@ docker exec -it FastProtein fastprotein -h
 ##        input.fasta - proteins to analyze
 ##        db.fasta - database for blast search (protein FASTA)
 ##        result_test - local inside the container with the results (/fastprotein/result_test is linked with the local folder ~/fastprotein/result_test)
-docker exec -it FastProtein fastprotein -i /example/input.fasta --local-blast /example/db.fasta -o result_test
+docker exec -it FastProtein fastprotein -i /example/input.fasta -db /example/db.fasta -o result_test
 ```
+
 #
 #### **Using inside the docker container**
-
 ```bash
 ## Enter into container
 docker exec -it FastProtein /bin/bash 
@@ -267,20 +288,19 @@ fastprotein -h
 ## Simplest execution (the default output is fastprotein_results)
 fastprotein -i /example/input.fasta 
 ##
-## Complete execution (with InterproScan and Remote Blast using uniprotkb_swissprot as database)
-## PS: The Remote Blast executes protein by protein, which makes the process slower (2-4min per protein). 
-##       It is recommended to use the --local-blast instead. However, both can be executed, and the result is displayed in separate columns.
-fastprotein -i /example/input.fasta --local-blast /example/db.fasta --interpro --remote-blast -o result_test --zip
+## Example of a complete execution (with InterproScan and BlastP) with output in folder result_test
+fastprotein -i /example/input.fasta -db /example/db.fasta --interpro -o result_test
 ##
-## Running remote BLAST, local BLAST with custom database and InterPro**
-##
-fastprotein -i /example/input.fasta -s animal --interpro --remote-blast --local-blast /example/db.fasta
+## The same example but with output in zip mode
+fastprotein -i /example/input.fasta -db /example/db.fasta --interpro -o result_test --zip
 ```
 ---
 
 ### **BioLib**
 
-FastProtein has an online service for small datasets or even example of generated results
+<p>FastProtein has an online service for small datasets (~100 proteins). 
+This limitation is not from FastProtein, but rather from the web service that can generate a timeout.
+</p>
 
 This service is available at: (<a href="https://biolib.com/UFSC/FastProtein" target='_blank'>https://biolib.com/UFSC/FastProtein</a>)
 
@@ -290,7 +310,7 @@ Alternatively, you can run FastProtein via biolib through the command line. To d
 Required python 3 and pip3.
 
 ```bash
-##Installing BioLib
+##Installing BioLib before Run
 pip3 install -U pybiolib
 ##Running help
 biolib run UFSC/FastProtein --help
@@ -298,13 +318,62 @@ biolib run UFSC/FastProtein --help
 
 <p>&ensp;</p>
 
-BioLib has a specific syntax and the flags `--interpro` and `--remote-blast` needed a `true` or `false` value in the command line. 
+BioLib has a specific syntax and the flags `--interpro` needed a `true` or `false` value in the command line. 
 The default BioLib output is `biolib_results/` in the current folder
 Check the Example:
 
 ```bash
-biolib run UFSC/FastProtein -i input.fasta --interpro true --remote-blast true
+biolib run UFSC/FastProtein -i input.fasta --interpro true
 ```
+
+##Output console
+It is possible to see all the commands running using the flag -log ALL in command line.
+
+##Use your FastProtein container as your Bioinformatic tools
+In the FastProtein container, it is possible to run the software used within the pipeline as follows:
+
+<table>
+<tr>
+<td>Software</td>
+<td>Command</td>
+</tr>
+<tr>
+<td>WoLFPSORT</td>
+<td>Command</td>
+</tr>
+<tr>
+<td>SignalP5</td>
+<td>Command</td>
+</tr>
+<tr>
+<td>Phobius</td>
+<td>Command</td>
+</tr>
+<tr>
+<td>TMHMM2</td>
+<td>Command</td>
+</tr>
+<tr>
+<td>PredGPI</td>
+<td>Command</td>
+</tr>
+<tr>
+<td>InterProScan5</td>
+<td>Command</td>
+</tr>
+
+<tr>
+<td>Blastp</td>
+<td>Command</td>
+</tr>
+<tr>
+<td>MakeblastDB</td>
+<td>Command</td>
+</tr>
+
+</table>
+
+<b>Remember, the results are stored INSIDE the docker and will reflect in your local folder only if the output is set to <i>/fastprotein/</i></b>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
