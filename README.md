@@ -17,7 +17,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a> -->
 
-<h3 align="center">FastProtein</h3>
+  <h3 align="center">FastProtein</h3>
 
   <p align="center">
     A fast and easy way to know more about your proteins :)
@@ -197,7 +197,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 ```
 
 ### **Controlling Docker container (mandatory)**
-
+    
    ```bash
    # Step 1 - Create a local directory that will be used to exchange files with Docker (example fastprotein/ inside user home)
    #          ~/fastprotein is the work directory
@@ -212,7 +212,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
       <img src=".img/filesharing.png" width="800" height="500"/>
     </a>
     </p>
-
+    
    ```bash
    # Step 3 - Create a container named FastProtein that will have the volume associated with the locally created directory. 
    #          Port 5000 is used to access the FastProtein web server.
@@ -320,7 +320,7 @@ biolib run UFSC/FastProtein --help
 
 <p>&ensp;</p>
 
-BioLib has a specific syntax and the flags `--interpro` needed a `true` or `false` value in the command line.
+BioLib has a specific syntax and the flags `--interpro` needed a `true` or `false` value in the command line. 
 The default BioLib output is `biolib_results/` in the current folder
 Check the Example:
 
@@ -431,9 +431,9 @@ In the FastProtein container, it is possible to run the software used within the
 
 This software was developed using Java 17 (please cite [BioJava](https://biojava.org)) and Python 3.
 
-Please cite us:
+Please cite us: 
 
-FastProtein also uses a suite of software, please cite them too:
+FastProtein also uses a suite of softwares, please cite them too:
 
 - WoLF PSORT - [Horton et al., 2007](https://doi.org/10.1093/nar/gkm259)
 - TMHMM-2.0 - [Krogh et al., 2001](https://doi.org/10.1006/jmbi.2000.4315)
