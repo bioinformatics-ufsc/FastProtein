@@ -382,10 +382,10 @@ In the FastProtein container, it is possible to run the software used within the
     <img src=".img/lab.png" width="300" height="100"/>
   </a><a>&ensp;</a>
   <a href="https://www.ifsc.edu.br/">
-    <img src="./ifsc.png" width="300" height="100"/>
+    <img src=".img/ifsc.png" width="300" height="100"/>
   </a><a>&ensp;</a>
   <a href="https://ufsc.br/">
-    <img src="./img/ufsc.png" width="100" height="120"/>
+    <img src=".img/ufsc.png" width="100" height="120"/>
   </a><a>&ensp;</a>
 </p>
 
