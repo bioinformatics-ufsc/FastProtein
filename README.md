@@ -206,12 +206,14 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    mkdir -p <your_home>/fastprotein/runs
    
    # Step 2 - File sharing - If you are using MacOS you have to share your folder before go to Step 3
+  ```
    <p align="center">
       <a>
       <img src=".img/filesharing.png" width="800" height="500"/>
     </a>
     </p>
-   
+    
+   ```bash
    # Step 3 - Create a container named FastProtein that will have the volume associated with the locally created directory. 
    #          Port 5000 is used to access the FastProtein web server.
    #          PS 1: this command is executed only one time and it will create and start your container
