@@ -191,9 +191,13 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 ### **Get a image from DockerHub (recommended)**
 
-1. Pull a image to host
+1. Pull a image to host (clean, without InterProScan) - 
 ```bash
    docker pull bioinfoufsc/fastprotein:latest
+```
+2. Pull a image to host (with InterProScan)
+```bash
+   docker pull bioinfoufsc/fastprotein-interproscan:latest
 ```
 
 ### **Controlling Docker container (mandatory)**
