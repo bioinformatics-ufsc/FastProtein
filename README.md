@@ -164,11 +164,6 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED ------------------------------------------------------- -->
-
-## **Prerequisites**
- <!-- TODO ver pre requisitos -->
-- Docker
-
 ## **Installation**
 
 ### **If you want to create a local image Docker from scratch (optional)**
