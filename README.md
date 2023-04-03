@@ -17,7 +17,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a> -->
 
-  <h3 align="center">FastProtein</h3>
+  <h3 align="center" name="top">FastProtein</h3>
 
   <p align="center">
     A fast and easy way to know more about your proteins :)
@@ -75,8 +75,6 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 ## **Output Results**
 
- <!-- TODO mudar arquivo de resultados -->
-
 ### FastProtein can evaluate multiple protein parameters in a single run. As output, user obtain a table with:
 <p>&ensp;</p>
 
@@ -116,7 +114,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 - **Sequence:** Protein sequence
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ---
 ## **Technologies**
@@ -167,14 +165,9 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED ------------------------------------------------------- -->
-
-## **Prerequisites**
- <!-- TODO ver pre requisitos -->
-- Docker
-
 ## **Installation**
 
 ### **If you want to create a local image Docker from scratch (optional)**
@@ -195,12 +188,16 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 ### **Get a image from DockerHub (recommended)**
 
-1. Pull an image to host
+1. Pull an image to host (clean, without InterProScan) - 
 ```bash
    #Light version 900Mb compressed
    docker pull bioinfoufsc/fastprotein:latest
    #Full version with interpro installed (don't need to execute Step 4, just change the image name in the end of the command)
    docker pull bioinfoufsc/fastprotein-interpro:latest
+```
+2. Pull a image to host (with InterProScan)
+```bash
+   docker pull bioinfoufsc/fastprotein-interproscan:latest
 ```
 
 ### **Controlling Docker container (mandatory)**
@@ -254,7 +251,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 ```
 
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- USAGE ----------------------------------------------------------------- -->
 ---
@@ -362,7 +359,7 @@ In the FastProtein container, it is possible to run the software used within the
 
 <b>Remember, the results are stored INSIDE the docker and will reflect in your local folder only if the output is set to <i>/fastprotein/</i></b>
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- CONTACT -->
 ---
@@ -434,7 +431,7 @@ In the FastProtein container, it is possible to run the software used within the
 </p>
 
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS ------------------------------------------------------- -->
 ---
@@ -454,4 +451,4 @@ FastProtein also uses a suite of softwares, please cite them too:
 - PROSITE - [Sigrist et al., 2012](https://doi.org/10.1093/nar/gks1067)
 - InterProScan5 - [Blum et al., 2020](https://doi.org/10.1093/nar/gkaa977)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p>
