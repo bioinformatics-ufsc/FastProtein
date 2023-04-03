@@ -1,3 +1,4 @@
+#docker build -t bioinfoufsc/fastprotein:latest .
 FROM debian
 
 RUN apt-get update

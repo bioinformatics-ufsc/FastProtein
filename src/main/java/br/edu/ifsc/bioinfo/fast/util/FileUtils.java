@@ -57,6 +57,24 @@ public class FileUtils {
         return null;
     }
 
+    public static File hasFileOnTemp(String file) {
+        File arq = new File(Parameters.getTemporaryFile(file));
+        debug("Looking for "+Parameters.getTemporaryFile(file));
+        if (arq.exists()) {
+            debug("    --->exists.");
+            return arq;
+        }
+        else{
+            arq = new File(Parameters.getTemporaryFile("raw/"+file));
+            debug("Looking for "+Parameters.getTemporaryFile("raw/"+file));
+            if(arq.exists()){
+                debug("    --->exists.");
+                return arq;
+            }
+        }
+        return null;
+    }
+
     public static File createFile(String content, String fileOut) throws IOException {
         FileWriter fw = null;
         File outfile = new File(Parameters.getTemporaryFile(fileOut));

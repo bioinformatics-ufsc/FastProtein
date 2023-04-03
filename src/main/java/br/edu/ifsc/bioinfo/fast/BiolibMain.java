@@ -63,7 +63,7 @@ public class BiolibMain implements Callable<Integer> {
 
     @CommandLine.Option(names = {"-ipr_home", "--interpro_home"},
             description = "The installation directory for InterProScan. E,g /opt/interproscan-5.61-93.0" +
-                    "\nThis attribute replaces the value of the INTERPRO_HOME system variable only during execution.", defaultValue = "")
+                    "\nThis attribute replaces the value of the INTERPRO_HOME system variable only during execution.", defaultValue = "/bioinformatic/interproscan-5.61-93.0")
     String interproHome;
 
     @Override
@@ -77,6 +77,7 @@ public class BiolibMain implements Callable<Integer> {
         Parameters.INTERPRO_HOME = interproHome;
 
         Parameters.createTempDir();
+
         debug("Setting permissions - init");
         chmod(String.format("%s/bin/blast.sh", Parameters.FAST_PROTEIN_HOME));
         chmod(String.format("%s/bin/fastprotein.sh", Parameters.FAST_PROTEIN_HOME));

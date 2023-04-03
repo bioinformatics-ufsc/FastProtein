@@ -55,17 +55,20 @@
 
 ## **About FastProtein**
 
-> _Developed by Renato Simões, PhD - <renato.simoes@ifsc.edu.br>_
+> _Developed by the <a href='https://bioinformatica.ufsc.br/'>Bioinformatics Laboratory - UFSC</a>  and <a href="www.ifsc.edu.br">IFSC</a> under the responsibility of Professor <a mailto='renato.simoes@ifsc.edu.br'>PhD. Renato Simões Moreira.</a>_
 
-# TODO terminar descrição do Fast (incluir workflow)
+<p>
+FastProtein is a software developed in Java that brings together various protein characteristics. We use the main prediction players and organize them into various files and images so that you can have information quickly and easy.
+</p>
 
-FastProtein is a integrated pipeline...
+<p>
+We use Docker technology for the development of a Linux image (based on Debian) with all the necessary installation not only to run FastProtein but also all the bioinformatics software we use in the pipeline. This way, you don't have just a Docker for a single tool but for multiple ones.
+</p>
+<p>
+If you have questions, suggestions or difficulties regarding the pipeline, please do not hesitate to contact our team here on GitHub or by <a mailto="labioinfo.genome@gmail.com">Bioinformatics Lab (UFSC)</a>.
+</p>
 
-FastProtein was tested in Unix-based systems and supports Docker and BioLib execution.
 
-If you have questions, suggestions or difficulties regarding the pipeline, please do not hesitate to contact our team here on GitHub or by [email](labioinfo.genome@gmail.com).
-
-#TODO FIX BACK TO TOP
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
@@ -94,6 +97,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 - **Subcellular Localization Prediction:** Prediction of the protein's subcellular localization using [WoLF PSORT](https://wolfpsort.hgc.jp)
 
 - **Prediction of Transmembrane Helices in Proteins:** Prediction of transmembrane helices in proteins using [TMHMM-2.0c](https://services.healthtech.dtu.dk/service.php?TMHMM-2.0) and [Phobius](https://phobius.sbc.su.se)
+
 - **Prediction of Signal Peptides:** Prediction of signal peptides using [SignalP-5](https://services.healthtech.dtu.dk/service.php?SignalP-5.0) and [Phobius](https://phobius.sbc.su.se)
 
 - **GPI-Anchored Proteins:** Prediction of GPI-anchored proteins using [PredGPI](https://github.com/BolognaBiocomp/predgpi)
@@ -191,9 +195,12 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 ### **Get a image from DockerHub (recommended)**
 
-1. Pull a image to host
+1. Pull an image to host
 ```bash
+   #Light version 900Mb compressed
    docker pull bioinfoufsc/fastprotein:latest
+   #Full version with interpro installed (don't need to execute Step 4, just change the image name in the end of the command)
+   docker pull bioinfoufsc/fastprotein-interpro:latest
 ```
 
 ### **Controlling Docker container (mandatory)**
@@ -218,8 +225,11 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    #          Port 5000 is used to access the FastProtein web server.
    #          PS 1: this command is executed only one time and it will create and start your container
    docker run -d -it --name FastProtein -p 5000:5000 -v <your_home>/fastprotein:/fastprotein bioinfoufsc/fastprotein:latest
-   
-   # Step 3 - InterProScan installation
+   # Step 3.1 - If you have InterProScan on your host, you can direct it to the FastProtein Docker InterProScan directory as follows.
+   #          The supported version is interproscan-5.61-93.0 (http://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.61-93.0/interproscan-5.61-93.0-64-bit.tar.gz)
+   docker run -d -it --name FastProtein -p 5000:5000 -v <your_home>/fastprotein:/fastprotein -v <your_interpro_home>:/bioinformatic/interproscan-5.61-93.0 bioinfoufsc/fastprotein:latest
+   #
+   # Step 4 - InterProScan installation
    #          This step may take ~1 hour total
    docker exec -it FastProtein interpro_install
    
@@ -242,6 +252,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
   # E.g: copy the folder runs from container to local runs folder
   docker cp FastProtein:/fastprotein/runs ./runs
 ```
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -335,16 +346,16 @@ It is possible to see all the commands running using the flag -log ALL in comman
 In the FastProtein container, it is possible to run the software used within the pipeline as follows:
 
 ```bash
-  ## WoLFPSORT (output = <local_execution>/wolfsort.out)
+  ## WoLFPSORT (output = <local_execution_folder>/wolfsort.out)
   docker exec -it FastProtein2 wolfpsort animal /example/input.fasta > wolfpsort.out
-  ## SignalP5 (output = <local_execution>/signalp.out)
+  ## SignalP5 (output = <local_execution_folder>/signalp.out)
   docker exec -it FastProtein2 signalp -fasta /example/input.fasta -stdout > signalp.out
-  ##Phobius (output = <local_execution>/phobius.out)
+  ##Phobius (output = <local_execution_folder>/phobius.out)
   docker exec -it FastProtein2 phobius -short /example/input.fasta > phobius.out
-  #TMHMM2 (output = <local_execution>/tmhmm.out)
+  #TMHMM2 (output = <local_execution_folder>/tmhmm.out)
   docker exec -it FastProtein2 tmhmm2 /example/input.fasta > tmhmm2.out
-  #PredGPI (output = <local_execution>/predgpi.out and <shared_folder>/predgpi.out)
-  docker exec -it FastProtein2 sh -c "predgpi /example/input.fasta predgpi.out ; cat predgpi.out" > predgpi.out
+  #PredGPI (output = <local_execution_folder>/predgpi.out)
+  docker exec -it FastProtein2 predgpi /example/input.fasta > predgpi.out
   #InterProScan5 (output = <shared_folder>/interpro.out)
   docker exec -it FastProtein interproscan -i /example/input.fasta -f tsv -o interpro.out --goterms
 ```

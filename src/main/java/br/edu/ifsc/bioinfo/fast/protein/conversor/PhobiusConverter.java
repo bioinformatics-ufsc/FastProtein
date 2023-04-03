@@ -7,6 +7,7 @@ package br.edu.ifsc.bioinfo.fast.protein.conversor;
 
 import br.edu.ifsc.bioinfo.fast.util.CommandRunner;
 import br.edu.ifsc.bioinfo.fast.protein.Parameters;
+import br.edu.ifsc.bioinfo.fast.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,16 +29,23 @@ public class PhobiusConverter {
     }
 
     public void execute() {
+        Parameters.pause();
         info("Executing Phobius");
         try {
             if (fasta == null) {
                 throw new IOException("Fasta file is null");
             }
-            String command = String.format("%s/bin/phobius.sh %s %s", Parameters.FAST_PROTEIN_HOME, fasta.getAbsolutePath(), Parameters.getTemporaryFile("phobius.txt"));
-            debug("Command: " + command);
-            CommandRunner.run(command);
 
-            File phobius = new File(Parameters.getTemporaryFile("phobius.txt"));
+            File phobius = FileUtils.hasFileOnTemp("phobius.txt");
+            if(phobius == null) {
+                String command = String.format("%s/bin/phobius.sh %s %s", Parameters.FAST_PROTEIN_HOME, fasta.getAbsolutePath(), Parameters.getTemporaryFile("phobius.txt"));
+                debug("Command: " + command);
+                CommandRunner.run(command);
+                phobius = new File(Parameters.getTemporaryFile("phobius.txt"));
+            }else {
+                info("Processing existing file - " + phobius.getAbsolutePath());
+            }
+
 
             if (phobius.exists()) {
                 debug("Parsing file: " + phobius.getAbsolutePath());

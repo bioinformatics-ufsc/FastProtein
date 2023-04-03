@@ -7,6 +7,7 @@ package br.edu.ifsc.bioinfo.fast.protein.conversor;
 
 import br.edu.ifsc.bioinfo.fast.util.CommandRunner;
 import br.edu.ifsc.bioinfo.fast.protein.Parameters;
+import br.edu.ifsc.bioinfo.fast.util.FileUtils;
 import br.edu.ifsc.bioinfo.fast.util.GeneOntologyUtil;
 
 import java.io.File;
@@ -28,15 +29,22 @@ public class PredGPIConverter {
     }
 
     public void execute() {
+        Parameters.pause();
         info("Executing PredGPI");
         try {
             if (fasta == null) {
                 throw new IOException("Fasta file is null");
             }
-            String command = String.format("%s/bin/predgpi.sh %s %s", Parameters.FAST_PROTEIN_HOME, fasta.getAbsolutePath(), Parameters.getTemporaryFile("predgpi.txt"));
-            debug("Command: " + command);
-            CommandRunner.run(command);
-            File predgpi = new File(Parameters.getTemporaryFile("predgpi.txt"));
+            File predgpi = FileUtils.hasFileOnTemp("predgpi.txt");
+            if(predgpi == null) {
+                String command = String.format("%s/bin/predgpi.sh %s %s", Parameters.FAST_PROTEIN_HOME, fasta.getAbsolutePath(), Parameters.getTemporaryFile("predgpi.txt"));
+                debug("Command: " + command);
+                CommandRunner.run(command);
+                predgpi = new File(Parameters.getTemporaryFile("predgpi.txt"));
+            }else {
+                info("Processing existing file - " + predgpi.getAbsolutePath());
+            }
+
             if(predgpi.exists()) {
                 Scanner s = new Scanner(predgpi);
                 debug("Parsing file: " + Parameters.getTemporaryFile("predgpi.txt"));

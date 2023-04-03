@@ -14,11 +14,13 @@ import br.edu.ifsc.bioinfo.fast.util.log.LevelConverter;
 
 import static br.edu.ifsc.bioinfo.fast.util.log.LoggerUtil.*;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Level;
 import picocli.CommandLine;
 
 import java.io.File;
+import java.util.Scanner;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "FastProtein-1", requiredOptionMarker = '*', abbreviateSynopsis = true,
@@ -71,9 +73,27 @@ public class Main implements Callable<Integer> {
                     "\nThis attribute replaces the value of the INTERPRO_HOME system variable only during execution.", defaultValue = "")
     String interproHome;
 
+
+    @CommandLine.Option(names = {"-ipr_split", "--interpro_split"},
+            description = "Split a file in <ipr_split> proteins group." , defaultValue = "500")
+    int interproSplit;
+
+
+    @CommandLine.Option(names = {"-cdt", "--copy_dir_to_temp"},
+            description = "Copy all contents from a given dir to temporary folder." , defaultValue = "")
+    String copyOutputContentTemp;
+
+    @CommandLine.Option(names = {"-pause", "--pause]"},
+            description = "Pause the processing after each third-party software execution (requires typing enter to continue)." ,
+            defaultValue = "false")
+    boolean pause;
+
     @Override
     public Integer call() throws Exception {
+        init();
+        setLevel(logLevel);
 
+        Parameters.PAUSE=pause;
         String fastproteinHome = System.getenv("FASTPROTEIN_HOME");
 
         if (StringUtils.isNotBlank(fastproteinHome)) {
@@ -83,32 +103,29 @@ public class Main implements Callable<Integer> {
         }
 
         Parameters.INTERPRO_HOME = System.getenv("INTERPRO_HOME");
-        if (StringUtils.isNotBlank(interproHome)) {
+        debug("InterProScan Home (env) = " + Parameters.INTERPRO_HOME);
+
+        if (interproHome!=null && !interproHome.trim().equals("")) {
             Parameters.INTERPRO_HOME = interproHome;
+            debug("New InterProScan Home  = " + Parameters.INTERPRO_HOME);
         }
         if (Parameters.INTERPRO_HOME.endsWith("/")) {
             Parameters.INTERPRO_HOME = Parameters.INTERPRO_HOME.substring(0, Parameters.INTERPRO_HOME.length() - 1);
         }
-
+        Parameters.INTERPRO_SPLIT=interproSplit;
         debug("InterProScan Home = " + Parameters.INTERPRO_HOME);
 
         Parameters.ZIP = zip;
 
-
         Parameters.createTempDir();
-        init();
-        setLevel(logLevel);
-        //Setting permission
-        debug("Setting permissions - init");
-        chmod(String.format("%s/bin/blast.sh", Parameters.FAST_PROTEIN_HOME));
-        chmod(String.format("%s/bin/fastprotein.sh", Parameters.FAST_PROTEIN_HOME));
-        chmod(String.format("%s/bin/interproscan.sh", Parameters.FAST_PROTEIN_HOME));
-        chmod(String.format("%s/bin/phobius.sh", Parameters.FAST_PROTEIN_HOME));
-        chmod(String.format("%s/bin/predgpi.sh", Parameters.FAST_PROTEIN_HOME));
-        chmod(String.format("%s/bin/signalp5.sh", Parameters.FAST_PROTEIN_HOME));
-        chmod(String.format("%s/bin/tmhmm2.sh", Parameters.FAST_PROTEIN_HOME));
-        chmod(String.format("%s/bin/wolfpsort.sh", Parameters.FAST_PROTEIN_HOME));
-        debug("Setting permissions - done");
+
+
+        if(!copyOutputContentTemp.isEmpty()){
+            info("Copying files from " + copyOutputContentTemp + " to "+Parameters.TEMP_DIR);
+            FileUtils.copyDirectory(new File(copyOutputContentTemp), new File(Parameters.TEMP_DIR));
+            info("Files copied.");
+            Parameters.pause();
+        }
 
         FastProtein.run(input, wolfpsortType, signalPorganism, fastaBlastDb, interpro, outputFolder, Source.other);
         return 0;

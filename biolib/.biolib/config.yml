@@ -2,7 +2,8 @@ biolib_version: 2
 
 modules:
   main:
-    image: 'local-docker://biolib/fastprotein:latest'
+    image: 'dockerhub://bioinfoufsc/fastprotein-interpro:latest'
+#    image: 'local-docker://bioinfoufsc/fastprotein-interpro:latest'
     command: java -cp FastProtein.jar br.edu.ifsc.bioinfo.fast.BiolibMain
     working_directory: /home/biolib/
     input_files:
@@ -57,14 +58,6 @@ arguments:
     key: --db_blast
     required: false
     type: file
-
-  -
-    description: 'Interproscan home'
-    default_value: '/bioinformatic/interproscan-5.61-93.0'
-    key: --interpro_home
-    required: false
-    type: hidden
-
 
 main_output_file: /fastprotein/output-biolib.md
 remote_hosts:

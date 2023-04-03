@@ -7,6 +7,7 @@ package br.edu.ifsc.bioinfo.fast.protein.conversor;
 
 import br.edu.ifsc.bioinfo.fast.util.CommandRunner;
 import br.edu.ifsc.bioinfo.fast.protein.Parameters;
+import br.edu.ifsc.bioinfo.fast.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,18 +46,23 @@ public class WolfPsortConverter {
     }
 
     public void execute(Type type) {
-
+        Parameters.pause();
         info("Executing WoLFPSORT");
 
         try {
             if (fasta == null) {
                 throw new IOException("Fasta file is null");
             }
-            String command = String.format("%s/bin/wolfpsort.sh %s %s %s", Parameters.FAST_PROTEIN_HOME, type, fasta.getAbsolutePath(), Parameters.getTemporaryFile("wolfpsort.txt"));
-            debug("Command " +command);
-            CommandRunner.run(command);
+            File wolfpsortFile = FileUtils.hasFileOnTemp("wolfpsort.txt");
+            if(wolfpsortFile == null) {
+                String command = String.format("%s/bin/wolfpsort.sh %s %s %s", Parameters.FAST_PROTEIN_HOME, type, fasta.getAbsolutePath(), Parameters.getTemporaryFile("wolfpsort.txt"));
+                debug("Command " + command);
+                CommandRunner.run(command);
+                wolfpsortFile = new File(Parameters.getTemporaryFile("wolfpsort.txt"));
+            }else {
+                info("Processing existing file - " + wolfpsortFile.getAbsolutePath());
+            }
 
-            File wolfpsortFile = new File(Parameters.getTemporaryFile("wolfpsort.txt"));
             if(wolfpsortFile.exists()) {
                 debug("Parsing file: " + wolfpsortFile.getAbsolutePath());
                 Scanner s = new Scanner(wolfpsortFile);

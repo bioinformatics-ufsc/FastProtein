@@ -7,6 +7,7 @@ package br.edu.ifsc.bioinfo.fast.protein.conversor;
 
 import br.edu.ifsc.bioinfo.fast.util.CommandRunner;
 import br.edu.ifsc.bioinfo.fast.protein.Parameters;
+import br.edu.ifsc.bioinfo.fast.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,16 +26,21 @@ public class TMHMM2Converter {
     }
 
     public void execute() {
+        Parameters.pause();
         info("Executing TMHMM-2.0c");
         try {
             if (fasta == null) {
                 throw new IOException("Fasta file is null");
             }
-            String command = String.format("%s/bin/tmhmm2.sh %s %s %s", Parameters.FAST_PROTEIN_HOME, fasta.getAbsolutePath(), Parameters.getTemporaryFile("tmhmm2.txt"), Parameters.TEMP_DIR);
-            debug("Command: " +command);
-            CommandRunner.run(command);
-
-            File fileTMHMM = new File(Parameters.getTemporaryFile("tmhmm2.txt"));
+            File fileTMHMM = FileUtils.hasFileOnTemp("tmhmm2.txt");
+            if(fileTMHMM == null) {
+                String command = String.format("%s/bin/tmhmm2.sh %s %s %s", Parameters.FAST_PROTEIN_HOME, fasta.getAbsolutePath(), Parameters.getTemporaryFile("tmhmm2.txt"), Parameters.TEMP_DIR);
+                debug("Command: " + command);
+                CommandRunner.run(command);
+                fileTMHMM = new File(Parameters.getTemporaryFile("tmhmm2.txt"));
+            }else {
+                info("Processing existing file - " + fileTMHMM.getAbsolutePath());
+            }
 
             if (fileTMHMM.exists()) {
                 debug("Parsing file: "+fileTMHMM.getAbsolutePath());

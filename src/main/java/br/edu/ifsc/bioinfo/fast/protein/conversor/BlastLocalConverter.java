@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import br.edu.ifsc.bioinfo.fast.util.CommandRunner;
+import br.edu.ifsc.bioinfo.fast.util.FileUtils;
 
 import static br.edu.ifsc.bioinfo.fast.util.log.LoggerUtil.*;
 
@@ -28,21 +29,29 @@ public class BlastLocalConverter {
 
 
     public void process(File inputFasta, File dbFasta) {
+        Parameters.pause();
         try {
-            debug("Starting Blast local execution");
-            String command = String.format("%s/bin/blast.sh %s %s %s", Parameters.FAST_PROTEIN_HOME, inputFasta.getAbsolutePath(), dbFasta.getAbsolutePath(), Parameters.TEMP_DIR);
-            debug("Command: " + command);
-            CommandRunner.run(command);
-            debug("Command: executed");
-            File blastResults = new File(Parameters.getTemporaryFile("blast_local/blast-firsthit.txt"));
-            if(blastResults.exists()) {
+
+            File blastResults = FileUtils.hasFileOnTemp("blast_local/blast-firsthit.txt");
+            if (blastResults == null) {
+                debug("Starting Blast local execution");
+                String command = String.format("%s/bin/blast.sh %s %s %s", Parameters.FAST_PROTEIN_HOME, inputFasta.getAbsolutePath(), dbFasta.getAbsolutePath(), Parameters.TEMP_DIR);
+                debug("Command: " + command);
+                CommandRunner.run(command);
+                debug("Command: executed");
+                blastResults = new File(Parameters.getTemporaryFile("blast_local/blast-firsthit.txt"));
+            } else {
+                info("Processing existing file - " + blastResults.getAbsolutePath());
+            }
+
+            if (blastResults.exists()) {
                 debug("Parsing file: " + blastResults);
                 parseResult(blastResults);
                 debug("Parsing end.");
             }
         } catch (Exception e) {
             info("Error running blast.sh: " + e.getMessage());
-            info("\t"+e.getMessage());
+            info("\t" + e.getMessage());
         }
     }
 

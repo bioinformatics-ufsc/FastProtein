@@ -62,15 +62,101 @@ public class InterproScanConverter {
         this.fasta = fasta;
     }
 
-    public void executeLocal() {
+    /**
+     *
+     * @param input
+     * @param disablePreCalc if true, the flag -dp is added in InterProScan command:
+     *                       Optional.  Disables use of the precalculated match lookup
+     *                       service.  All match calculations will be run locally.
+     * @return
+     * @throws Exception
+     */
+    public boolean execute(File input, boolean disablePreCalc) throws Exception {
+        String arqResult = input.getAbsolutePath() + ".txt";
+        String command = String.format("%s/interproscan.sh -i %s -o %s -T %s --goterms -f tsv %s",
+                Parameters.INTERPRO_HOME, input.getAbsolutePath(),
+                arqResult,
+                Parameters.getTemporaryFile("interpro/"),
+                disablePreCalc?"-dp":"");
+        debug("Command: " + command);
+        CommandRunner.run(command);
+        return new File(arqResult).exists();
+    }
+
+    public File executeLocal() {
+        Parameters.pause();
+        int count = 3;
         if (isInstalled()) {
             try {
+                ArrayList<File> filesToDelete = new ArrayList<>();
                 info("Executing InterproScan - This step is complex and may significantly increase the processing time. But it's worth it! :)");
-                String command = String.format("%s/bin/interproscan.sh %s %s %s", Parameters.FAST_PROTEIN_HOME, fasta.getAbsolutePath(), Parameters.getTemporaryFile("interproTemp.tsv"), Parameters.getTemporaryFile("interpro/"));
-                debug("Command: " + command);
-                CommandRunner.run(command);
+                debug("Spliting file");
+                List<File> files = FASTASplitter.subfasta(proteins, Parameters.INTERPRO_SPLIT, "interpro");
+                debug(files.size() + " generated");
+                ArrayList<File> generated = new ArrayList<>();
+                for (File file : files) {
 
-                File interproResult = new File(Parameters.getTemporaryFile("interproTemp.tsv"));
+                    try {
+                        File fileProcess = FileUtils.hasFileOnTemp(file.getName() + ".txt");
+                        if (fileProcess == null) {
+                            boolean fileGenerate = execute(file, false);
+                            if (!fileGenerate) {
+                                info(" " + file.getName() + " not generated, we will try to run calculation locally (see -dp parameter in InterProScan command)");
+                                fileGenerate = execute(file, true);
+                            }
+
+                            if (fileGenerate) {
+                                String arqResult = file.getAbsolutePath() + ".txt";
+                                fileProcess = new File(arqResult);
+                                debug("Adding file to process: " + fileProcess);
+                                generated.add(fileProcess);
+                                debug("Adding file to delete in the end of the process" + file.getAbsolutePath());
+                                filesToDelete.add(file);
+                            } else {
+                                info("File not found " + file.getName() + ".txt" + " this dataset will be ignored");
+                                info("This is a InterProScan problem, caused mainly by network issues.");
+                            }
+                        } else {
+                            info("Processing existing file - " + fileProcess.getAbsolutePath());
+                        }
+                    }catch(Exception e){
+                        info("Error processing the file: " +file.getAbsolutePath() +" skipping it");
+                        e.printStackTrace();
+                    }
+                }
+                debug("Join interpro files: " + generated.size());
+                ArrayList<String> allLines = new ArrayList<>();
+                boolean error=false;
+                for (File arq : generated) {
+                    if (arq != null) {
+                        debug("Processing: " + arq.getAbsolutePath());
+                        try {
+                            allLines.addAll(org.apache.commons.io.FileUtils.readLines(arq));
+                            debug("Deleting processed file: " + arq.getAbsolutePath());
+                            filesToDelete.add(arq);
+                        } catch (Exception e) {
+                            info("File not found: " + arq.getAbsolutePath());
+                            e.printStackTrace();
+                        }
+                    }else{
+                        info("File not found " + arq.getAbsolutePath());
+                        error=true;
+                    }
+                }
+                if(error){
+                    info("There are some missing files. We are interrupting the process because it may cause inconsistencies in the final intepro.tsv output");
+                    info("Run again your data with flag -cdt "+Parameters.TEMP_DIR);
+                    info("This flag will copy all your generated files and will process again! (You will save some precious minutes! :D)");
+                    System.exit(0);
+                }else{
+                    for(File file: filesToDelete){
+
+                    }
+                }
+
+                debug("Creating interproTemp.tsv");
+
+                File interproResult = FileUtils.createFile(String.join("\n", allLines), "interproTemp.tsv");
 
                 if (interproResult.exists()) {
                     debug("Parsing file: " + interproResult.getAbsolutePath());
@@ -114,22 +200,37 @@ public class InterproScanConverter {
                     }
                     debug("Interpro - Generating interpro.tsv - " + interprotsv);
                     //interproResult.delete();
+                    debug("Generating file end - " + interprotsv.getAbsolutePath());
+                    return interprotsv;
                 } else {
-                    throw new Exception("Interpro - File not found: interpro.tsv");
+                    throw new Exception("Interpro - File not found: " + interproResult.getAbsolutePath());
                 }
-                debug("Parsing file end.");
+
             } catch (Exception ex) {
                 error("Interproscan not executed, this feature will be skipped. Error:");
                 error("\t" + ex.getMessage());
             }
         }
+        return null;
 
     }
 
 
     public void updateProteins(List<Protein> proteins) {
-        File iprFile = new File(Parameters.getTemporaryFile("interpro.tsv"));
-        updateProteins(proteins, iprFile);
+        File iprFile = FileUtils.hasFileOnTemp("interpro.tsv");
+        if (iprFile == null) {
+            iprFile = executeLocal();
+            if(iprFile!=null){
+                info("Processing existing file - " + iprFile.getAbsolutePath());
+                updateProteins(proteins, iprFile);
+            }else{
+                info("File not found - interpro.tsv");
+            }
+        } else {
+            info("Processing existing file - " + iprFile.getAbsolutePath());
+        }
+
+
     }
 
     public void updateProteins(List<Protein> proteins, File iprFile) {
@@ -164,10 +265,14 @@ public class InterproScanConverter {
                     FileUtils.createFile(String.join("\n", wego), "wego.txt");
                 }
             } catch (IOException ex) {
-                error("Error processing interproscan files");
+                error("Error processing InterProScan files");
                 error("\t" + ex.getMessage());
+                ex.printStackTrace();
             }
 
+        } else {
+            info("Erro file not found: " + iprFile.getAbsolutePath());
+            info("Skipping InterProScan");
         }
     }
 

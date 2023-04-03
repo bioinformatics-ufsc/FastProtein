@@ -11,7 +11,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <docker.container>FastProteinTest</docker.container>
+        <docker.container>FastProtein</docker.container>
     </properties>
 
     <dependencies>

@@ -19,6 +19,7 @@ import java.util.logging.Logger;
  */
 public class InterproUtil {
     private static HashMap<String, String> interproMembrane = new HashMap<>();
+
     static {
         try {
             Scanner sInterpro = new Scanner(new File(Parameters.FAST_PROTEIN_HOME + "/data/interpro-membrane.txt"));

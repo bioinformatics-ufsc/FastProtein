@@ -29,7 +29,7 @@ public class FASTASplitter {
         int i = 1;
         for (List<Protein> list : output) {
             String fileName = String.format("%s-%s.fasta", name, i++);
-            debug("Generating fasta: " + i + " - " + fileName);
+            debug("Generating fasta: " + fileName);
             File f = new File(Parameters.getTemporaryFile(fileName));
             FileWriter fw = new FileWriter(f);
             for (Protein protein : list) {

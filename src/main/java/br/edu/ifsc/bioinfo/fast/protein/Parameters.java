@@ -9,6 +9,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Scanner;
 import java.util.UUID;
 
 import static br.edu.ifsc.bioinfo.fast.util.log.LoggerUtil.*;
@@ -17,10 +18,13 @@ import static br.edu.ifsc.bioinfo.fast.util.log.LoggerUtil.*;
  * @author renato
  */
 public class Parameters {
+    public static int INTERPRO_SPLIT = 500;
+
     public static String FAST_PROTEIN_HOME = ".";
     public static String TEMP_DIR = "temp";
     public static boolean ZIP = false;
     public static String INTERPRO_HOME = ".";
+    public static boolean PAUSE = false;
 
     public static String EMAIL_EBI_WS = "renato.simoes@ifsc.edu.br";
 
@@ -52,4 +56,11 @@ public class Parameters {
         return String.format("%s/%s", TEMP_DIR, file);
     }
 
+    public static void pause(){
+        if(PAUSE) {
+            Scanner s = new Scanner(System.in);
+            System.out.println("Press enter to continue");
+            s.nextLine();
+        }
+    }
 }
