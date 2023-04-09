@@ -442,7 +442,7 @@ This software was developed using Java 17 (please cite [BioJava](https://biojava
 
 Please cite us: 
 
-FastProtein also uses a suite of softwares, please cite them too:
+FastProtein also uses a suite of software, please cite them too:
 
 - WoLF PSORT - [Horton et al., 2007](https://doi.org/10.1093/nar/gkm259)
 - TMHMM-2.0 - [Krogh et al., 2001](https://doi.org/10.1006/jmbi.2000.4315)
@@ -451,6 +451,8 @@ FastProtein also uses a suite of softwares, please cite them too:
 - PredGPI - [Pierleoni, A; Marteli P.L. and Casadio R., 2008](https://doi.org/10.1186/1471-2105-9-392)
 - PROSITE - [Sigrist et al., 2012](https://doi.org/10.1093/nar/gks1067)
 - InterProScan5 - [Blum et al., 2020](https://doi.org/10.1093/nar/gkaa977)
+- Diamond - [Mai et al., 2018](https://doi.org/10.1093/bioinformatics/bty391)
+- BlastP - [Camacho et al., 2009](https://doi.org/10.1186/1471-2105-10-421)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 </font>
