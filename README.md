@@ -9,7 +9,6 @@
 [biolib-url]: https://biolib.com/ufsc/FastProtein
 [biolib-shield]: https://img.shields.io/badge/Online%20Server-BioLib-brightgreen
 
-<!-- PROJECT LOGO ---------------------------------------------------------- -->
 <font color="#4682b4">
 
 <br />
