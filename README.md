@@ -10,6 +10,7 @@
 [biolib-shield]: https://img.shields.io/badge/Online%20Server-BioLib-brightgreen
 
 <!-- PROJECT LOGO ---------------------------------------------------------- -->
+<font color="#4682b4">
 
 <br />
 <div align="center">
@@ -17,10 +18,13 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a> -->
 
-  <h3 align="center" name="top">FastProtein</h3>
+![Subcellular Localizations](.img/logo.png)
+
+
+
+### _A fast, easy, and cost-free way for you to learn more about your proteins =)_
 
   <p align="center">
-    A fast and easy way to know more about your proteins :)
     <!-- <br />
     <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
     <br /> -->
@@ -432,8 +436,6 @@ In the FastProtein container, it is possible to run the software used within the
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- ACKNOWLEDGMENTS ------------------------------------------------------- -->
----
 ## **Citation and Acknowledgments**
 
 This software was developed using Java 17 (please cite [BioJava](https://biojava.org)) and Python 3.
@@ -451,3 +453,4 @@ FastProtein also uses a suite of softwares, please cite them too:
 - InterProScan5 - [Blum et al., 2020](https://doi.org/10.1093/nar/gkaa977)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+</font>
