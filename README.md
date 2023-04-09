@@ -103,19 +103,19 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 - **GPI-Anchored Proteins:** Prediction of GPI-anchored proteins using [PredGPI](https://github.com/BolognaBiocomp/predgpi)
 
-- **Endoplasmic Reticulum Retention Total:** Total number of domains found with an endoplasmic reticulum retention signal - [E.R Retention Domain](https://prosite.expasy.org/PDOC00014)
+- **Endoplasmic Reticulum Retention domains** (peptide and position) - [E.R Retention Domain](https://prosite.expasy.org/PDOC00014).
 
-- **Endoplasmic Reticulum Retention Domains:** Endoplasmic reticulum retention domains found with peptide and position
-
-- **N-Glycosylation Total:** Total number of N-glycosylation domains found - [N-Glyc Domain](https://prosite.expasy.org/PDOC00001)
-
-- **N-Glycosylation Domains:** N-glycosylation domains found with peptide and position
+- **N-Glycosylation domains** (peptide and position) - [N-Glyc Domain](https://prosite.expasy.org/PDOC00001).
 
 - **Header:** Protein header
 
 - **Gene Ontology, Panther, and Pfam:** Protein function and annotation using [InterProScan5](https://www.ebi.ac.uk/interpro)
 
-- **Sequence:** Protein sequence
+- **Charts**
+
+- **Alignment** by [Diamond](https://github.com/bbuchfink/diamond) and [Blast](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
+
+- **and much more**...
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
