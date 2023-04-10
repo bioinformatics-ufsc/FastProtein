@@ -300,8 +300,11 @@ fastprotein -h
 ## Simplest execution (the default output is fastprotein_results)
 fastprotein -i /example/input.fasta 
 ##
-## Example of a complete execution (with InterproScan and BlastP) with output in folder result_test
+## Example of a complete execution (with InterproScan and Diamond [default]) with output in folder result_test
 fastprotein -i /example/input.fasta -db /example/db.fasta --interpro -o result_test
+##
+## Example of a complete execution (with InterproScan and BlastP) with output in folder result_test
+fastprotein -i /example/input.fasta -db /example/db.fasta -am blastp --interpro -o result_test
 ##
 ## The same example but with output in zip mode
 fastprotein -i /example/input.fasta -db /example/db.fasta --interpro -o result_test --zip
