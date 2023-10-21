@@ -7,6 +7,7 @@ package br.edu.ifsc.bioinfo.fast.protein.conversor;
 
 import br.edu.ifsc.bioinfo.fast.util.CommandRunner;
 import br.edu.ifsc.bioinfo.fast.protein.Parameters;
+import br.edu.ifsc.bioinfo.fast.util.FastTime;
 import br.edu.ifsc.bioinfo.fast.util.FileUtils;
 
 import java.io.File;
@@ -24,13 +25,15 @@ public class PhobiusConverter {
     private HashMap<String, Integer> mapTM = new HashMap<>();
     private File fasta;
 
+    public FastTime fastTime = new FastTime();
     public PhobiusConverter(File fasta) {
         this.fasta = fasta;
     }
 
     public void execute() {
+        fastTime.start();
         Parameters.pause();
-        info("Executing Phobius");
+        info("Executing Phobius - Search for signal peptide and transmembrane domains");
         try {
             if (fasta == null) {
                 throw new IOException("Fasta file is null");
@@ -40,7 +43,9 @@ public class PhobiusConverter {
             if(phobius == null) {
                 String command = String.format("%s/bin/phobius.sh %s %s", Parameters.FAST_PROTEIN_HOME, fasta.getAbsolutePath(), Parameters.getTemporaryFile("phobius.txt"));
                 debug("Command: " + command);
+                fastTime.startStep();
                 CommandRunner.run(command);
+                fastTime.endStep();
                 phobius = new File(Parameters.getTemporaryFile("phobius.txt"));
             }else {
                 info("Processing existing file - " + phobius.getAbsolutePath());
@@ -72,6 +77,8 @@ public class PhobiusConverter {
             error("Phobius not executed, this feature will be skipped.");
             error("\t"+ex.getMessage());
         }
+        fastTime.end();
+        fastTime.showTime();
     }
 
     public Boolean getSignalPeptide(String id) {

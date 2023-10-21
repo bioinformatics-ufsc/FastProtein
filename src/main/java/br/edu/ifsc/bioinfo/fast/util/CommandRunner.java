@@ -11,22 +11,23 @@ import java.io.InputStreamReader;
 /**
  * @author renato
  */
+import static br.edu.ifsc.bioinfo.fast.util.log.LoggerUtil.*;
+
 public class CommandRunner {
 
     public static void run(String command) throws IOException, InterruptedException {
         String s;
         Process p = Runtime.getRuntime().exec(command);
-        p.waitFor();
+        //p.waitFor();
 
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
         BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
-        boolean success = false;
         String stSuccess = "";
         while ((s = stdInput.readLine()) != null) {
             stSuccess += s;
             stSuccess += "\n";
-            success = true;
+            debug(s);
         }
 
         boolean error = false;
@@ -36,6 +37,7 @@ public class CommandRunner {
             stError += s;
             stError += "\n";
             error = true;
+            //error(s);
         }
 
         if (error) {
@@ -44,5 +46,7 @@ public class CommandRunner {
             fw.flush();
             fw.close();
         }
+        stdInput.close();
+        stdError.close();
     }
 }

@@ -13,6 +13,8 @@ RUN apt-get install -y python3
 RUN apt-get install -y python3-pip
 RUN apt-get install -y openjdk-17-jdk
 
+RUN apt-get install -y diamond-aligner
+
 #Dependency for predgpi
 RUN pip3 install numpy==1.23.1
 
@@ -73,16 +75,12 @@ RUN chmod +x /bioinformatic/fastprotein/bin/predgpi.sh
 RUN chmod +x /bioinformatic/fastprotein/bin/tmhmm2.sh
 RUN chmod +x /bioinformatic/fastprotein/bin/wolfpsort.sh
 RUN chmod +x /bioinformatic/fastprotein/bin/phobius.sh
-RUN chmod +x /bioinformatic/fastprotein/bin/blast.sh
+RUN chmod +x /bioinformatic/fastprotein/bin/blastp.sh
+RUN chmod +x /bioinformatic/fastprotein/bin/diamond.sh
 RUN chmod +x /bioinformatic/fastprotein/bin/fastprotein.sh
 RUN chmod +x /bioinformatic/fastprotein/bin/interproscan.sh
 RUN chmod +x /bioinformatic/fastprotein/bin/interpro_install.sh
 RUN chmod +x /bioinformatic/fastprotein/web/server.sh
-
-
-
-
-
 
 RUN mkdir -p /fastprotein/
 RUN mkdir /example

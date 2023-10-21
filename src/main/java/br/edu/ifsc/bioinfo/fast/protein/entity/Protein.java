@@ -5,6 +5,7 @@
  */
 package br.edu.ifsc.bioinfo.fast.protein.entity;
 
+import br.edu.ifsc.bioinfo.fast.protein.Parameters;
 import br.edu.ifsc.bioinfo.fast.util.ProteomicCalculator;
 import br.edu.ifsc.bioinfo.fast.util.GeneOntologyUtil;
 import br.edu.ifsc.bioinfo.fast.util.InterproUtil;
@@ -17,8 +18,10 @@ import java.util.TreeSet;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.biojava.nbio.aaproperties.PeptideProperties;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
-
+import static br.edu.ifsc.bioinfo.fast.util.log.LoggerUtil.*;
+import static org.biojava.nbio.aaproperties.Utils.*;
 /**
  * @author renato.simoes
  */
@@ -32,7 +35,7 @@ public class Protein {
     private Integer phobiusTM = 0;
     private boolean phobiusSP = false;
     private String signalp5 = "";
-    private String localBlastHit = "";
+    private String localAlignmentHit = "";
     private ArrayList<Domain> nglycDomains = new ArrayList<>();
     private ArrayList<Domain> erretDomains = new ArrayList<>();
 
@@ -56,6 +59,10 @@ public class Protein {
     public Protein(String id, String sequence) {
         this.id = id;
         this.sequence = sequence;
+        removeLastStopCodon();
+        if(Parameters.TRUNCATE_SEQUENCE){
+            truncateSequence();
+        }
     }
 
     public TreeSet<String> getSeparatedGO() {
@@ -135,12 +142,12 @@ public class Protein {
         }
     }
 
-    public void setLocalBlastHit(String localBlastHit) {
-        this.localBlastHit = localBlastHit;
+    public void setLocalAlignmentHit(String localAlignmentHit) {
+        this.localAlignmentHit = localAlignmentHit;
     }
 
-    public String getLocalBlastHit() {
-        return localBlastHit;
+    public String getLocalAlignmentHit() {
+        return localAlignmentHit;
     }
 
     public void setTransmembrane(Integer transmembrane) {
@@ -323,7 +330,7 @@ public class Protein {
         json.put("phobius_tm", phobiusSP);
         json.put("signalp5", signalp5);
         json.put("phobius_sp", phobiusSP);
-        json.put("local_blast_hit", localBlastHit);
+        json.put("local_alignment_hit", localAlignmentHit);
         json.put("gpi-anchored", gpi);
         json.put("gpi-anchored-evidence", gpiEvidence);
         json.put("membrane", membraneEvidences.size());
@@ -403,7 +410,7 @@ public class Protein {
             membraneEvidences.add("PHOBIUS_TM");
         }
 
-        if (subcellularLocalization.contains("plas")) {
+        if (subcellularLocalization.toLowerCase().contains("plas")) {
             membraneEvidences.add("SL");
         }
 
@@ -457,4 +464,22 @@ public class Protein {
         return String.format(">%s\n%s", id, sequence);
     }
 
+    public void removeLastStopCodon(){
+        if(sequence.endsWith("*")){
+            debug(id+ " - Removing the last stop codon from the sequence");
+            sequence=sequence.substring(0,sequence.length()-1);
+        }
+    }
+
+    public boolean isSequenceValid(){
+        return !doesSequenceContainInvalidChar(sequence, PeptideProperties.standardAASet);
+    }
+
+    public void truncateSequence(){
+        if(!isSequenceValid()) {
+            debug(id+ " - removing all non-aminoacid code from the sequence");
+            String newSequence = cleanSequence(sequence, PeptideProperties.standardAASet);
+            sequence = newSequence.replaceAll("-", "");
+        }
+    }
 }

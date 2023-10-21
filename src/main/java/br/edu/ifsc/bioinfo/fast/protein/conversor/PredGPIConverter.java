@@ -7,6 +7,7 @@ package br.edu.ifsc.bioinfo.fast.protein.conversor;
 
 import br.edu.ifsc.bioinfo.fast.util.CommandRunner;
 import br.edu.ifsc.bioinfo.fast.protein.Parameters;
+import br.edu.ifsc.bioinfo.fast.util.FastTime;
 import br.edu.ifsc.bioinfo.fast.util.FileUtils;
 import br.edu.ifsc.bioinfo.fast.util.GeneOntologyUtil;
 
@@ -23,14 +24,16 @@ public class PredGPIConverter {
     private HashMap<String, Boolean> map = new HashMap<>();
     private HashMap<String, String> mapGOEnvidence = new HashMap<>();
     private File fasta;
+    public FastTime fastTime = new FastTime();
 
     public PredGPIConverter(File fasta) {
         this.fasta = fasta;
     }
 
     public void execute() {
+        fastTime.start();
         Parameters.pause();
-        info("Executing PredGPI");
+        info("Executing PredGPI - Search for Glycosylphosphatidylinositol (GPI) domain");
         try {
             if (fasta == null) {
                 throw new IOException("Fasta file is null");
@@ -39,7 +42,9 @@ public class PredGPIConverter {
             if(predgpi == null) {
                 String command = String.format("%s/bin/predgpi.sh %s %s", Parameters.FAST_PROTEIN_HOME, fasta.getAbsolutePath(), Parameters.getTemporaryFile("predgpi.txt"));
                 debug("Command: " + command);
+                fastTime.startStep();
                 CommandRunner.run(command);
+                fastTime.endStep();
                 predgpi = new File(Parameters.getTemporaryFile("predgpi.txt"));
             }else {
                 info("Processing existing file - " + predgpi.getAbsolutePath());
@@ -71,6 +76,8 @@ public class PredGPIConverter {
             error("Predgpi not executed, this feature will be skipped.");
             error("\t"+ex.getMessage());
         }
+        fastTime.end();
+        fastTime.showTime();
     }
 
     public Boolean isGPIAnchored(String id) {

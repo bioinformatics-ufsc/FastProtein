@@ -7,6 +7,7 @@ package br.edu.ifsc.bioinfo.fast;
 
 import br.edu.ifsc.bioinfo.fast.protein.FastProtein;
 import br.edu.ifsc.bioinfo.fast.protein.Parameters;
+import br.edu.ifsc.bioinfo.fast.protein.conversor.AlignerLocalConverter;
 import br.edu.ifsc.bioinfo.fast.protein.conversor.SignalP5Converter;
 import br.edu.ifsc.bioinfo.fast.protein.conversor.WolfPsortConverter;
 import br.edu.ifsc.bioinfo.fast.util.CommandRunner;
@@ -52,8 +53,14 @@ public class BiolibMain implements Callable<Integer> {
             defaultValue = "false")
     String interpro;
 
-    @CommandLine.Option(names = {"-db", "--db_blast"}, description = "FASTA file used to create a database for a local blastp query")
-    File fastaBlastDb;
+    @CommandLine.Option(names = {"-db", "--db-align"}, description = "FASTA file used to create a database for a local query")
+    File fastaDb;
+
+    @CommandLine.Option(names = {"-am", "--align-method"}, description = "Choose the alignment method:\n " +
+            "\t blast \n" +
+            "\t diamond (default)\n"
+            , defaultValue = "diamond")
+    AlignerLocalConverter.AlignerEnum aligner;
 
     @CommandLine.Option(names = {"-log", "--log"}, description = "(Advanced) Level of Log4J. Choose only one:\n" +
             "OFF,INFO,ALL"
@@ -68,18 +75,26 @@ public class BiolibMain implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        init();
+        Parameters.FAST_PROTEIN_HOME = ".";
+        Parameters.createTempDir();
+        String outputfolder = "fastprotein";
+        File fileOutputFolder = new File(outputfolder);
+        if (fileOutputFolder.exists())
+            org.apache.commons.io.FileUtils.deleteDirectory(fileOutputFolder);
+        fileOutputFolder.mkdirs();
+
+        init(outputfolder);
         setLevel(logLevel);
         boolean interpro = this.interpro.equals("true");
 
-        Parameters.FAST_PROTEIN_HOME = ".";
+
 
         Parameters.INTERPRO_HOME = interproHome;
 
-        Parameters.createTempDir();
+
 
         debug("Setting permissions - init");
-        chmod(String.format("%s/bin/blast.sh", Parameters.FAST_PROTEIN_HOME));
+        chmod(String.format("%s/bin/blastp.sh", Parameters.FAST_PROTEIN_HOME));
         chmod(String.format("%s/bin/fastprotein.sh", Parameters.FAST_PROTEIN_HOME));
         chmod(String.format("%s/bin/interproscan.sh", Parameters.FAST_PROTEIN_HOME));
         chmod(String.format("%s/bin/phobius.sh", Parameters.FAST_PROTEIN_HOME));
@@ -89,7 +104,7 @@ public class BiolibMain implements Callable<Integer> {
         chmod(String.format("%s/bin/wolfpsort.sh", Parameters.FAST_PROTEIN_HOME));
 
         debug("Setting permissions - done");
-        FastProtein.run(input, wolfpsortType, signalPorganism, fastaBlastDb, interpro, "fastprotein", Main.Source.biolib);
+        FastProtein.run(input, wolfpsortType, signalPorganism, fastaDb, aligner, interpro, outputfolder, Main.Source.biolib);
         return 0;
 
     }

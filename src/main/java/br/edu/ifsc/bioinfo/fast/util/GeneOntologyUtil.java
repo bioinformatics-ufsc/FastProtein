@@ -98,9 +98,12 @@ public class GeneOntologyUtil {
             if (term != null) {
                 return term.getDescription();
             }
+
             return "";
         } catch (Exception e) {
-            error(String.format("GO %s not found: %s\n", go, e.getMessage()));
+            debug(String.format("GO %s not found: %s\n", go, e.getMessage()));
+            debug("To avoid this error, update the file /bioinformatic/fastprotein/data/obo.obo:");
+            debug("   /bioinformatic/fastprotein/bin/update_gos.sh");
             return "";
         }
     }

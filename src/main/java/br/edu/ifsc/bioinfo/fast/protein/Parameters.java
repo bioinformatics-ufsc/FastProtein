@@ -6,9 +6,12 @@
 package br.edu.ifsc.bioinfo.fast.protein;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -18,6 +21,8 @@ import static br.edu.ifsc.bioinfo.fast.util.log.LoggerUtil.*;
  * @author renato
  */
 public class Parameters {
+    public static boolean TRUNCATE_SEQUENCE = false;
+    public static boolean DELETE_TEMP_FILE = true;
     public static int INTERPRO_SPLIT = 500;
 
     public static String FAST_PROTEIN_HOME = ".";
@@ -27,6 +32,8 @@ public class Parameters {
     public static boolean PAUSE = false;
 
     public static String EMAIL_EBI_WS = "renato.simoes@ifsc.edu.br";
+
+    private static ArrayList<File> filesToDelete = new ArrayList<>();
 
     public static void createTempDir() {
         try {
@@ -61,6 +68,30 @@ public class Parameters {
             Scanner s = new Scanner(System.in);
             System.out.println("Press enter to continue");
             s.nextLine();
+        }
+    }
+    public static void addFileToDelete(File file){
+        debug("File added to be removed: " + file.getAbsolutePath());
+        filesToDelete.add(file);
+    }
+    public static void addFilesToDelete(List<File> files){
+        for(File file: files){
+            addFileToDelete(file);
+        }
+    }
+
+
+    public static void deleteTempFiles(){
+        if(DELETE_TEMP_FILE) {
+            debug("Delete temporary files:");
+            for (File file : filesToDelete) {
+                debug("\t" + file.getAbsolutePath());
+                try {
+                    Files.deleteIfExists(file.toPath());
+                } catch (IOException e) {
+                    debug("Error: " + e.getMessage());
+                }
+            }
         }
     }
 }

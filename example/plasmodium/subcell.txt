@@ -1,9 +1,0 @@
-wolfsort	localization	proteins
-cyto	Cytosol	60
-nucl	Nucleus	29
-mito	Mitochondrion	13
-plas	Plasma membrane	13
-E.R.	Endoplasmic Reticulum	5
-cyto_nucl	Other	2
-extr	Extracellular	2
-pero	Peroxisome	1

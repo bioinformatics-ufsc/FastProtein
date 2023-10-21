@@ -44,7 +44,7 @@ arguments:
     required: false
   -
     key: --interpro
-    description: 'Do you want to perform InterproScan (slow)? (For big dataset (100+ proteins),
+    description: 'Do you want to perform InterproScan? (For big dataset (200+ proteins),
                   we recommend to run in terminal, it may cause timeout)'
     default_value: 'true'
     type: radio
@@ -54,8 +54,8 @@ arguments:
       'No': 'false'
 
   -
-    description: 'Do you want to perform a Local BLAST? Inform here your FASTA for DB'
-    key: --db_blast
+    description: 'Do you want to perform a search by similarity (Diamond)? Inform here your FASTA for DB'
+    key: -db
     required: false
     type: file
 

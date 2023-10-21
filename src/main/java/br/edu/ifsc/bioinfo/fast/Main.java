@@ -7,6 +7,7 @@ package br.edu.ifsc.bioinfo.fast;
 
 import br.edu.ifsc.bioinfo.fast.protein.FastProtein;
 import br.edu.ifsc.bioinfo.fast.protein.Parameters;
+import br.edu.ifsc.bioinfo.fast.protein.conversor.AlignerLocalConverter;
 import br.edu.ifsc.bioinfo.fast.protein.conversor.SignalP5Converter;
 import br.edu.ifsc.bioinfo.fast.protein.conversor.WolfPsortConverter;
 import br.edu.ifsc.bioinfo.fast.util.CommandRunner;
@@ -20,7 +21,6 @@ import org.apache.log4j.Level;
 import picocli.CommandLine;
 
 import java.io.File;
-import java.util.Scanner;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "FastProtein-1", requiredOptionMarker = '*', abbreviateSynopsis = true,
@@ -54,16 +54,27 @@ public class Main implements Callable<Integer> {
             defaultValue = "false")
     boolean interpro;
 
-    @CommandLine.Option(names = {"-db", "--db-blast"}, description = "FASTA file used to create a database for a local blastp query")
-    File fastaBlastDb;
+    @CommandLine.Option(names = {"-dp", "--interprodp"},
+            description = "Add -dp flag in interproscan command \n",
+            defaultValue = "false")
+    boolean interproDp;
+
+    @CommandLine.Option(names = {"-db", "--db-align"}, description = "FASTA file used to create a database for a local blastp query")
+    File fastaDb;
+
+    @CommandLine.Option(names = {"-am", "--align-method"}, description = "Choose the alignment method:\n " +
+            "\t blastp \n" +
+            "\t diamond (default)\n"
+            , defaultValue = "diamond")
+    AlignerLocalConverter.AlignerEnum aligner;
 
     @CommandLine.Option(names = {"-o", "--output"}, description = "Output folder for generated file (default is 'fastprotein_results')", defaultValue = "fastprotein_results")
     String outputFolder;
 
-    @CommandLine.Option(names = {"-zip", "--zip"}, description = "Zip your output folder", defaultValue = "false")
+    @CommandLine.Option(names = {"-zip", "--zip"}, description = "Zip your output folder (default is false)", defaultValue = "false")
     boolean zip;
 
-    @CommandLine.Option(names = {"-log", "--log"}, description = "(Advanced) Level of Log4J. Choose only one:\n" +
+    @CommandLine.Option(names = {"-log", "--log"}, description = "(Advanced) Level of Log4J. Choose only one (default is INFO):\n" +
             "OFF,INFO,ALL"
             , defaultValue = "INFO", converter = LevelConverter.class)
     Level logLevel;
@@ -75,7 +86,7 @@ public class Main implements Callable<Integer> {
 
 
     @CommandLine.Option(names = {"-ipr_split", "--interpro_split"},
-            description = "Split a file in <ipr_split> proteins group." , defaultValue = "500")
+            description = "Split a file in <ipr_split> proteins group. (default is 500)" , defaultValue = "500")
     int interproSplit;
 
 
@@ -84,16 +95,29 @@ public class Main implements Callable<Integer> {
     String copyOutputContentTemp;
 
     @CommandLine.Option(names = {"-pause", "--pause]"},
-            description = "Pause the processing after each third-party software execution (requires typing enter to continue)." ,
+            description = "Pause the processing after each third-party software execution (requires typing enter to continue, default is false)." ,
             defaultValue = "false")
     boolean pause;
 
+    @CommandLine.Option(names = {"-dtf", },
+            description = "Delete temporary files (default is true) \n",
+            defaultValue = "true")
+    boolean deleteTempFile;
+
+
+    @CommandLine.Option(names = {"-ts","-truncate" },
+            description = "Truncate sequence - remove all non-aminoacid code from the entire sequence (default is false)\n",
+            defaultValue = "false")
+    boolean truncateSequence;
+
+
     @Override
     public Integer call() throws Exception {
-        init();
-        setLevel(logLevel);
-
+        Parameters.ZIP = zip;
         Parameters.PAUSE=pause;
+        Parameters.DELETE_TEMP_FILE=deleteTempFile;
+        Parameters.TRUNCATE_SEQUENCE = truncateSequence;
+
         String fastproteinHome = System.getenv("FASTPROTEIN_HOME");
 
         if (StringUtils.isNotBlank(fastproteinHome)) {
@@ -101,6 +125,16 @@ public class Main implements Callable<Integer> {
         } else {
             Parameters.FAST_PROTEIN_HOME = ".";
         }
+        Parameters.createTempDir();
+        File fileOutputFolder = new File(outputFolder);
+        if (fileOutputFolder.exists())
+            org.apache.commons.io.FileUtils.deleteDirectory(fileOutputFolder);
+        fileOutputFolder.mkdirs();
+
+
+
+        init(outputFolder);
+        setLevel(logLevel);
 
         Parameters.INTERPRO_HOME = System.getenv("INTERPRO_HOME");
         debug("InterProScan Home (env) = " + Parameters.INTERPRO_HOME);
@@ -115,9 +149,6 @@ public class Main implements Callable<Integer> {
         Parameters.INTERPRO_SPLIT=interproSplit;
         debug("InterProScan Home = " + Parameters.INTERPRO_HOME);
 
-        Parameters.ZIP = zip;
-
-        Parameters.createTempDir();
 
 
         if(!copyOutputContentTemp.isEmpty()){
@@ -127,7 +158,7 @@ public class Main implements Callable<Integer> {
             Parameters.pause();
         }
 
-        FastProtein.run(input, wolfpsortType, signalPorganism, fastaBlastDb, interpro, outputFolder, Source.other);
+        FastProtein.run(input, wolfpsortType, signalPorganism, fastaDb, aligner, interpro, outputFolder, Source.other);
         return 0;
 
     }

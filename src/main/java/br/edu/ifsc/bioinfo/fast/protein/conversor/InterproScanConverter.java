@@ -9,6 +9,7 @@ import br.edu.ifsc.bioinfo.fast.util.CommandRunner;
 import br.edu.ifsc.bioinfo.fast.protein.Parameters;
 import br.edu.ifsc.bioinfo.fast.protein.entity.Protein;
 import br.edu.ifsc.bioinfo.fast.util.FASTASplitter;
+import br.edu.ifsc.bioinfo.fast.util.FastTime;
 import br.edu.ifsc.bioinfo.fast.util.FileUtils;
 
 import java.io.BufferedWriter;
@@ -53,6 +54,7 @@ public class InterproScanConverter {
     public static final String INTERPRO_ANNOTATIONS_DESCRIPTION = "InterPro_annotations_description";
     public static final String GO_ANNOTATIONS = "GO_annotations";
     public static final String ADDITIONAL = "Additional";
+    public FastTime fastTime = new FastTime();
 
     private File fasta;
     private static String[] header = {PROTEIN_ACCESSION, SEQUENCE_MD5_DIGEST, SEQUENCE_LENGTH, ANALYSIS, SIGNATURE_ACCESSION, SIGNATURE_DESCRIPTION, START_LOCATION, STOP_LOCATION, SCORE, STATUS, DATE, INTERPRO_ANNOTATIONS_ACCESSION, INTERPRO_ANNOTATIONS_DESCRIPTION, GO_ANNOTATIONS};
@@ -79,19 +81,25 @@ public class InterproScanConverter {
                 Parameters.getTemporaryFile("interpro/"),
                 disablePreCalc?"-dp":"");
         debug("Command: " + command);
+        fastTime.startStep();
         CommandRunner.run(command);
+        fastTime.endStep();
         return new File(arqResult).exists();
     }
 
     public File executeLocal() {
+        boolean error=false;
         Parameters.pause();
+        ArrayList<File> filesToDelete = new ArrayList<>();
         int count = 3;
         if (isInstalled()) {
             try {
-                ArrayList<File> filesToDelete = new ArrayList<>();
-                info("Executing InterproScan - This step is complex and may significantly increase the processing time. But it's worth it! :)");
-                debug("Spliting file");
+
+                info("Executing InterProScan - Search for Gene Ontology");
+                info("   This step is complex and may significantly increase the processing time. But it's worth it! :)");
+                debug("Splitting file");
                 List<File> files = FASTASplitter.subfasta(proteins, Parameters.INTERPRO_SPLIT, "interpro");
+                filesToDelete.addAll(files);
                 debug(files.size() + " generated");
                 ArrayList<File> generated = new ArrayList<>();
                 for (File file : files) {
@@ -101,11 +109,13 @@ public class InterproScanConverter {
                         if (fileProcess == null) {
                             boolean fileGenerate = execute(file, false);
                             if (!fileGenerate) {
+                                error = true;
                                 info(" " + file.getName() + " not generated, we will try to run calculation locally (see -dp parameter in InterProScan command)");
                                 fileGenerate = execute(file, true);
                             }
 
                             if (fileGenerate) {
+                                error = false;
                                 String arqResult = file.getAbsolutePath() + ".txt";
                                 fileProcess = new File(arqResult);
                                 debug("Adding file to process: " + fileProcess);
@@ -114,10 +124,17 @@ public class InterproScanConverter {
                                 filesToDelete.add(file);
                             } else {
                                 info("File not found " + file.getName() + ".txt" + " this dataset will be ignored");
-                                info("This is a InterProScan problem, caused mainly by network issues.");
+                                info("This error was caused by InterProScan, probably due to network issues. " +
+                                                "\nInterProScan queries a remote server to speed up its execution. " +
+                                                "\nCheck if there is any network blocking for 'www.ebi.ac.uk'. " );
+
                             }
                         } else {
                             info("Processing existing file - " + fileProcess.getAbsolutePath());
+                            debug("Adding file to process: " + fileProcess);
+                            generated.add(fileProcess);
+                            debug("Adding file to delete in the end of the process" + file.getAbsolutePath());
+                            filesToDelete.add(file);
                         }
                     }catch(Exception e){
                         info("Error processing the file: " +file.getAbsolutePath() +" skipping it");
@@ -126,7 +143,7 @@ public class InterproScanConverter {
                 }
                 debug("Join interpro files: " + generated.size());
                 ArrayList<String> allLines = new ArrayList<>();
-                boolean error=false;
+
                 for (File arq : generated) {
                     if (arq != null) {
                         debug("Processing: " + arq.getAbsolutePath());
@@ -149,9 +166,7 @@ public class InterproScanConverter {
                     info("This flag will copy all your generated files and will process again! (You will save some precious minutes! :D)");
                     System.exit(0);
                 }else{
-                    for(File file: filesToDelete){
-
-                    }
+                    Parameters.addFilesToDelete(filesToDelete);
                 }
 
                 debug("Creating interproTemp.tsv");
@@ -190,26 +205,33 @@ public class InterproScanConverter {
                     sb.append(String.join("\n", lines));
                     File interprotsv = new File(Parameters.getTemporaryFile("interpro.tsv"));
                     FileWriter fw = new FileWriter(interprotsv);
-
                     fw.write(sb.toString());
                     fw.close();
-                    File interprotemp = new File(Parameters.getTemporaryFile("interpro"));
+
+                    File interprotemp = new File(Parameters.getTemporaryFile("interproTemp.tsv"));
                     if (interprotemp.exists()) {
-                        debug("Interpro - Deleting temp dir: " + interprotemp);
-                        interprotemp.deleteOnExit();
+                        Parameters.addFileToDelete(interprotemp);
                     }
-                    debug("Interpro - Generating interpro.tsv - " + interprotsv);
-                    //interproResult.delete();
+                    debug("Interpro - Generating interpro.tsv ");
                     debug("Generating file end - " + interprotsv.getAbsolutePath());
                     return interprotsv;
                 } else {
-                    throw new Exception("Interpro - File not found: " + interproResult.getAbsolutePath());
+                    info("Interpro - File not found: " + interproResult.getAbsolutePath());
+                    info("There are some missing files. We are interrupting the process because it may cause inconsistencies in the final interpro.tsv output");
+                    info("Run again your data with flag -cdt "+Parameters.TEMP_DIR);
+                    info("This flag will copy all your generated files and will process again! (You will save some precious minutes! :D)");
+                    System.exit(0);
                 }
 
             } catch (Exception ex) {
-                error("Interproscan not executed, this feature will be skipped. Error:");
-                error("\t" + ex.getMessage());
+                info("InterProScan not executed, this feature will be skipped. Try to run again. Error:");
+                info("\t" + ex.getMessage());
+                System.exit(0);
             }
+        }else{
+            info("InterProScan not Installed. Remove the flags -ipr or check the installation process at https://github.com/bioinformatics-ufsc/FastProtein");
+
+            System.exit(0);
         }
         return null;
 
@@ -217,20 +239,22 @@ public class InterproScanConverter {
 
 
     public void updateProteins(List<Protein> proteins) {
+        fastTime.start();
         File iprFile = FileUtils.hasFileOnTemp("interpro.tsv");
         if (iprFile == null) {
             iprFile = executeLocal();
             if(iprFile!=null){
-                info("Processing existing file - " + iprFile.getAbsolutePath());
+                debug("Processing existing file - " + iprFile.getAbsolutePath());
                 updateProteins(proteins, iprFile);
             }else{
                 info("File not found - interpro.tsv");
             }
         } else {
             info("Processing existing file - " + iprFile.getAbsolutePath());
+            updateProteins(proteins, iprFile);
         }
-
-
+        fastTime.end();
+        fastTime.showTime();
     }
 
     public void updateProteins(List<Protein> proteins, File iprFile) {
@@ -240,7 +264,7 @@ public class InterproScanConverter {
                 CsvReadOptions options = CsvReadOptions.builder(iprFile).separator('\t').build();
                 Table tabela = Table.read().csv(options);
                 if (tabela.rowCount() == 0) {
-                    error("InterproScan - no rows to analyze");
+                    error("InterProScan - no rows to analyze");
                     return;
                 }
                 ArrayList<String> wego = new ArrayList<>();

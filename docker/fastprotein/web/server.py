@@ -108,20 +108,20 @@ def upload():
         print("interpro=yes")
         params.extend(['--interpro'])
 
-    fileBlast = request.files['fastaBlast']
-    local_blast = False
-    if fileBlast.filename != '':
-        inputBlast = output_folder+'/'+run_id+'-blastdb.fasta'
-        fileBlast.save(inputBlast)
-        if is_fasta_file(inputBlast):
-            print('File saved: ' + inputBlast)
+    file_db = request.files['fastaSearch']
+    local_search = False
+    if file_db.filename != '':
+        inputDB = output_folder+'/'+run_id+'-db.fasta'
+        file_db.save(inputDB)
+        if is_fasta_file(inputDB):
+            print('File saved: ' + inputDB)
             print("local blast=true")
-            params.extend(['--local-blast', inputBlast])
-            local_blast = True
+            params.extend(['-db', inputDB])
+            local_search = True
         else:
             error = 'Local Blast DB is not a FASTA file. Please check the file and try again.'
             print('Error: ' + error)
-            os.remove(inputBlast)
+            os.remove(inputDB)
             return error
 
     params.extend(['-zip'])
@@ -136,8 +136,8 @@ def upload():
     print('Result files: ' +  folder +".zip")
     print('Removing input files')
     subprocess.run(['rm', inputFasta])
-    if local_blast:
-        subprocess.run(['rm', inputBlast])
+    if local_search:
+        subprocess.run(['rm', inputDB])
     subprocess.run(['rm', '-r', folder])
 
     return redirect(url_for('index'))

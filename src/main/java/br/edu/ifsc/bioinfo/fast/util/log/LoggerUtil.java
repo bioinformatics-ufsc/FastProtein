@@ -7,14 +7,14 @@ import java.io.IOException;
 
 public class LoggerUtil {
     private static final Logger logger = LogManager.getLogger(LoggerUtil.class);
-    public static void init(){
+    public static void init(String outputfolder){
         FileAppender fileAppender = null;
         try {
-            String logFilePath = Parameters.getTemporaryFile("console.log"); // Define the log file path dynamically
+            String logFilePath = outputfolder+"/console.log"; // Define the log file path dynamically
             fileAppender = new FileAppender(new PatternLayout("%d{yy/MM/dd HH:mm:ss} %p: %m%n"), logFilePath);
             debug("Logger output file: " + logFilePath);
             logger.addAppender(fileAppender);
-
+            fileAppender.setImmediateFlush(true);
 
         } catch (IOException e) {
             e.printStackTrace();

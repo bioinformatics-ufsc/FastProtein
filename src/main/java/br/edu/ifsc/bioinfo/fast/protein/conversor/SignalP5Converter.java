@@ -9,6 +9,7 @@ import br.edu.ifsc.bioinfo.fast.util.CommandRunner;
 import br.edu.ifsc.bioinfo.fast.protein.Parameters;
 import br.edu.ifsc.bioinfo.fast.protein.entity.Protein;
 import br.edu.ifsc.bioinfo.fast.util.FASTASplitter;
+import br.edu.ifsc.bioinfo.fast.util.FastTime;
 import br.edu.ifsc.bioinfo.fast.util.FileUtils;
 
 import java.io.File;
@@ -40,19 +41,23 @@ public class SignalP5Converter {
     private HashMap<String, String> map = new HashMap<>();
     private File fasta;
 
+    public FastTime fastTime = new FastTime();
+
     public SignalP5Converter(File fasta) {
         this.fasta = fasta;
     }
 
     public void execute(Organism org, ArrayList<Protein> proteins) {
+        fastTime.start();
         Parameters.pause();
-        info("Executing SignalP-5");
+        info("Executing SignalP-5 - Search for signal peptide");
         try {
 
             File signalpFile = FileUtils.hasFileOnTemp("signalp5.txt");
             if (signalpFile == null) {
                 debug("Spliting file");
                 List<File> files = FASTASplitter.subfasta(proteins, 3000, "signalp");
+                Parameters.addFilesToDelete(files);
                 debug(files.size() + " generated");
                 ArrayList<File> generated = new ArrayList<>();
                 for (File file : files) {
@@ -60,12 +65,17 @@ public class SignalP5Converter {
 
                     String command = String.format("%s/bin/signalp5.sh %s %s %s", Parameters.FAST_PROTEIN_HOME, file.getAbsolutePath(), org.toString(), arqResult);
                     debug("Command:" + command);
+                    fastTime.startStep();
                     CommandRunner.run(command);
+                    fastTime.endStep();
                     File fileProcess = new File(arqResult);
-                    debug("Adding file to process: " + arqResult);
-                    generated.add(fileProcess);
-                    file.delete();
-                    debug("Deleting file to process" + arqResult);
+                    if(fileProcess.exists()) {
+                        debug("Adding file to process: " + arqResult);
+                        generated.add(fileProcess);
+                        Parameters.addFileToDelete(fileProcess);
+                    }else{
+                        info("File not found: " + arqResult);
+                    }
 
                 }
                 debug("Adding header in SignalP5 file");
@@ -83,7 +93,6 @@ public class SignalP5Converter {
                             }
                         }
                     }
-                    file.delete();
                 }
                 signalpFile = FileUtils.createFile(signalPout.toString(), "signalp5.txt");
                 debug("Creating Signalp5 file " + Parameters.getTemporaryFile("signalp5.txt"));
@@ -110,6 +119,8 @@ public class SignalP5Converter {
             error("SignalP5 not executed, this feature will be skipped.");
             error("\t" + ex.getMessage());
         }
+        fastTime.end();
+        fastTime.showTime();
     }
 
     public String getSignal(String id) {

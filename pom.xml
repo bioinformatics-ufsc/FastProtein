@@ -166,7 +166,7 @@
                         <phase>install</phase>
                         <configuration>
                             <target>
-                                <!-- copy jar file to docker container - PLEASE CHANGE the variavel docker.container
+                                <!-- copy jar file to docker container - PLEASE CHANGE the variable docker.container
                                  if you want a deploy without recreate the container-->
                                 <exec executable="docker">
                                     <arg value="cp"/>

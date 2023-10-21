@@ -59,15 +59,14 @@ public class FileUtils {
 
     public static File hasFileOnTemp(String file) {
         File arq = new File(Parameters.getTemporaryFile(file));
-        debug("Looking for "+Parameters.getTemporaryFile(file));
+        debug("Looking for " + Parameters.getTemporaryFile(file));
         if (arq.exists()) {
             debug("    --->exists.");
             return arq;
-        }
-        else{
-            arq = new File(Parameters.getTemporaryFile("raw/"+file));
-            debug("Looking for "+Parameters.getTemporaryFile("raw/"+file));
-            if(arq.exists()){
+        } else {
+            arq = new File(Parameters.getTemporaryFile("raw/" + file));
+            debug("Looking for " + Parameters.getTemporaryFile("raw/" + file));
+            if (arq.exists()) {
                 debug("    --->exists.");
                 return arq;
             }
@@ -76,14 +75,30 @@ public class FileUtils {
     }
 
     public static File createFile(String content, String fileOut) throws IOException {
-        FileWriter fw = null;
+        /*FileWriter fw = null;
         File outfile = new File(Parameters.getTemporaryFile(fileOut));
         if (outfile.exists())
             outfile.delete();
         fw = new FileWriter(outfile);
         fw.append(content);
         fw.close();
-        return outfile;
+        return outfile;*/
+
+
+        // Create a FileWriter object with the file name
+        File file = new File(Parameters.getTemporaryFile(fileOut));
+
+        // Create a BufferedWriter object to write to the file
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
+
+        // Write to the file
+        writer.write(content);
+
+        // Close the BufferedWriter
+        writer.close();
+        return file;
+
+
     }
 
     public static void copyDirectory(File source, File destination) throws IOException {

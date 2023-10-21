@@ -70,14 +70,13 @@
 
                         <p/>
 
-                        <h6>BLAST Search</h6>
+                        <h6>Do you want to perform a search by similarity (Diamond)?</h6>
                         <p>PS: The first hit will be displayed in separate columns and associated with the query</p>
                         <div class="row mb-3">
-                            <label for="fastaBlast" class="col-sm-4 col-form-label">Local BLAST (fast) FASTA to
-                                query:
+                            <label for="fastaSearch" class="col-sm-4 col-form-label">Inform here your FASTA for DB:
                             </label>
                             <div class="col-sm-7">
-                                <input type="file" class="form-control" id="fastaBlast" name="fastaBlast"
+                                <input type="file" class="form-control" id="fastaSearch" name="fastaSearch"
                                        placeholder="FASTA file to process">
                             </div>
                         </div>
@@ -159,7 +158,7 @@
                                              class="img-fluid">
                                     </div>
                                     <div class="col">
-                                        <img src="{{ url_for('static', filename='img/lab.png') }}"
+                                        <img src="{{ url_for('static', filename='img/udesc.png') }}"
                                              class="img-fluid">
                                     </div>
 

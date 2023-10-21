@@ -7,6 +7,7 @@ package br.edu.ifsc.bioinfo.fast.protein.conversor;
 
 import br.edu.ifsc.bioinfo.fast.util.CommandRunner;
 import br.edu.ifsc.bioinfo.fast.protein.Parameters;
+import br.edu.ifsc.bioinfo.fast.util.FastTime;
 import br.edu.ifsc.bioinfo.fast.util.FileUtils;
 
 import java.io.File;
@@ -25,9 +26,11 @@ public class TMHMM2Converter {
         this.fasta = fasta;
     }
 
+    public FastTime fastTime = new FastTime();
     public void execute() {
+        fastTime.start();
         Parameters.pause();
-        info("Executing TMHMM-2.0c");
+        info("Executing TMHMM-2.0c - Search for transmembrane domains");
         try {
             if (fasta == null) {
                 throw new IOException("Fasta file is null");
@@ -36,7 +39,9 @@ public class TMHMM2Converter {
             if(fileTMHMM == null) {
                 String command = String.format("%s/bin/tmhmm2.sh %s %s %s", Parameters.FAST_PROTEIN_HOME, fasta.getAbsolutePath(), Parameters.getTemporaryFile("tmhmm2.txt"), Parameters.TEMP_DIR);
                 debug("Command: " + command);
+                fastTime.startStep();
                 CommandRunner.run(command);
+                fastTime.endStep();
                 fileTMHMM = new File(Parameters.getTemporaryFile("tmhmm2.txt"));
             }else {
                 info("Processing existing file - " + fileTMHMM.getAbsolutePath());
@@ -62,6 +67,8 @@ public class TMHMM2Converter {
             error("TMHMM not executed, this feature will be skipped.");
             error("\t"+ex.getMessage());
         }
+        fastTime.end();
+        fastTime.showTime();
     }
 
     public Integer getTotalTransmembrane(String id) {
