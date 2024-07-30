@@ -194,12 +194,12 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 1. Pull an image to host (clean, without InterProScan) - 
 ```bash
    #Light version 900Mb compressed
-   docker pull bioinfoufsc/fastprotein:latest
+   docker pull bioinfoufsc/fastprotein
 ```
 2. Pull a image to host (with InterProScan)
 ```bash
    #Full version with interpro installed (don't need to execute Step 4, just change the image name in the end of the command)
-   docker pull bioinfoufsc/fastprotein-interproscan:latest
+   docker pull bioinfoufsc/fastprotein-interpro
 ```
 
 ### **Controlling Docker container (mandatory)**
