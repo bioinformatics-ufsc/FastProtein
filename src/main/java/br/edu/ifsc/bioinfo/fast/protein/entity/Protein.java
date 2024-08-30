@@ -52,6 +52,8 @@ public class Protein {
     private TreeSet<String> membraneEvidences;
     private TreeSet<String> membraneFullEvidences;
 
+    private String description;
+
     public Protein(String id) {
         this.id = id;
     }
@@ -320,23 +322,25 @@ public class Protein {
         this.signalp5 = signalp5;
     }
 
-    public String toJson() {
+    public String toJson() throws Exception{
         JSONObject json = new JSONObject();
         json.put("id", id);
-        json.put("header", header);
-        json.put("sequence", sequence);
-        json.put("subcellular_localization", subcellularLocalization);
+        json.put("header", description.trim());
+        json.put("sequence", sequence.trim());
+        json.put("kda", getKdaStr());
+        json.put("isoelectric_point", getIsoelectricPointAvgStr());
+        json.put("aromaticity", getAromaticityStr());
+        json.put("subcellular_localization", subcellularLocalization.trim());
         json.put("tm", transmembrane);
-        json.put("phobius_tm", phobiusSP);
-        json.put("signalp5", signalp5);
+        json.put("phobius_tm", phobiusTM);
+        json.put("signalp5", signalp5.trim());
         json.put("phobius_sp", phobiusSP);
-        json.put("local_alignment_hit", localAlignmentHit);
+        json.put("local_alignment_hit", localAlignmentHit.trim());
         json.put("gpi-anchored", gpi);
-        json.put("gpi-anchored-evidence", gpiEvidence);
+        json.put("gpi-anchored-evidence", gpiEvidence.trim());
         json.put("membrane", membraneEvidences.size());
-        json.put("membrane_evidence", getMembraneEvidencesAsString());
-        json.put("membrane_evidence_complete", getMembraneFullEvidencesAsString());
-
+        json.put("membrane_evidence", getMembraneEvidencesAsString().trim());
+        json.put("membrane_evidence_complete", getMembraneFullEvidencesAsString().trim());
 
         JSONArray nglyc = new JSONArray();
         for (Domain nglycDomain : nglycDomains) {
@@ -462,6 +466,14 @@ public class Protein {
 
     public String getFasta() {
         return String.format(">%s\n%s", id, sequence);
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void removeLastStopCodon(){

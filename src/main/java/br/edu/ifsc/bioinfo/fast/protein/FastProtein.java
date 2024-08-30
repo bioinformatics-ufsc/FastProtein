@@ -37,6 +37,7 @@ public class FastProtein {
     private static long lastModified = new File(".").lastModified();
 
     private static FastTime fastTime = new FastTime();
+
     public enum Output {
         csv(",", ".csv"), tsv("\t", ".tsv"), txt("txt", ".txt"), sep("sep", ".sep");
         private final String separator;
@@ -59,7 +60,6 @@ public class FastProtein {
     public enum Field {
 
         ID("Id"), HEADER("Header"), LENGTH("Length"), KDA("kDa"), ISOELETRIC_POINT("Isoelectric_Point"), HYDROPATHY("Hydropathy"), AROMATICITY("Aromaticity"), SUBCELLULAR_LOCALIZATION("Localization"), ERR_TOTAL("ER_Retention_Total"), ERR_DOMAINS("ER_Retention_Domains"), NGLYC_TOTAL("NGlyc_Total"), NGLYC_DOMAINS("NGlyc_Domains"), SEQUENCE("Sequence"), TRANSMEMBRANE("TMHMM_2"),
-
         PHOBIUS_TM("Phobius_TM"), SIGNAL_P5("SignalP5"), PHOBIUS_SP("Phobius_SP"), PREDGPI("PredGPI"), MEMBRANE_EVIDENCE("Membrane_evidences"), MEMBRANE_EVIDENCE_DETAIL("Membrane_evidences_detail"), LOCAL_ALIGNMENT_DESC("Local_alignment_description"), GO_ANNOTATION("Gene_Ontology"), INTERPRO_ANNOTATION("Interpro_Annotation"), PFAM_ANNOTATION("PFAM_Annotation"), PANTHER_ANNOTATION("Panther_Annotation");
 
         private String description;
@@ -78,8 +78,8 @@ public class FastProtein {
     public static File generateFasta(ArrayList<Protein> proteins, String filename) throws IOException {
         ArrayList<String> sbFasta = new ArrayList<>();
         for (Protein protein : proteins) {
-                sbFasta.add(">" + protein.getId());
-                sbFasta.add(protein.getSequence());
+            sbFasta.add(">" + protein.getId());
+            sbFasta.add(protein.getSequence());
         }
         return createFile(String.join("\n", sbFasta), filename);
     }
@@ -92,7 +92,7 @@ public class FastProtein {
         }
     }
 
-    public static void run(File fileSource, WolfPsortConverter.Type psortType, SignalP5Converter.Organism signalPOption, File fastaDb, AlignerLocalConverter.AlignerEnum aligner, boolean interpro, String outputFolder, Main.Source source) throws IOException {
+    public static void run(File fileSource, WolfPsortConverter.Type psortType, SignalP5Converter.Organism signalPOption, String dbSearch, AlignerLocalConverter.AlignerEnum aligner, boolean interpro, String outputFolder, Main.Source source) throws IOException {
         fastTime.start();
 
         File fileTempDir = new File(Parameters.TEMP_DIR);
@@ -103,12 +103,26 @@ public class FastProtein {
             fileSource = new File(Parameters.getTemporaryFile(fileSource.getName()));
         } else {
             error("Error: invalid FASTA input. Please inform a FASTA file");
-            System.exit(0);
+            System.exit(1);
         }
 
-        if (fastaDb != null && fastaDb.exists() && fastaDb.isFile()) {
-            org.apache.commons.io.FileUtils.copyFileToDirectory(fastaDb, fileTempDir);
-            fastaDb = new File(Parameters.getTemporaryFile(fastaDb.getName()));
+        File dbFile = new File(dbSearch);
+
+        if (dbFile != null && dbFile.exists() && dbFile.isFile() && dbFile.getAbsolutePath().endsWith(".fasta")) {
+            org.apache.commons.io.FileUtils.copyFileToDirectory(dbFile, fileTempDir);
+            dbFile = new File(Parameters.getTemporaryFile(dbFile.getName()));
+        } else {
+            if (aligner == AlignerLocalConverter.AlignerEnum.blastp) {
+                if (!DatabaseValidator.isValidBlastDatabase(dbSearch)) {
+                    error("Error: invalid BlastDB " + dbSearch);
+                    System.exit(1);
+                }
+            } else if (aligner == AlignerLocalConverter.AlignerEnum.diamond) {
+                if (dbFile.exists() && !dbFile.getAbsolutePath().endsWith(".dmnd")) {
+                    error("Error: The provided file (" + dbSearch + ") is not a valid DIAMOND database. Please provide a valid .dmnd file.");
+                    System.exit(1);
+                }
+            }
         }
 
         LinkedHashMap<String, ProteinSequence> resp = null;
@@ -152,6 +166,7 @@ public class FastProtein {
             String sequence = s.getSequenceAsString().toUpperCase();
             Protein protein = new Protein(proteinId, sequence);
             protein.setHeader(s.getOriginalHeader());
+            protein.setDescription(FastaUtil.extractName(s.getOriginalHeader()));
 
             //Processing ER Retention
             Matcher erretMatcher = patternErret.matcher(sequence);
@@ -163,9 +178,9 @@ public class FastProtein {
             while (nGlycmatcher.find()) {
                 protein.addNglycDomain(new Domain(nGlycmatcher.group(), nGlycmatcher.start(), nGlycmatcher.end()));
             }
-            if(protein.isSequenceValid()){
+            if (protein.isSequenceValid()) {
                 proteins.add(protein);
-            }else{
+            } else {
                 debug(String.format("Protein %s is ignored because contains non-aminoacid code. \n", protein.getId()));
                 ignored.add(protein);
             }
@@ -174,17 +189,16 @@ public class FastProtein {
         info("Proteins in FASTA: " + resp.size());
         info("Proteins viable for analysis: " + proteins.size());
 
-
         File cleanFasta = generateFasta(proteins, "clean.fasta");
         debug("Clean FASTA generated " + cleanFasta.getAbsolutePath());
 
-        if(!ignored.isEmpty()) {
+        if (!ignored.isEmpty()) {
             info("Ignored proteins (contains * or X) : " + ignored.size());
             for (Protein prot : ignored) {
                 debug("  -> " + prot.getHeader());
             }
-            File ignoredFile = generateFasta(ignored,"ignored.fasta");
-            debug("Ignored proteins: " +ignoredFile.getAbsolutePath());
+            File ignoredFile = generateFasta(ignored, "ignored.fasta");
+            debug("Ignored proteins: " + ignoredFile.getAbsolutePath());
         }
 
         //Generate erret and n-glyc files
@@ -240,7 +254,6 @@ public class FastProtein {
             PhobiusConverter phobius = new PhobiusConverter(cleanFasta);
             phobius.execute();
             fastTime.addExternalCommand(phobius.fastTime.getExternalCommandsTotal());
-
 
             Summary summary = new Summary();
 
@@ -306,18 +319,20 @@ public class FastProtein {
             }
 
             AlignerLocalConverter localAlignmentConverter = new AlignerLocalConverter(aligner);
-            if (fastaDb != null && fastaDb.exists() && fastaDb.isFile()) {
-                localAlignmentConverter.process(cleanFasta, fastaDb);
-                fastTime.addExternalCommand(localAlignmentConverter.fastTime.getExternalCommandsTotal());
-
-            } else {
-                if (fastaDb == null) {
-                    info("Skipping - Alignment");
-                } else if (fastaDb.isDirectory()) {
-                    info("Error: inform a FASTA file to perform a local alignment.");
-                    System.exit(0);
+            if (!dbSearch.trim().isEmpty()) {
+                if (dbFile.getAbsolutePath().endsWith(".fasta") || dbFile.getAbsolutePath().endsWith(".dmnd")) {
+                    localAlignmentConverter.process(cleanFasta, dbFile.getAbsolutePath());
+                    fastTime.addExternalCommand(localAlignmentConverter.fastTime.getExternalCommandsTotal());
+                } else if (!dbSearch.trim().isEmpty() && aligner == AlignerLocalConverter.AlignerEnum.blastp && DatabaseValidator.isValidBlastDatabase(dbSearch)) {
+                    localAlignmentConverter.process(cleanFasta, dbSearch);
+                }else{
+                    error("Error. Check your database informed "+dbSearch);
+                    System.exit(1);
                 }
+            }else{
+                info("Skipping - Search for similarity");
             }
+
             //Calculate column size to formated report
             HashMap<Field, Integer> mapSize = new HashMap<>();
             for (Field value : Field.values()) {
@@ -363,7 +378,7 @@ public class FastProtein {
                     protein.setPhobiusSP(phobius.getSignalPeptide(protein.getId()));
                     protein.setPhobiusTM(phobius.getTM(protein.getId()));
 
-                    protein.setLocalAlignmentHit(localAlignmentConverter.getAnnotation(protein.getId()));
+                    protein.setLocalAlignmentHit(FastaUtil.extractName(localAlignmentConverter.getAnnotation(protein.getId())));
                     //Generate data in protein for membrane evidences
                     protein.processMembraneEvidences();
 
@@ -427,7 +442,7 @@ public class FastProtein {
                     replaceSize(protein.getErretDomainsAsString(), Field.ERR_DOMAINS, mapSize);
                     replaceSize(protein.getnGlycTotal().toString(), Field.NGLYC_TOTAL, mapSize);
                     replaceSize(protein.getnGlycDomainsAsString(), Field.NGLYC_DOMAINS, mapSize);
-                    replaceSize(protein.getHeader(), Field.HEADER, mapSize);
+                    replaceSize(protein.getDescription(), Field.HEADER, mapSize);
                     replaceSize(protein.getSequence(), Field.SEQUENCE, mapSize);
 
                 } catch (CompoundNotFoundException ex) {
@@ -513,12 +528,11 @@ public class FastProtein {
                 if (output == Output.csv || output == Output.tsv) {
                     StringBuilder sbOut = new StringBuilder();
                     sbOut.append(String.join(output.getSeparator(), Field.ID.toString(), Field.LENGTH.toString(), Field.KDA.toString(), Field.ISOELETRIC_POINT.toString(), Field.HYDROPATHY.toString(), Field.AROMATICITY.toString(), Field.SUBCELLULAR_LOCALIZATION.toString(), Field.TRANSMEMBRANE.toString(), Field.PHOBIUS_TM.toString(), Field.PREDGPI.toString(), Field.MEMBRANE_EVIDENCE.toString(), Field.MEMBRANE_EVIDENCE_DETAIL.toString(), Field.SIGNAL_P5.toString(), Field.PHOBIUS_SP.toString(), Field.ERR_TOTAL.toString(), Field.NGLYC_TOTAL.toString(), Field.ERR_DOMAINS.toString(),
-
                             Field.NGLYC_DOMAINS.toString(), Field.HEADER.toString(), Field.LOCAL_ALIGNMENT_DESC.toString(), Field.GO_ANNOTATION.toString(), Field.INTERPRO_ANNOTATION.toString(), Field.PFAM_ANNOTATION.toString(), Field.PANTHER_ANNOTATION.toString(), Field.SEQUENCE.toString()));
                     sbOut.append("\n");
                     for (Protein protein : proteins) {
                         try {
-                            sbOut.append(String.join(output.separator, protein.getId(), protein.getLength().toString(), protein.getKdaStr(), protein.getIsoelectricPointAvgStr(), protein.getHydropathyStr(), protein.getAromaticityStr(), protein.getSubcellularLocalization(), protein.getTransmembrane().toString(), protein.getPhobiusTM().toString(), protein.isGpi() ? "Y" : "-", protein.getMembraneEvidences().size() + "", protein.getMembraneEvidencesAsString(), protein.getSignalp5(), protein.isPhobiusSP() ? "Y" : "-", protein.getErretTotal().toString(), protein.getnGlycTotal().toString(), protein.getErretDomainsAsString(), protein.getnGlycDomainsAsString(), protein.getHeader(), protein.getLocalAlignmentHit(), protein.getCleanFullGO(), protein.getCleanInterpro(), protein.getCleanPfam(), protein.getCleanPanther(), protein.getSequence()));
+                            sbOut.append(String.join(output.separator, protein.getId(), protein.getLength().toString(), protein.getKdaStr(), protein.getIsoelectricPointAvgStr(), protein.getHydropathyStr(), protein.getAromaticityStr(), protein.getSubcellularLocalization(), protein.getTransmembrane().toString(), protein.getPhobiusTM().toString(), protein.isGpi() ? "Y" : "-", protein.getMembraneEvidences().size() + "", protein.getMembraneEvidencesAsString(), protein.getSignalp5(), protein.isPhobiusSP() ? "Y" : "-", protein.getErretTotal().toString(), protein.getnGlycTotal().toString(), protein.getErretDomainsAsString(), protein.getnGlycDomainsAsString(), protein.getDescription(), protein.getLocalAlignmentHit(), protein.getCleanFullGO(), protein.getCleanInterpro(), protein.getCleanPfam(), protein.getCleanPanther(), protein.getSequence()));
 
                             sbOut.append("\n");
                         } catch (CompoundNotFoundException ex) {
@@ -535,7 +549,7 @@ public class FastProtein {
                     sbTxt.append("\n");
                     for (Protein protein : proteins) {
                         try {
-                            sbTxt.append(String.join(" ", (StringUtils.rightPad(protein.getId(), mapSize.get(Field.ID), ' ')), (StringUtils.center(protein.getLength().toString(), mapSize.get(Field.LENGTH), ' ')), (StringUtils.center(protein.getKdaStr(), mapSize.get(Field.KDA), ' ')), (StringUtils.center(protein.getIsoelectricPointAvgStr(), mapSize.get(Field.ISOELETRIC_POINT), ' ')), (StringUtils.center(protein.getHydropathyStr(), mapSize.get(Field.HYDROPATHY), ' ')), (StringUtils.center(protein.getAromaticityStr(), mapSize.get(Field.AROMATICITY), ' ')), (StringUtils.center(protein.getSubcellularLocalization(), mapSize.get(Field.SUBCELLULAR_LOCALIZATION), ' ')), (StringUtils.center(protein.getTransmembrane().toString(), mapSize.get(Field.TRANSMEMBRANE), ' ')), (StringUtils.center(protein.getPhobiusTM().toString(), mapSize.get(Field.PHOBIUS_TM), ' ')), (StringUtils.center(protein.isGpi() ? "Y" : "-", mapSize.get(Field.PREDGPI), ' ')), (StringUtils.center(protein.getMembraneEvidences().size() + "", mapSize.get(Field.MEMBRANE_EVIDENCE), ' ')), (StringUtils.center(protein.getMembraneEvidencesAsString().toString(), mapSize.get(Field.MEMBRANE_EVIDENCE_DETAIL), ' ')), (StringUtils.center(protein.getSignalp5(), mapSize.get(Field.SIGNAL_P5), ' ')), (StringUtils.center(protein.isPhobiusSP() ? "Y" : "-", mapSize.get(Field.PHOBIUS_SP), ' ')), (StringUtils.center(protein.getErretTotal().toString(), mapSize.get(Field.ERR_TOTAL), ' ')), (StringUtils.center(protein.getnGlycTotal().toString(), mapSize.get(Field.NGLYC_TOTAL), ' ')), (StringUtils.rightPad(protein.getErretDomainsAsString(), mapSize.get(Field.ERR_DOMAINS), ' ')), (StringUtils.rightPad(protein.getnGlycDomainsAsString(), mapSize.get(Field.NGLYC_DOMAINS), ' ')), (StringUtils.rightPad(protein.getHeader(), mapSize.get(Field.HEADER), ' ')), (StringUtils.rightPad(protein.getLocalAlignmentHit(), mapSize.get(Field.LOCAL_ALIGNMENT_DESC), ' ')), (StringUtils.rightPad(protein.getCleanFullGO(), mapSize.get(Field.GO_ANNOTATION), ' ')), (StringUtils.rightPad(protein.getCleanInterpro(), mapSize.get(Field.INTERPRO_ANNOTATION), ' ')), (StringUtils.rightPad(protein.getCleanPfam(), mapSize.get(Field.PFAM_ANNOTATION), ' ')), (StringUtils.rightPad(protein.getCleanPanther(), mapSize.get(Field.PANTHER_ANNOTATION), ' ')), protein.getSequence()));
+                            sbTxt.append(String.join(" ", (StringUtils.rightPad(protein.getId(), mapSize.get(Field.ID), ' ')), (StringUtils.center(protein.getLength().toString(), mapSize.get(Field.LENGTH), ' ')), (StringUtils.center(protein.getKdaStr(), mapSize.get(Field.KDA), ' ')), (StringUtils.center(protein.getIsoelectricPointAvgStr(), mapSize.get(Field.ISOELETRIC_POINT), ' ')), (StringUtils.center(protein.getHydropathyStr(), mapSize.get(Field.HYDROPATHY), ' ')), (StringUtils.center(protein.getAromaticityStr(), mapSize.get(Field.AROMATICITY), ' ')), (StringUtils.center(protein.getSubcellularLocalization(), mapSize.get(Field.SUBCELLULAR_LOCALIZATION), ' ')), (StringUtils.center(protein.getTransmembrane().toString(), mapSize.get(Field.TRANSMEMBRANE), ' ')), (StringUtils.center(protein.getPhobiusTM().toString(), mapSize.get(Field.PHOBIUS_TM), ' ')), (StringUtils.center(protein.isGpi() ? "Y" : "-", mapSize.get(Field.PREDGPI), ' ')), (StringUtils.center(protein.getMembraneEvidences().size() + "", mapSize.get(Field.MEMBRANE_EVIDENCE), ' ')), (StringUtils.center(protein.getMembraneEvidencesAsString().toString(), mapSize.get(Field.MEMBRANE_EVIDENCE_DETAIL), ' ')), (StringUtils.center(protein.getSignalp5(), mapSize.get(Field.SIGNAL_P5), ' ')), (StringUtils.center(protein.isPhobiusSP() ? "Y" : "-", mapSize.get(Field.PHOBIUS_SP), ' ')), (StringUtils.center(protein.getErretTotal().toString(), mapSize.get(Field.ERR_TOTAL), ' ')), (StringUtils.center(protein.getnGlycTotal().toString(), mapSize.get(Field.NGLYC_TOTAL), ' ')), (StringUtils.rightPad(protein.getErretDomainsAsString(), mapSize.get(Field.ERR_DOMAINS), ' ')), (StringUtils.rightPad(protein.getnGlycDomainsAsString(), mapSize.get(Field.NGLYC_DOMAINS), ' ')), (StringUtils.rightPad(protein.getDescription(), mapSize.get(Field.HEADER), ' ')), (StringUtils.rightPad(protein.getLocalAlignmentHit(), mapSize.get(Field.LOCAL_ALIGNMENT_DESC), ' ')), (StringUtils.rightPad(protein.getCleanFullGO(), mapSize.get(Field.GO_ANNOTATION), ' ')), (StringUtils.rightPad(protein.getCleanInterpro(), mapSize.get(Field.INTERPRO_ANNOTATION), ' ')), (StringUtils.rightPad(protein.getCleanPfam(), mapSize.get(Field.PFAM_ANNOTATION), ' ')), (StringUtils.rightPad(protein.getCleanPanther(), mapSize.get(Field.PANTHER_ANNOTATION), ' ')), protein.getSequence()));
                             sbTxt.append("\n");
                         } catch (CompoundNotFoundException ex) {
                             error("It is not possible to calculate molecular mass, isoelectric point," + " aromaticity and hydropathy of the protein" + protein.getId() + ". " + "The sequence appears to be in error, check the contents of the FASTA file " + "and run the program again. Check for non-amino acid characters with X and *.");
@@ -567,7 +581,7 @@ public class FastProtein {
                             sbSep.append(String.format("%s: %s\n", Field.ERR_DOMAINS.toString(), protein.getErretDomainsAsString()));
                             sbSep.append(String.format("%s: %s\n", Field.NGLYC_TOTAL.toString(), protein.getnGlycTotal().toString()));
                             sbSep.append(String.format("%s: %s\n", Field.NGLYC_DOMAINS.toString(), protein.getnGlycDomainsAsString()));
-                            sbSep.append(String.format("%s: %s\n", Field.HEADER.toString(), protein.getHeader()));
+                            sbSep.append(String.format("%s: %s\n", Field.HEADER.toString(), protein.getDescription()));
                             sbSep.append(String.format("%s: %s\n", Field.LOCAL_ALIGNMENT_DESC.toString(), protein.getLocalAlignmentHit()));
                             sbSep.append(String.format("%s: %s\n", Field.GO_ANNOTATION.toString(), protein.getCleanFullGO()));
                             sbSep.append(String.format("%s: %s\n", Field.INTERPRO_ANNOTATION.toString(), protein.getCleanInterpro()));
@@ -583,13 +597,13 @@ public class FastProtein {
                     }
                     finalOut = sbSep.toString();
                 }
+                ArrayList<String> teste = new ArrayList<>();
+
                 info("Creating output files: " + output.extension.toUpperCase());
                 File out = createFile(finalOut, "output" + output.extension);
-                debug("   File created: "+out.getAbsolutePath());
+                debug("   File created: " + out.getAbsolutePath());
                 outFiles.put(output, out);
             }
-
-
 
             boolean charts = ChartUtil.createCharts(outFiles.get(Output.tsv));
 
@@ -597,7 +611,6 @@ public class FastProtein {
 
                 MarkdownHelper.appendHeader(outputmd, "Molecular mass (kDa) vs Isoelectric point (pH)", 3);
                 MarkdownHelper.appendImage(outputmd, "Molecular mass (kDa) vs Isoelectric point (pH)", "image/kda-vs-pi.png");
-
 
             }
 
@@ -617,7 +630,6 @@ public class FastProtein {
                         mapOrdSubcell.get(subcell)));
             }
 
-
             if (charts) {
 
                 outputmd.append("\n");
@@ -627,15 +639,10 @@ public class FastProtein {
                 outputmd.append("\n");
             }
 
-
-
-
-
             summary.setSubcellLocalizations(mapOrdSubcell);
             MarkdownHelper.appendTableFromMap(outputmd, new String[]{"Subcellular localization", "Proteins"}, mapOrdSubcell);
 
             MarkdownHelper.appendLine(outputmd);
-
 
             if (totalWithER > 0) {
                 MarkdownHelper.appendHeader(outputmd, "E.R Retention domain summary", 3);
@@ -688,36 +695,36 @@ public class FastProtein {
             }
             //Generate output.md
             String[] headerMd = {Field.ID.toString(),//left
-                    Field.LENGTH.toString(),//center
-                    Field.KDA.toString(),//center
-                    Field.ISOELETRIC_POINT.toString(),//center
-                    Field.HYDROPATHY.toString(),//center
-                    Field.AROMATICITY.toString(),//center
-                    Field.SUBCELLULAR_LOCALIZATION.toString(),
-                    Field.TRANSMEMBRANE.toString(),
-                    Field.PHOBIUS_TM.toString(),
-                    Field.PREDGPI.toString(),
-                    Field.MEMBRANE_EVIDENCE.toString(),
-                    Field.MEMBRANE_EVIDENCE_DETAIL.toString(),
-                    Field.SIGNAL_P5.toString(),
-                    Field.PHOBIUS_SP.toString(),
-                    Field.ERR_TOTAL.toString(),
-                    Field.NGLYC_TOTAL.toString(),
-                    Field.ERR_DOMAINS.toString(),
-                    Field.NGLYC_DOMAINS.toString(),
-                    Field.HEADER.toString(),
-                    Field.LOCAL_ALIGNMENT_DESC.toString(),
-                    Field.GO_ANNOTATION.toString(),
-                    Field.INTERPRO_ANNOTATION.toString(),
-                    Field.PFAM_ANNOTATION.toString(),
-                    Field.PANTHER_ANNOTATION.toString()};
+                Field.LENGTH.toString(),//center
+                Field.KDA.toString(),//center
+                Field.ISOELETRIC_POINT.toString(),//center
+                Field.HYDROPATHY.toString(),//center
+                Field.AROMATICITY.toString(),//center
+                Field.SUBCELLULAR_LOCALIZATION.toString(),
+                Field.TRANSMEMBRANE.toString(),
+                Field.PHOBIUS_TM.toString(),
+                Field.PREDGPI.toString(),
+                Field.MEMBRANE_EVIDENCE.toString(),
+                Field.MEMBRANE_EVIDENCE_DETAIL.toString(),
+                Field.SIGNAL_P5.toString(),
+                Field.PHOBIUS_SP.toString(),
+                Field.ERR_TOTAL.toString(),
+                Field.NGLYC_TOTAL.toString(),
+                Field.ERR_DOMAINS.toString(),
+                Field.NGLYC_DOMAINS.toString(),
+                Field.HEADER.toString(),
+                Field.LOCAL_ALIGNMENT_DESC.toString(),
+                Field.GO_ANNOTATION.toString(),
+                Field.INTERPRO_ANNOTATION.toString(),
+                Field.PFAM_ANNOTATION.toString(),
+                Field.PANTHER_ANNOTATION.toString()};
             Integer[] alignMd = {LEFT, CENTER, CENTER, CENTER, CENTER, CENTER, CENTER, CENTER, CENTER, CENTER, CENTER, CENTER, CENTER, CENTER, CENTER, CENTER, CENTER, CENTER, CENTER, LEFT, LEFT, LEFT, LEFT, LEFT};
 
             ArrayList<String[]> dataOutpumd = new ArrayList<>();
             int totalOutmod = 0;
             for (Protein protein : proteins) {
                 try {
-                    dataOutpumd.add(new String[]{protein.getId(), protein.getLength().toString(), protein.getKdaStr(), protein.getIsoelectricPointAvgStr(), protein.getHydropathyStr(), protein.getAromaticityStr(), protein.getSubcellularLocalization(), protein.getTransmembrane().toString(), protein.getPhobiusTM().toString(), protein.isGpi() ? "Y" : "-", protein.getMembraneEvidences().size() + "", protein.getMembraneEvidencesAsString().replace("|", "&#124;"), protein.getSignalp5(), protein.isPhobiusSP() ? "Y" : "-", protein.getErretTotal().toString(), protein.getnGlycTotal().toString(), protein.getErretDomainsAsString(), protein.getnGlycDomainsAsString(), protein.getHeader().replace("|", "&#124;"), protein.getLocalAlignmentHit().replace("|", "&#124;"), protein.getCleanFullGO().replace("|", "&#124;"), protein.getCleanInterpro().replace("|", "&#124;"), protein.getCleanPfam().replace("|", "&#124;"), protein.getCleanPanther().replace("|", "&#124;")
+                    dataOutpumd.add(new String[]{protein.getId(), protein.getLength().toString(), protein.getKdaStr(), protein.getIsoelectricPointAvgStr(), protein.getHydropathyStr(), protein.getAromaticityStr(), protein.getSubcellularLocalization(), protein.getTransmembrane().toString(), protein.getPhobiusTM().toString(), protein.isGpi() ? "Y" : "-", protein.getMembraneEvidences().size() + "", protein.getMembraneEvidencesAsString().replace("|", "&#124;"), protein.getSignalp5(), protein.isPhobiusSP() ? "Y" : "-", protein.getErretTotal().toString(), protein.getnGlycTotal().toString(), protein.getErretDomainsAsString(), protein.getnGlycDomainsAsString(), protein.getDescription().replace("|", "&#124;"), protein.getLocalAlignmentHit().replace("|", "&#124;"), protein.getCleanFullGO().replace("|", "&#124;"), protein.getCleanInterpro().replace("|", "&#124;"), protein.getCleanPfam().replace("|", "&#124;"), protein.getCleanPanther().replace("|", "&#124;")
 
                     });
                     totalOutmod++;
@@ -735,7 +742,6 @@ public class FastProtein {
             byte[] utf8Bytes = sbSummary.toString().getBytes(StandardCharsets.UTF_8);
             String utf8String = new String(utf8Bytes, StandardCharsets.UTF_8);
             createFile(utf8String, "summary.txt");
-
 
             info("Creating ODF (Open Document Format) file ");
             tsvToSheets(Parameters.getTemporaryFile("output.tsv"), Parameters.getTemporaryFile("output.odf"));
@@ -771,8 +777,7 @@ public class FastProtein {
             outputmd.append("\n");
             MarkdownHelper.appendHeader(outputmd, "Do you have a question or tips? Please contact us! E-mail: renato.simoes@ifsc.edu.br", 5);
 
-            outputmd.append("Generated time: " + new Date());
-
+            outputmd.append("Generated time: " + new Date().toString());
 
             createFile(outputmd.toString(), "output.md");
 
@@ -786,19 +791,14 @@ public class FastProtein {
                 createFile(outBiolib, "output-biolib.md");
             }
 
-
             createFile(summary.getJSON(), "summary.json");
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             error("An error occurred when saving some file. " + ex.getMessage());
         }
 
-
-
         moveFiles();
 
-
-        //org.apache.commons.io.FileUtils.moveDirectory(new File(Parameters.TEMP_DIR), new File(outputFolder));
         org.apache.commons.io.FileUtils.copyDirectory(new File(Parameters.TEMP_DIR), new File(outputFolder));
         if (Parameters.ZIP) {
             File out = new File(outputFolder);
@@ -812,7 +812,6 @@ public class FastProtein {
 
             }
         }
-
 
         long endTime = System.currentTimeMillis(); // Get end time in milliseconds
         long totalTime = endTime - startTime; // Calculate total time in milliseconds
@@ -834,7 +833,6 @@ public class FastProtein {
         info("Thank you for using FastProtein, we hope it will be useful for your research. Please, cite us!");
         org.apache.commons.io.FileUtils.deleteDirectory(fileTempDir);
 
-
     }
 
     public static void moveFiles() throws IOException {
@@ -848,32 +846,26 @@ public class FastProtein {
         for (File arq : arqs) {
             if (arq.isFile()) {
                 var dest = switch (arq.getName()) {
-                    case "predgpi.txt",
-                            "kdaiso.csv",
-                            "wolfpsort.txt",
-                            "tmhmm2.txt",
-                            "signalp5.txt",
-                            "erret.txt",
-                            "nglyc.txt",
-                            "interpro.tsv",
-                            "phobius.txt" -> tempRaw;
-                    default -> tempDir;
+                    case "predgpi.txt", "kdaiso.csv", "wolfpsort.txt", "tmhmm2.txt", "signalp5.txt", "erret.txt", "nglyc.txt", "interpro.tsv", "phobius.txt" ->
+                        tempRaw;
+                    default ->
+                        tempDir;
                 };
-                if(arq.getAbsolutePath().endsWith(".fasta")){
+                if (arq.getAbsolutePath().endsWith(".fasta")) {
                     dest = tempRaw;
                 }
                 //FileUtils.move(arq, dest);
                 if (dest.equals(tempRaw)) {
-                    File rawFile = new File(Parameters.getTemporaryFile("raw/"+arq.getName()));
-                    if(rawFile.exists()){
+                    File rawFile = new File(Parameters.getTemporaryFile("raw/" + arq.getName()));
+                    if (rawFile.exists()) {
                         org.apache.commons.io.FileUtils.copyFile(arq, rawFile);
-                    }else {
+                    } else {
                         org.apache.commons.io.FileUtils.moveFileToDirectory(arq, dest, true);
                     }
                 }
             } else if (arq.getName().contains("TMHMM")) {
                 org.apache.commons.io.FileUtils.deleteDirectory(arq);
-            } else if (arq.getName().contains("blast_local")  || arq.getName().contains("diamond_local") ) {
+            } else if (arq.getName().contains("blast_local") || arq.getName().contains("diamond_local")) {
                 try {
                     //Moving files generated by blast results
                     org.apache.commons.io.FileUtils.moveDirectoryToDirectory(arq, tempRaw, true);

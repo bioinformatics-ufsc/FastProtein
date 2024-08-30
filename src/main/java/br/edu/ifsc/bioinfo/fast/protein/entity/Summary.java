@@ -328,19 +328,20 @@ public class Summary {
         return totalTM;
     }
 
-    public String getJSON() {
+    public String getJSON() throws Exception {
         JSONObject json = new JSONObject();
         json.put("software", "FastProtein");
         json.put("version", "1.0");
         json.put("date", new Date().toString());
         json.put("proteins_size", getProteins().size());
-        json.put("kda_mean", getKdaMean());
-        json.put("kda_sd", getKdaSd());
-        json.put("iso_mean", getIsoMean());
-        json.put("iso_sd", getIsoSd());
-        json.put("hydrophobicity_mean", getHydroMean());
-        json.put("hydrophobicity_sd", getHydroSd());
-        json.put("aromaticity_mean", getAromacityMean());
+        json.put("kda_mean", String.format("%.2f",getKdaMean()));
+        json.put("kda_sd", String.format("%.2f",getKdaSd()));
+        json.put("iso_mean", String.format("%.2f",getIsoMean()));
+        json.put("iso_sd", String.format("%.2f",getIsoSd()));
+        json.put("hydrophobicity_mean", String.format("%.2f",getHydroMean()));
+        json.put("hydrophobicity_sd", String.format("%.2f",getHydroSd()));
+        json.put("aromaticity_mean", String.format("%.2f",getAromacityMean()));
+        json.put("aromaticity_mean_sd", String.format("%.2f",getAromacitySd()));
         json.put("total_tm", getTotalTM());
         json.put("total_sp", getTotalSp());
         json.put("total_nglyc", getTotalNGlyc());

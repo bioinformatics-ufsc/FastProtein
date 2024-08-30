@@ -60,7 +60,7 @@ public class Main implements Callable<Integer> {
     boolean interproDp;
 
     @CommandLine.Option(names = {"-db", "--db-align"}, description = "FASTA file used to create a database for a local blastp query")
-    File fastaDb;
+    String dbSearch;
 
     @CommandLine.Option(names = {"-am", "--align-method"}, description = "Choose the alignment method:\n " +
             "\t blastp \n" +
@@ -158,7 +158,7 @@ public class Main implements Callable<Integer> {
             Parameters.pause();
         }
 
-        FastProtein.run(input, wolfpsortType, signalPorganism, fastaDb, aligner, interpro, outputFolder, Source.other);
+        FastProtein.run(input, wolfpsortType, signalPorganism, dbSearch, aligner, interpro, outputFolder, Source.other);
         return 0;
 
     }

@@ -10,7 +10,7 @@ public class ChartUtil {
     public static boolean createCharts(File outputTSV) {
         try {
             info("Creating Charts");
-            String command = String.format("%s/bin/charts.py %s", Parameters.FAST_PROTEIN_HOME, outputTSV.getAbsolutePath());
+            String command = String.format("python3 %s/bin/chart.py %s", Parameters.FAST_PROTEIN_HOME, outputTSV.getAbsolutePath());
             debug("Command " + command);
             CommandRunner.run(command);
             return true;
