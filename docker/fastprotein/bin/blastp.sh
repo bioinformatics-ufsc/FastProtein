@@ -14,9 +14,17 @@ FIRST_HIT="$BLAST_RESULTS/blastp-firsthit.txt"
 
 mkdir -p $BLAST_RESULTS
 
+
 #Create database with the given proteome
-echo '[Blast] Creating database'
-makeblastdb -dbtype prot -in $2 -out $BLAST_DB
+if [[ $2 == *.fasta ]]; then
+    # Create database with the given proteome
+    echo '[Blast] Creating database'
+    makeblastdb -dbtype prot -in $2 -out $BLAST_DB  
+
+else
+    BLAST_DB="$2"
+    echo '[Blast] Using database '$BLAST_DB
+fi
 
 echo '[Blast] Performing query'
 blastp -query $1 -db $BLAST_DB -outfmt '6 qacc sacc pident qcovs ppos evalue bitscore sseqid stitle' -out $OUTPUT_FILE -max_target_seqs 5

@@ -9,7 +9,7 @@ fi
 
 if [ ! -f "/bioinformatic/interproscan-5.61-93.0-64-bit.tar.gz" ]; then
     echo 'File interproscan-5.61-93.0-64-bit.tar.gz not found, downloading'
-    wget http://150.162.6.129/interproscan-5.61-93.0-64-bit.tar.gz -P /bioinformatic/
+    wget https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.61-93.0/interproscan-5.61-93.0-64-bit.tar.gz -P /bioinformatic/
 fi
 
 if [ -f "/bioinformatic/interproscan-5.61-93.0-64-bit.tar.gz" ]; then
