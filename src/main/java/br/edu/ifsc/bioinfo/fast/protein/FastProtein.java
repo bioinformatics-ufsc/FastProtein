@@ -106,25 +106,25 @@ public class FastProtein {
             System.exit(1);
         }
 
-        File dbFile = new File(dbSearch);
-
-        if (dbFile != null && dbFile.exists() && dbFile.isFile() && dbFile.getAbsolutePath().endsWith(".fasta")) {
-            org.apache.commons.io.FileUtils.copyFileToDirectory(dbFile, fileTempDir);
-            dbFile = new File(Parameters.getTemporaryFile(dbFile.getName()));
-        } else {
-            if (aligner == AlignerLocalConverter.AlignerEnum.blastp) {
-                if (!DatabaseValidator.isValidBlastDatabase(dbSearch)) {
-                    error("Error: invalid BlastDB " + dbSearch);
-                    System.exit(1);
-                }
-            } else if (aligner == AlignerLocalConverter.AlignerEnum.diamond) {
-                if (dbFile.exists() && !dbFile.getAbsolutePath().endsWith(".dmnd")) {
-                    error("Error: The provided file (" + dbSearch + ") is not a valid DIAMOND database. Please provide a valid .dmnd file.");
-                    System.exit(1);
+        if (dbSearch != null && dbSearch.trim().isEmpty()) {
+            File dbFile = new File(dbSearch);
+            if (dbFile != null && dbFile.exists() && dbFile.isFile() && dbFile.getAbsolutePath().endsWith(".fasta")) {
+                org.apache.commons.io.FileUtils.copyFileToDirectory(dbFile, fileTempDir);
+                dbFile = new File(Parameters.getTemporaryFile(dbFile.getName()));
+            } else {
+                if (aligner == AlignerLocalConverter.AlignerEnum.blastp) {
+                    if (!DatabaseValidator.isValidBlastDatabase(dbSearch)) {
+                        error("Error: invalid BlastDB " + dbSearch);
+                        System.exit(1);
+                    }
+                } else if (aligner == AlignerLocalConverter.AlignerEnum.diamond) {
+                    if (dbFile.exists() && !dbFile.getAbsolutePath().endsWith(".dmnd")) {
+                        error("Error: The provided file (" + dbSearch + ") is not a valid DIAMOND database. Please provide a valid .dmnd file.");
+                        System.exit(1);
+                    }
                 }
             }
         }
-
         LinkedHashMap<String, ProteinSequence> resp = null;
 
         ArrayList<String[]> goP = new ArrayList<>();
@@ -319,17 +319,18 @@ public class FastProtein {
             }
 
             AlignerLocalConverter localAlignmentConverter = new AlignerLocalConverter(aligner);
-            if (!dbSearch.trim().isEmpty()) {
+            if (dbSearch != null && !dbSearch.trim().isEmpty()) {
+                File dbFile = new File(dbSearch);
                 if (dbFile.getAbsolutePath().endsWith(".fasta") || dbFile.getAbsolutePath().endsWith(".dmnd")) {
                     localAlignmentConverter.process(cleanFasta, dbFile.getAbsolutePath());
                     fastTime.addExternalCommand(localAlignmentConverter.fastTime.getExternalCommandsTotal());
                 } else if (!dbSearch.trim().isEmpty() && aligner == AlignerLocalConverter.AlignerEnum.blastp && DatabaseValidator.isValidBlastDatabase(dbSearch)) {
                     localAlignmentConverter.process(cleanFasta, dbSearch);
-                }else{
-                    error("Error. Check your database informed "+dbSearch);
+                } else {
+                    error("Error. Check your database informed " + dbSearch);
                     System.exit(1);
                 }
-            }else{
+            } else {
                 info("Skipping - Search for similarity");
             }
 
@@ -799,7 +800,8 @@ public class FastProtein {
 
         moveFiles();
 
-        org.apache.commons.io.FileUtils.copyDirectory(new File(Parameters.TEMP_DIR), new File(outputFolder));
+        org.apache.commons.io.FileUtils.copyDirectory(
+                new File(Parameters.TEMP_DIR), new File(outputFolder));
         if (Parameters.ZIP) {
             File out = new File(outputFolder);
             try {
@@ -821,16 +823,24 @@ public class FastProtein {
         int hours = (int) ((totalTime / (1000 * 60 * 60)) % 24);
 
         info();
-        info("Processed proteins: " + proteins.size());
-        info("Process started at: " + new Date(startTime));
-        info("Process ended at: " + new Date(endTime));
+
+        info(
+                "Processed proteins: " + proteins.size());
+        info(
+                "Process started at: " + new Date(startTime));
+        info(
+                "Process ended at: " + new Date(endTime));
 
         fastTime.end();
-        info("General processing time");
+
+        info(
+                "General processing time");
         fastTime.showTime();
 
-        info("Check out your generated files in " + outputFolder);
-        info("Thank you for using FastProtein, we hope it will be useful for your research. Please, cite us!");
+        info(
+                "Check out your generated files in " + outputFolder);
+        info(
+                "Thank you for using FastProtein, we hope it will be useful for your research. Please, cite us!");
         org.apache.commons.io.FileUtils.deleteDirectory(fileTempDir);
 
     }
