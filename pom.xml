@@ -52,7 +52,6 @@
             <artifactId>log4j-core</artifactId>
             <version>2.20.0</version>
         </dependency>
-
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
@@ -166,24 +165,11 @@
                         <phase>install</phase>
                         <configuration>
                             <target>
-                                <!-- copy jar file to docker container - PLEASE CHANGE the variable docker.container
-                                 if you want a deploy without recreate the container-->
-                                <exec executable="docker">
-                                    <arg value="cp"/>
-                                    <arg value="target/FastProtein-1.0-jar-with-dependencies.jar"/>
-                                    <arg value="${docker.container}:/bioinformatic/fastprotein/bin/FastProtein.jar"/>
-                                </exec>
                                 <!-- copy jar file to the root docker folder -->
                                 <exec executable="cp">
                                     <arg value="-p"/>
                                     <arg value="target/FastProtein-1.0-jar-with-dependencies.jar"/>
-                                    <arg value="docker/fastprotein/bin/FastProtein.jar"/>
-                                </exec>
-
-                                <!-- Files to biolib environment-->
-                                <exec executable="cp">
-                                    <arg value="target/FastProtein-1.0-jar-with-dependencies.jar"/>
-                                    <arg value="biolib/FastProtein.jar"/>
+                                    <arg value="/bioinformatic/fastprotein/bin/FastProtein.jar"/>
                                 </exec>
                             </target>
                         </configuration>
