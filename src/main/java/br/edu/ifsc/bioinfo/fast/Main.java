@@ -59,7 +59,7 @@ public class Main implements Callable<Integer> {
             defaultValue = "false")
     boolean interproDp;
 
-    @CommandLine.Option(names = {"-db", "--db-align"}, description = "FASTA file used to create a database for a local blastp query")
+    @CommandLine.Option(names = {"-db", "--db-align"}, description = "FASTA, Diamond or Blast database file. ")
     String dbSearch;
 
     @CommandLine.Option(names = {"-am", "--align-method"}, description = "Choose the alignment method:\n "
