@@ -1,0 +1,5 @@
+#How to run basic FastProtein
+fastprotein -i input.fasta
+
+#See more arguments in
+fastprotein -h

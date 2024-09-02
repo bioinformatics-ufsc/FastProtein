@@ -140,16 +140,6 @@
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
-                            
-                            <!--transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>br.edu.ifsc.bioinfo.fast.Main</mainClass>
-                                    <manifestEntries>
-                                        <Multi-Release>true</Multi-Release>
-                                    </manifestEntries>
-                                </transformer>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                            </transformers-->
                         </configuration>
                     </execution>
                 </executions>
@@ -161,7 +151,7 @@
                 <version>1.8</version>
                 <executions>
                     <execution>
-                        <id>copy-jar-to-docker</id>
+                        <id>copy-jar</id>
                         <phase>install</phase>
                         <configuration>
                             <target>
@@ -169,7 +159,7 @@
                                 <exec executable="cp">
                                     <arg value="-p"/>
                                     <arg value="target/FastProtein-1.0-jar-with-dependencies.jar"/>
-                                    <arg value="/bioinformatic/fastprotein/bin/FastProtein.jar"/>
+                                    <arg value="/FastProtein/bin/FastProtein.jar"/>
                                 </exec>
                             </target>
                         </configuration>
