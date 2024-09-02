@@ -44,6 +44,8 @@ OUTPUT_PATH = FLASK_HOME + '/runs'
 os.makedirs(DB_PATH, exist_ok=True)
 os.makedirs(OUTPUT_PATH, exist_ok=True)
 
+FLASK_DEBUG = os.getenv('FLASK_DEBUG')
+
 # Database controls
 ALLOWED_EXTENSIONS = {'.fa', '.fas', '.fasta', '.faa', '.dmnd'}
 # os.makedirs(output_folder, exist_ok=True)
@@ -554,16 +556,17 @@ def get_logged_user():
 
 
 def auto_login():
-    default_user = {
-        'user': 'dev',
-        'password': base64.b64encode('dev'.encode()).decode(),
-        'name': 'administrator',
-        'role': 'ADMIN'
-    }
+    if FLASK_DEBUG:
+        default_user = {
+            'user': 'dev',
+            'password': base64.b64encode('dev'.encode()).decode(),
+            'name': 'Administrator Dev - Debug',
+            'role': 'ADMIN'
+        }
 
-    session.permanent = True
-    session['logged_in'] = True
-    session['user'] = default_user
+        session.permanent = True
+        session['logged_in'] = True
+        session['user'] = default_user
 
 
 @app.route('/login', methods=['GET', 'POST'])
