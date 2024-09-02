@@ -44,7 +44,7 @@ OUTPUT_PATH = FLASK_HOME + '/runs'
 os.makedirs(DB_PATH, exist_ok=True)
 os.makedirs(OUTPUT_PATH, exist_ok=True)
 
-FLASK_DEBUG = os.getenv('FLASK_DEBUG')
+FLASK_DEBUG = app.config['DEBUG']
 
 # Database controls
 ALLOWED_EXTENSIONS = {'.fa', '.fas', '.fasta', '.faa', '.dmnd'}
@@ -541,21 +541,19 @@ app.permanent_session_lifetime = timedelta(hours=1)  # Duração da sessão
 
 @app.before_request
 def require_login():
-    return
-    print('Tentando acesso:', request.endpoint)
     # Permite acesso à página de login e aos arquivos estáticos
     if request.endpoint in ['login', 'static', 'processes']:
         return
     if not session.get('logged_in') and request.endpoint != 'login':
         return redirect(url_for('login'))
 
-
 def get_logged_user():
     if session['logged_in']:
         return session['user']
 
-
 def auto_login():
+
+    print("ESTA DEBUGANDO?", (FLASK_DEBUG == True))
     if FLASK_DEBUG:
         default_user = {
             'user': 'dev',
