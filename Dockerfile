@@ -54,9 +54,7 @@ RUN ln -s /bioinformatic/predgpi/predgpi.sh /usr/local/bin/predgpi
 RUN ln -s /bioinformatic/phobius-1.01/phobius.pl /usr/local/bin/phobius
 RUN ln -s /bioinformatic/tmhmm-2.0c/bin/tmhmm /usr/local/bin/tmhmm2
 RUN ln -s /bioinformatic/wolfpsort/bin/wolfpsort.sh /usr/local/bin/wolfpsort
-RUN ln -s /bioinformatic/fastprotein/input.fasta /fasta/input.fasta
-RUN ln -s /bioinformatic/fastprotein/db.fasta /fasta/db.fasta
-RUN ln -s /bioinformatic/fastprotein/bin/interpro_install.sh /usr/local/bin/interpro_install
+RUN ln -s /FastProtein/bin/interpro_install.sh /usr/local/bin/interpro_install
 
 ENV PREDGPI_HOME='/bioinformatic/predgpi'
 ENV FASTPROTEIN_HOME='/FastProtein'
@@ -86,6 +84,7 @@ RUN pip3 install biopython==1.84
 RUN pip3 install Werkzeug==3.0.4
 
 RUN mkdir -p /FastProtein/runs
+
 EXPOSE 5000
 
 ENV FLASK_RUN_HOST=0.0.0.0
@@ -96,7 +95,7 @@ ENV FLASK_REMOVE_RESULT_DIR=Yes
 RUN ln -s /FastProtein/web/server.sh /usr/local/bin/server
 RUN echo 'source server' >> ~/.bashrc
 
-VOLUME /FastProtein
+VOLUME /FastProtein/runs
 WORKDIR /FastProtein
 
 

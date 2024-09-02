@@ -13,4 +13,4 @@ ln -sf /bioinformatic/wolfpsort/bin/wolfpsort.sh /usr/local/bin/wolfpsort
 
 
 
-java -jar /bioinformatic/fastprotein/bin/FastProtein.jar $@
+java -jar $FASTPROTEIN_HOME/bin/FastProtein.jar $@
