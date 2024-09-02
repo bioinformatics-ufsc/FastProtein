@@ -312,15 +312,21 @@ def view():
 
         if file.endswith('.zip'):
             destination_file_path = os.path.join(OUTPUT_PATH, os.path.basename(file))
+
+
             print('destination_file_path', destination_file_path)
 
-            base_name = os.path.splitext(os.path.basename(destination_file_path))[0]
+            base_name = os.path.splitext(destination_file_path)[0]
 
             if not os.path.exists(base_name):
+                os.makedirs(base_name)
                 print('UNZIP FILE', destination_file_path)
-                base_folder = unzip_file(destination_file_path)
+                print('Folder', base_name)
+                with zipfile.ZipFile(destination_file_path, 'r') as zip_ref:
+                    zip_ref.extractall(base_name)  # Extrai os arquivos para o diretório 'arquivo'
+                print(f'Arquivos extraídos para: {base_name}')
 
-            tsv_path = os.path.join(base_folder, 'output.tsv')
+            tsv_path = os.path.join(base_name, 'output.tsv')
 
             if not os.path.exists(tsv_path):
                 return jsonify({"error": "output.tsv not found in the zip file"}), 400
