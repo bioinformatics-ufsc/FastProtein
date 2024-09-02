@@ -1,23 +1,17 @@
 from flask import Flask, request, jsonify, render_template, session, make_response, send_file, flash
-from flask import Blueprint, send_from_directory, redirect, url_for
 from functools import wraps
 from werkzeug.utils import secure_filename
 import os
 import zipfile
 import json
-import tempfile
-import re
 import subprocess
 import shutil
-import time
 import os.path
 import time
-import sys
 from flask import Flask, request, render_template, send_from_directory, redirect, url_for, Blueprint
 from datetime import datetime
 from Bio import SeqIO
 import re
-import csv
 from io import StringIO, BytesIO
 import pandas as pd
 import textwrap
@@ -31,6 +25,7 @@ FLASK_HOME = os.getenv('FLASK_HOME')
 
 if FLASK_HOME is None:
     FLASK_HOME = os.path.abspath(os.path.dirname(__file__))
+
 DB_PATH = os.getenv('DATABASE_HOME')
 
 if DB_PATH is None:
@@ -39,10 +34,15 @@ if DB_PATH is None:
     # Define DB_PATH como o diretório 'db' na raiz da aplicação
     DB_PATH = os.path.join(BASE_DIR, 'db')
 
-OUTPUT_PATH = FLASK_HOME + '/runs'
 
-os.makedirs(DB_PATH, exist_ok=True)
-os.makedirs(OUTPUT_PATH, exist_ok=True)
+OUTPUT_PATH = FLASK_HOME + '/runs'
+USERS_PATH = FLASK_HOME + '/users.json'
+
+if not os.path.exists(OUTPUT_PATH):
+    os.makedirs(OUTPUT_PATH, exist_ok=True)
+
+if not os.path.exists(DB_PATH):
+    os.makedirs(DB_PATH, exist_ok=True)
 
 FLASK_DEBUG = app.config['DEBUG']
 
@@ -107,7 +107,6 @@ def load_db_list():
     db_list.sort(key=lambda x: x['name'], reverse=True)
     return db_list
 
-
 @app.route('/run', methods=['POST'])
 def run():
     session['type'] = 'new'
@@ -125,24 +124,26 @@ def run():
     print('run-id', run_id)
     params = []
 
-    file = request.files['fasta']
-    form = request.form
     print('FORMULARIO', request.form)
-    if file.filename != '':
-        inputFasta = OUTPUT_PATH + '/' + run_id + '.fasta'
-        file.save(inputFasta)
-        print('File saved: ' + inputFasta)
 
-        if is_fasta_file(inputFasta):
-            params.extend(['-i', inputFasta])
-        else:
-            error = 'Input file is not a FASTA file. Please check the file and try again.'
-            os.remove(inputFasta)
-            flash(error, 'danger')
-            return render_template('index.html', session=session, dbs=db_list)
+    if not request.form.get('example'):
+        file = request.files['fasta']
+        if file.filename != '':
+            inputFasta = OUTPUT_PATH + '/' + run_id + '.fasta'
+            file.save(inputFasta)
+            print('File saved: ' + inputFasta)
 
+            if is_fasta_file(inputFasta):
+                params.extend(['-i', inputFasta])
+            else:
+                error = 'Input file is not a FASTA file. Please check the file and try again.'
+                os.remove(inputFasta)
+                flash(error, 'danger')
+                return render_template('index.html', session=session, dbs=db_list)
+    elif request.form.get('example'):
+        params.extend(['-i', FLASK_HOME + '/example.fasta'])
     else:
-        flash('Error: Inform a FASTA file', 'danger')
+        flash('Error: Inform a FASTA file', 'error')
         return render_template('index.html', session=session, dbs=db_list)
 
     subcell = request.form.get('subcell')
@@ -199,7 +200,7 @@ def run():
     #     os.remove(inputDB)
     #thread = threading.Thread(target=run_fastprotein_task, args=(params, folder, inputFasta, inputDB, local_search))
     #thread.start()
-
+    print(params)
     filtered_lines.append(generate_line(params))
     flash('Your process is running under id ' + run_id, 'success')
     return render_template('index.html', session=session, dbs=db_list)
@@ -314,6 +315,7 @@ def view():
                 base_folder = unzip_file(destination_file_path)
 
             tsv_path = os.path.join(base_folder, 'output.tsv')
+
             if not os.path.exists(tsv_path):
                 return jsonify({"error": "output.tsv not found in the zip file"}), 400
 
@@ -325,7 +327,7 @@ def view():
             df['local_alignment_description'] = df['local_alignment_description'].apply(extract_name)
             json_result = df.to_json(orient='records', indent=4)
             proteins = json.loads(json_result)
-
+            return render_template('view.html', files=file_list, proteins=proteins, session=session)
     return render_template('view.html', files=file_list, proteins=proteins, session=session)
 
 
@@ -602,12 +604,12 @@ def logout():
 
 
 # Users module
-USERS_FILE = 'users.json'
+
 
 
 def load_users():
-    if not os.path.exists(USERS_FILE):
-        # Criar arquivo com usuário padrão
+    if not os.path.exists(USERS_PATH):
+        # Default user/pass - admin/admin
         default_user = {
             "admin": {
                 "user": "admin",
@@ -617,12 +619,12 @@ def load_users():
             }
         }
         save_users(default_user)
-    with open(USERS_FILE, 'r') as file:
+    with open(USERS_PATH, 'r') as file:
         return json.load(file)
 
 
 def save_users(users):
-    with open(USERS_FILE, 'w') as file:
+    with open(USERS_PATH, 'w') as file:
         json.dump(users, file, indent=4)
 
 

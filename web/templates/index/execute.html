@@ -6,7 +6,7 @@
                     <b>New submission</b>
                 </div>
                 <div class="card-body">
-                    <form class="mb-0" action="/run" method="POST" enctype="multipart/form-data">
+                    <form class="mb-0" action="/run" method="POST" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
                         {% with messages = get_flashed_messages(with_categories=true) %}
                             {% if messages %}
                                 {% for category, message in messages %}
@@ -29,18 +29,20 @@
                                     <input type="hidden" name="user" value="{{ session['user']['user'] }}"/>
                                     <div class="card-body p-3">
                                         <div class="mb-3">
-                                            <label for="run-name" class="form-label">Your run name:</label>
+                                            <label for="run-name" class="form-label">Your job name:</label>
                                             <input
                                                     type="text"
                                                     class="form-control"
                                                     name="run-name"
                                                     id="run-name"
-                                                    value="fastprotein"
-                                            />
+                                                    value="fastprotein" placeholder="Job name"
+                                           required/>
                                         </div>
                                         <div class="mb-3">
                                             <label for="fasta" class="form-label">FASTA file to process:</label>
-                                            <input type="file" class="form-control" id="fasta" name="fasta"/>
+                                            <input type="file" class="form-control" id="fasta" name="fasta" required/>
+                                            <input type="hidden" id="example" name="example"/>
+                                            <a class="mt-2" href="#" onclick="setFile()">Example file</a>
                                         </div>
                                         <label for="subcell" class="form-label">Select an
                                             organism</label>
@@ -177,3 +179,28 @@
     </div>
 </div>
 </form>
+<script>
+    function setFile() {
+        const fileInput = document.getElementById('fasta');
+        document.getElementById('example').value = 'example.fasta';
+        const file = new File([""], "example.fasta", { type: "text/plain" });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+    }
+
+    function handleFileSelect(event) {
+        document.getElementById('example').value = '';
+    }
+
+    function handleFormSubmit(event){
+        demo = document.getElementById('example');
+        if (demo.value == '')
+            demo.remove()
+    }
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Adiciona o event listener ao input de arquivo quando o DOM é carregado
+        document.getElementById('fasta').addEventListener('change', handleFileSelect);
+    });
+</script>
