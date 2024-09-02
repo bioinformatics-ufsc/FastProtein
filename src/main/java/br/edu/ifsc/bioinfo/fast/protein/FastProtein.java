@@ -106,7 +106,7 @@ public class FastProtein {
             System.exit(1);
         }
 
-        if (dbSearch != null && dbSearch.trim().isEmpty()) {
+        if (dbSearch != null && !dbSearch.trim().isEmpty()) {
             File dbFile = new File(dbSearch);
             if (dbFile != null && dbFile.exists() && dbFile.isFile() && dbFile.getAbsolutePath().endsWith(".fasta")) {
                 org.apache.commons.io.FileUtils.copyFileToDirectory(dbFile, fileTempDir);
