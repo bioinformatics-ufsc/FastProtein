@@ -53,9 +53,10 @@ ALLOWED_EXTENSIONS = {'.fa', '.fas', '.fasta', '.faa', '.dmnd'}
 # app.static_folder=flask_home+'/static'
 errors = []
 
-filtered_lines = [
-    '503 Thu Aug 22 16:37:45 2024 /bin/bash /usr/local/bin/fastprotein -i /fastprotein/runs/testefastprotein-1724344665.fasta -s animal -zip -o /fastprotein/runs/testefastprotein-1724344665_results -log ALL',
-    '608 Thu Aug 22 16:47:44 2024 /bin/bash /usr/local/bin/fastprotein -i /fastprotein/runs/fastprotein2-1724345264.fasta -s animal -zip -o /fastprotein/runs/fastprotein2-1724345264_results -log ALL']
+#filtered_lines = [
+#    '503 Thu Aug 22 16:37:45 2024 /bin/bash /usr/local/bin/fastprotein -i /fastprotein/runs/testefastprotein-1724344665.fasta -s animal -zip -o /fastprotein/runs/testefastprotein-1724344665_results -log ALL',
+#    '608 Thu Aug 22 16:47:44 2024 /bin/bash /usr/local/bin/fastprotein -i /fastprotein/runs/fastprotein2-1724345264.fasta -s animal -zip -o /fastprotein/runs/fastprotein2-1724345264_results -log ALL']
+filtered_lines = []
 
 static_bp = Blueprint('runs', __name__,
                       static_folder='/runs',
@@ -156,6 +157,7 @@ def run():
         params.extend(['--interpro'])
 
     run_similarity = request.form.get('searchSimilarity')
+    local_search = False
     if run_similarity:
         selectDB = request.form.get('selectDB')
         if selectDB == 'fasta_diamond':
@@ -184,7 +186,7 @@ def run():
     folder = OUTPUT_PATH + "/" + run_id + '_results'
     params.extend(['-o', folder])
     params.extend(['-log', 'ALL'])
-    params.extend(['>', f"{OUTPUT_PATH}/{run_id}.log"])
+    # params.extend(['>', f"{OUTPUT_PATH}/{run_id}.log"])
 
     # subprocess.run(['fastprotein'] + params)
     # print('Result files: ' +  folder +".zip")
@@ -198,23 +200,27 @@ def run():
     #     os.remove(inputFasta)
     # if os.path.exists(inputDB):
     #     os.remove(inputDB)
-    #thread = threading.Thread(target=run_fastprotein_task, args=(params, folder, inputFasta, inputDB, local_search))
-    #thread.start()
+    thread = threading.Thread(target=run_fastprotein_task, args=(params, folder, inputFasta, inputDB, local_search, run_id))
+    thread.start()
+
     print(params)
-    filtered_lines.append(generate_line(params))
+    #filtered_lines.append(generate_line(params))
     flash('Your process is running under id ' + run_id, 'success')
     return render_template('index.html', session=session, dbs=db_list)
 
 
-def run_fastprotein_task(params, folder, inputFasta, inputDB, local_search):
+def run_fastprotein_task(params, folder, inputFasta, inputDB, local_search, run_id):
 
-    subprocess.run(['fastprotein'] + params)
-    print('Result files: ' + folder + ".zip")
-    print('Removing input files')
-    subprocess.run(['rm', inputFasta])
-    if local_search:
-        subprocess.run(['rm', inputDB])
-    subprocess.run(['rm', '-r', folder])
+    with open(f"{OUTPUT_PATH}/{run_id}.log", 'w') as log_file:
+        subprocess.run(['fastprotein'] + params, stdout=log_file, stderr=log_file)
+
+    # subprocess.run(['fastprotein'] + params)
+    # print('Result files: ' + folder + ".zip")
+    # print('Removing input files')
+    # subprocess.run(['rm', inputFasta])
+    # if local_search:
+    #     subprocess.run(['rm', inputDB])
+    # subprocess.run(['rm', '-r', folder])
 
 
 def generate_line(params):
@@ -372,29 +378,32 @@ def extract_name(text):
 ##Process management
 def get_process_info():
     try:
-        # result = subprocess.run(
-        #     'ps -eo pid,lstart,command | grep "/bin/bash /usr/local/bin/fastprotein -i /fastprotein/runs"',
-        #     shell=True,
-        #     stdout=subprocess.PIPE,
-        #     text=True
-        # )
-        #
-        # process_list = result.stdout
-        #
-        # filtered_lines = [line for line in process_list.splitlines() if '/bin/bash /usr/local/bin/fastprotein -i /fastprotein/runs' in line]
+        result = subprocess.run(
+            'ps -eo pid,lstart,command | grep "/bin/bash /usr/local/bin/fastprotein"',
+            shell=True,
+            stdout=subprocess.PIPE,
+            text=True
+        )
+
+        process_list = result.stdout
+
+        filtered_lines = [
+            line for line in process_list.splitlines()
+            if '/bin/bash /usr/local/bin/fastprotein' in line and '-o /FastProtein/web/runs/'+get_logged_user()['user'] in line
+        ]
         print(filtered_lines)
         process_info = []
         for line in filtered_lines:
             # print('--------------')
-            parts = line.split(" ")  # Divida em 3 partes: PID, tempo de início, e comando
+            parts = line.strip().split(" ")  # Divida em 3 partes: PID, tempo de início, e comando
             if len(parts) > 2:
                 pid = parts[0]
-                start_time_str = ' '.join(parts[1:6])  # Captura o tempo de início
-                cmd = (' '.join(parts[6:len(parts)])).replace('_results', '').strip()
+                start_time_str = ' '.join(parts[1:7])  # Captura o tempo de início
+                cmd = (' '.join(parts[7:len(parts)])).replace('_results -log ALL', '').strip()
 
-                # print('id', pid)
-                # print('time', start_time_str)
-                # print('cmd', cmd)
+                print('id', pid)
+                print('time', start_time_str)
+                print('cmd', cmd)
                 if cmd.startswith('/bin/bash /usr/local/bin/fastprotein'):
 
                     # print(pid)
@@ -440,10 +449,10 @@ def kill_process(pid):
         return jsonify({"success": False, "error": str(e)})
 
 
-@app.route('/view-log/<run_name>')
-def view_log(run_name):
+@app.route('/view-log/<run_id>')
+def view_log(run_id):
     try:
-        log_file_path = f"{OUTPUT_PATH}/{run_name}.log"
+        log_file_path = f"{OUTPUT_PATH}/{run_id}.log"
         with open(log_file_path, 'r') as file:
             log_content = file.read()
         return log_content
