@@ -1,13 +1,26 @@
 #docker build -t bioinfoufsc/fastprotein:latest .
 FROM debian:bullseye
 
+###################################
+LABEL base_image="debian:bullseye"
+LABEL version="1"
+LABEL software="FastProtein"
+LABEL software.version="1.1"
+LABEL about.summary="FastProtein – An automated software for in silico proteomic analysis."
+LABEL about.home="https://github.com/bioinformatics-ufsc/FastProtein/"
+LABEL about.documentation="https://github.com/bioinformatics-ufsc/FastProtein/"
+LABEL about.tags="Proteomics"
+###################################
+
 RUN apt-get update
+RUN apt-get install -y apt-utils
 RUN apt-get install -y git
 RUN apt-get install -y unzip
 RUN apt-get install -y zip
 RUN apt-get install -y nano
 RUN apt-get install -y wget
 RUN apt-get install -y maven
+RUN apt-get install -y procps=2:3.3.17-5
 
 #Dependency for wolfpsort
 RUN apt-get install -y libfindbin-libs-perl

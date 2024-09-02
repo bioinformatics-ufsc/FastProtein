@@ -1,0 +1,10 @@
+name: FastProtein
+version: 1.0
+description: FastProtein – An automated software for in silico proteomic analysis. 
+homepage: https://github.com/bioinformatics-ufsc/FastProtein/
+license: MIT
+maintainer: Professor Renato Simões Moreira <renato.simoes@ifsc.edu.br>
+tags:
+  - bioinformatics
+  - proteomic
+  - tool
