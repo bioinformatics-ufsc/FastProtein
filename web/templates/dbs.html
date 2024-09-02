@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastProtein-1.0 - Databases Management</title>
+
+    <!-- Styles -->
+    {% include 'styles.html' %}
+
+</head>
+<body>
+
+<!-- Navbar -->
+{% include 'navbar.html' %}
+
+<div class="container" style="padding-top:100px">
+    <div class="d-flex justify-content-center">
+        <div class="card col-5 mx-auto">
+            <div class="card-header custom-header">
+                Databases Management
+            </div>
+            <div class="card-body">
+                <!-- Display messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show mt-3"
+                                 role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form id="uploadForm" method="POST" action="/dbs" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Upload FASTA File</label>
+                        <input type="file" class="form-control" id="file" name="file" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Database name" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Dabatase!</button>
+                </form>
+
+                <table id="fileTable" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Database</th>
+                        <th>Creation Date and Time</th>
+                        <th>Size</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for file in files %}
+                        <tr>
+                            <td>{{ file.name }}</td>
+                            <td>{{ file.date }}</td>
+                            <td>{{ file.size_mb }}</td>
+                            <td>
+                                <form method="POST" action="/delete_db/{{ file.name }}" style="display:inline-block;"
+                                      onsubmit="return confirm('Are you sure you want to delete this file?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script src="static/js/jquery-3.7.1.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/datatables.min.js"></script>
+    <script src="static/js/popper.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#fileTable').DataTable({
+                "paging": false,
+                "searching": false,
+                "info": false
+            });
+        });
+
+        $('.alert').alert()
+    </script>
+</body>
+</html>

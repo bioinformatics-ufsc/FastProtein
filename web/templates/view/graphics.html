@@ -1,0 +1,23 @@
+<style>
+    .chart-container {
+        width: 100%; /* Garante que o contêiner ocupe 100% da largura */
+    }
+    .chart-container > div {
+        display: flex;
+        justify-content: center; /* Centraliza horizontalmente o conteúdo */
+        align-items: center; /* Centraliza verticalmente o conteúdo */
+        height: 100%; /* Garante que a altura seja 100% do contêiner pai */
+    }
+</style>
+<div class="container col-12">
+    <div class="row chart-container">
+        <div class="col-4 d-flex justify-content-center align-items-center" style="width: 35%;height: auto;">
+            <canvas id="myChart" style="height: 100px!important"></canvas>
+        </div>
+        <div class="col-8 d-flex justify-content-center align-items-center" style="width: 65%;height: auto;">
+            <canva id="scatterPlot">
+            </canva>
+        </div>
+    </div>
+</div>
+

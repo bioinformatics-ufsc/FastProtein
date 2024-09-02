@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FastProtein-1.0 - New submission</title>
+
+    <!-- Styles -->
+    {% include 'styles.html' %}
+
+</head>
+
+<body>
+<!-- Navbar -->
+{% include 'navbar.html' %}
+<div class="container" style="padding-top:100px">
+
+    <div class="row justify-content-center align-items-center">
+        <div class="d-flex justify-content-center">
+
+            <div class="container text-center">
+                <!-- Texto centralizado na primeira linha -->
+                <div class="row">
+                    <div class="col-6">
+                        <span style="color:darkgray;">FastProtein is developed by</span>
+                    </div>
+                </div>
+
+                <!-- Imagens em colunas na linha debaixo e alinhadas ao fundo -->
+                <div class="row mt-3" style="height: 150px;"> <!-- Ajuste a altura conforme necessário -->
+                    <div class="col-md-6 d-flex align-items-start justify-content-center">
+                        <a href="https://github.com/bioinformatics-ufsc">
+                            <img src="static/images/bioufsc.png" alt="Developer 1">
+                        </a>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-start justify-content-center">
+                        <img src="static/images/ifsc.png" alt="Developer 2">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 d-flex justify-content-center  align-items-start">
+            <div style="text-align: center; width: 100%;">
+                <p class="mb-0" style="font-size: 0.8rem;">
+                    <strong>Please cite us:</strong><br>
+                    FastProtein – An automated software for in silico proteomic analysis.<br>
+                    Renato Simões Moreira, Vilmar Benetti Filho, Guilherme Augusto Maia, Tatiany Aparecida Teixeira Soratto, Eric Kazuo Kawagoe, <br> Bruna Caroline Russi, Luiz Claudio Miletti, Glauber Wagner.<br>
+                    bioRxiv 2023.12.19.572382; <a href="https://doi.org/10.1101/2023.12.19.572382" target="_blank">doi: https://doi.org/10.1101/2023.12.19.572382</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<tbody>
+{% set max_length = 20 %}
+{% set max_length_description = 100 %}
+{% for data_entry in proteins %}
+    <tr>
+        <td>{{ data_entry.id }}</td>
+        <td class="text-container expandable-column ">
+            {% if data_entry.header|length > max_length_description %}
+                <button class="show-more-btn"><i class="fas fa-eye"></i></button>
+            {% endif %}
+            <span class="text-truncated">
+                {% if data_entry.header %}
+                    {{ data_entry.header[:max_length_description] }}
+                            {% if data_entry.header|length > max_length_description %}...{% endif %}
+                {% else %}
+                    -
+                {% endif %}
+            </span>
+            <span class="full-text" style="display:none;">
+                {% if data_entry.header %}
+                    {{ data_entry.header }}
+                {% else %}
+                    -
+                {% endif %}
+            </span>
+        </td>
+        <td class="text-container expandable-column">
+            {% if data_entry.sequence|length > max_length %}
+                <button class="show-more-btn"><i class="fas fa-eye"></i></button>
+            {% endif %}
+            <span class="text-truncated">
+                {% if data_entry.sequence %}
+                    {{ data_entry.sequence[:max_length] }}{% if data_entry.sequence|length > max_length %}...{% endif %}
+                {% else %}
+                    -
+                {% endif %}
+            </span>
+            <span class="full-text" style="display:none;">
+                {% if data_entry.sequence %}
+                    {{ data_entry.sequence }}
+                {% else %}
+                    -
+                {% endif %}
+            </span>
+        </td>
+        <td>{{ data_entry.kda }}</td>
+        <td>{{ data_entry.isoelectric_point }}</td>
+        <td>{% if data_entry.localization %}{{ data_entry.localization }}{% else %}
+            -{% endif %}</td>
+        <td>{{ data_entry.tmhmm_2 }}</td>
+        <td>{{ data_entry.phobius_tm }}</td>
+        <td>{% if data_entry.signalp5 %}{{ data_entry.signalp5 }}{% else %}-{% endif %}</td>
+        <td>{% if data_entry.phobius_sp %}{{ data_entry.phobius_sp }}{% else %}-{% endif %}</td>
+
+        <td class="text-container expandable-column">
+            {% if data_entry.local_alignment_description|length > max_length_description %}
+                <button class="show-more-btn"><i class="fas fa-eye"></i></button>
+            {% endif %}
+            <span class="text-truncated">
+                {% if data_entry.local_alignment_description %}
+                    {{ data_entry.local_alignment_description[:max_length_description] }}
+                            {% if data_entry.Local_alignment_description|length > max_length_description %}...
+                            {% endif %}
+                {% else %}
+                    -
+                {% endif %}
+            </span>
+            <span class="full-text" style="display:none;">
+                {% if data_entry.local_alignment_description %}
+                    {{ data_entry.local_alignment_description }}
+                {% else %}
+                    -
+                {% endif %}
+            </span>
+        </td>
+
+        <td>{% if data_entry.gpi_anchored %}{{ data_entry.gpi_anchored }}{% else %}-{% endif %}</td>
+        <td>{% if data_entry.membrane_evidences %}{{ data_entry.membrane_evidences }}{% else %}-{% endif %}</td>
+        <td>{% if data_entry.membrane_evidences_detail %}{{ data_entry.membrane_evidences_detail }}{% else %}
+            -{% endif %}</td>
+
+        <!-- Para data_entry.nglyc -->
+        <td>{% if data_entry.nglyc_total %}{{ data_entry.nglyc_total }}{% else %}-{% endif %}</td>
+        <td>{% if data_entry.er_retention_total %}{{ data_entry.er_retention_total }}{% else %}-{% endif %}</td>
+
+        <!-- Para data_entry.pfam -->
+        <td class="text-container expandable-column">
+            {% set pfam_str = data_entry.pfam_annotation %}
+            {% if pfam_str | length > max_length %}
+                <button class="show-more-btn"><i class="fas fa-eye"></i></button>
+            {% endif %}
+            <span class="text-truncated">
+        {% if pfam_str %}
+            {{ pfam_str[:max_length] }}{% if pfam_str | length > max_length %}...{% endif %}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+            <span class="full-text" style="display:none;">
+        {% if pfam_str %}
+            {{ pfam_str }}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+        </td>
+
+        <!-- Para data_entry.panther -->
+        <td class="text-container expandable-column">
+            {% set panther_str = data_entry.panther_annotation %}
+            {% if panther_str | length > max_length %}
+                <button class="show-more-btn"><i class="fas fa-eye"></i></button>
+            {% endif %}
+            <span class="text-truncated">
+        {% if panther_str %}
+            {{ panther_str[:max_length] }}{% if panther_str | length > max_length %}...{% endif %}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+            <span class="full-text" style="display:none;">
+        {% if panther_str %}
+            {{ panther_str }}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+        </td>
+
+        <!-- Para data_entry.interpro_id -->
+        <td class="text-container expandable-column">
+            {% set interpro_id_str = data_entry.interpro_annotation %}
+            {% if interpro_id_str | length > max_length %}
+                <button class="show-more-btn"><i class="fas fa-eye"></i></button>
+            {% endif %}
+            <span class="text-truncated">
+        {% if interpro_id_str %}
+            {{ interpro_id_str[:max_length] }}{% if interpro_id_str | length > max_length %}...{% endif %}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+            <span class="full-text" style="display:none;">
+        {% if interpro_id_str %}
+            {{ interpro_id_str }}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+        </td>
+
+        <!-- Para data_entry.go_desc -->
+        <td class="text-container expandable-column">
+            {% set go_desc_str = data_entry.gene_ontology %}
+            {% if go_desc_str | length > max_length %}
+                <button class="show-more-btn"><i class="fas fa-eye"></i></button>
+            {% endif %}
+            <span class="text-truncated">
+        {% if go_desc_str %}
+            {{ go_desc_str[:max_length] }}{% if go_desc_str | length > max_length %}...{% endif %}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+            <span class="full-text" style="display:none;">
+        {% if go_desc_str %}
+            {{ go_desc_str }}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+        </td>
+
+
+    </tr>
+{% endfor %}
+</tbody>

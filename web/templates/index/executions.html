@@ -1,0 +1,50 @@
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header custom-header">
+                    <b>Real-time executions</b>
+                </div>
+                <div class="card-body card-scrollable">
+                    <table class="table table-striped table-bordered">
+                        <thead class="header">
+                        <tr>
+                            <th>PID</th>
+                            <th>Run name</th>
+                            <th>Time time</th>
+                            <th>Command</th>
+                        </tr>
+                        </thead>
+                        <tbody id="process-table-body">
+                        <!-- As linhas da tabela serão inseridas aqui pelo JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Log Modal -->
+
+<div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="logModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header custom-header">
+                <h6 class="modal-title" id="logModalLabel">
+                    <div id="run_name"></div>
+                </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+            </div>
+            <div class="modal-body">
+                <div id="outputAreaModal"
+                     style="width: 100%; height: 50vh; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; box-sizing: border-box; font-family: monospace; white-space: pre-wrap; background-color: black; color: white; border-radius: 5px;">
+                    Waiting...
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

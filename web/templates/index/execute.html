@@ -1,0 +1,179 @@
+<div class="container" style="padding-top:100px">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <div class="card mx-auto">
+                <div class="card-header custom-header">
+                    <b>New submission</b>
+                </div>
+                <div class="card-body">
+                    <form class="mb-0" action="/run" method="POST" enctype="multipart/form-data">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }} alert-dismissible fade show mt-3"
+                                         role="alert">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <div class="row justify-content-center mb-3">
+                            <div class="col-6">
+                                <div class="card" style="height: 370px">
+                                    <div class="card-header custom-header">
+                                        <b>Basic information</b>
+                                    </div>
+                                    <input type="hidden" name="user" value="{{ session['user']['user'] }}"/>
+                                    <div class="card-body p-3">
+                                        <div class="mb-3">
+                                            <label for="run-name" class="form-label">Your run name:</label>
+                                            <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="run-name"
+                                                    id="run-name"
+                                                    value="fastprotein"
+                                            />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="fasta" class="form-label">FASTA file to process:</label>
+                                            <input type="file" class="form-control" id="fasta" name="fasta"/>
+                                        </div>
+                                        <label for="subcell" class="form-label">Select an
+                                            organism</label>
+                                        <select class="form-control" id="subcell" name="subcell">
+                                            <option value="animal" selected>Animal</option>
+                                            <option value="fungi">Fungi</option>
+                                            <option value="plant">Plant</option>
+                                        </select>
+                                        <small><i class="fas fa-info-circle"></i>Protein subcellular
+                                            localization
+                                            prediction
+                                            <a href="https://wolfpsort.hgc.jp/" target="_blank">WoLF
+                                                PSORT</a></small>
+                                        <div class="mt-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="yes"
+                                                       name="interpro" id="interpro">
+                                                <label class="form-check-label" for="interpro">
+                                                    Run <a href="https://www.ebi.ac.uk/interpro/"
+                                                           target="_blank">InterProScan</a>
+                                                </label>
+                                            </div>
+                                            <div>
+                                                <small>
+                                                    <i class="fas fa-info-circle"></i> This option significantly increases the execution time.
+                                                </small>
+                                            </div>
+                                            <div>
+                                                <small>
+                                                    <i class="fas fa-info-circle"></i> This process was tested
+                                                    with
+                                                    <a href="https://www.ebi.ac.uk/interpro/"
+                                                       target="_blank">InterProScan</a> version 5.61-93.0
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <!-- Coluna que ocupa 4/12 da largura -->
+                                <div class="card"  style="height: 370px" >
+                                    <div class="card-header custom-header">
+                                        <b>Optional</b>
+                                    </div>
+                                    <div class="card-body p-3">
+
+                                        <div class="mb-3">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input"
+                                                       name="searchSimilarity" id="toggleSearchCheckBox">
+                                                <label class="form-check-label" for="toggleSearchCheckBox">Run
+                                                    similarity
+                                                    search</label>
+                                            </div>
+                                            <!-- Div que será habilitada/desabilitada -->
+                                            <div id="optionsDiv" class="mt-3 mb-0 disabled-div">
+                                                <div class="col-8 mt-3 mb-3" style="margin-left:30px">
+                                                    <div class="form-check" >
+                                                        <input type="radio" class="form-check-input"
+                                                               name="selectDB"
+                                                               id="selectDB" value="database" checked>
+                                                        <label class="form-check-label" for="selectDB">Select a
+                                                            database</label>
+                                                    </div>
+                                                    <div class="mt-2" style="margin-left:30px">
+                                                        <select name="selectDBFile" id="files"
+                                                                class="form-control">
+                                                            {% for db in dbs %}
+                                                                <option value="{{ db.path }}">{{ db.name }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-8" style="margin-left:30px">
+                                                    <div class="form-check">
+                                                        <input type="radio" class="form-check-input"
+                                                               name="selectDB" value="fasta_diamond"
+                                                               id="fastaDB" >
+                                                        <label class="form-check-label" for="fastaDB">Database file</label>
+                                                        <div class="mt-2 mb-3" style="margin-left:10px">
+                                                            <input
+                                                                    type="file"
+                                                                    class="form-control"
+                                                                    id="dbSearch"
+                                                                    name="dbSearch"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Checkbox para habilitar/desabilitar a div -->
+
+                                            <div class="mt-5">
+                                                <small>
+                                                    <i class="fas fa-info-circle"></i> Similarity search
+                                                    performed
+                                                    by <a
+                                                        href="https://github.com/bbuchfink/diamond"
+                                                        target="_blank">Diamond</a>.
+                                                </small>
+                                            </div>
+                                            <div>
+                                                <small>
+                                                    <i class="fas fa-info-circle"></i> The first hit will be
+                                                    displayed in
+                                                    separate columns and associated with the query.
+                                                </small>
+                                            </div><div>
+                                            <small>
+                                                <i class="fas fa-info-circle"></i>Accepted database file formats: FASTA (.fasta) and Diamond (.dmnd).
+                                            </small>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-center">
+                            <div class="col-7 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="fa-solid fa-rocket"
+                                       style="color: white !important; margin-right: 5px;"></i>
+                                    Run!
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>

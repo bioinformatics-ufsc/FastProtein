@@ -1,0 +1,92 @@
+<div class="container mt-5 mb-4 pt-5" id="table-container">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mt-1 mb-3">
+
+            <div class="d-flex">
+                <div>
+                <button id="downloadCsvBtn" class="btn btn-primary btn-sm mr-5"><i
+                        class="fas fa-file-csv text-white"></i> Download CSV
+                </button>
+                </div>
+                <div>
+                <button id="downloadTsvBtn" class="btn btn-success btn-sm mr-5" style=" margin-right: 10px;margin-left: 10px"><i
+                        class="fas fa-file-alt text-white"></i> Download TSV
+                </button>
+                </div>
+                <div class="ms">
+                <button id="downloadFastaBtn" class="btn btn-secondary btn-sm mr-2"><i
+                        class="fas fa-file-text text-white"></i> Download FASTA
+                </button>
+                </div>
+            </div>
+            <button id="clearFilters" class="btn btn-warning btn-sm text-white"><i class="fas fa-eraser text-white"></i>
+                Clear Selection
+            </button>
+            <input type="hidden" id="fileName" value="{{ request.args.get('file') }}"/>
+        </div>
+    </div>
+    <div class="table-responsive">
+        {#        <button class="btn-sm btn-custom" id="clearFilters">Clear Filters</button>#}
+
+        <table id="dataTable" class="table table-striped table-bordered display nowrap dataTables_scrollBody">
+            <thead class="header custom-header">
+            <tr>
+                <th>ID</th>
+                <th>Header</th>
+                <th>Sequence</th>
+                <th>kDa</th>
+                <th>I.P</th>
+                <th>Subcellular Localization</th>
+                <th>TMHMM</th>
+                <th>Phobius TM</th>
+                <th>SignalP5</th>
+                <th>Phobius SP</th>
+                <th>Local Alignment Hit</th>
+                <th>GPI-Anchored</th>
+                <th>Membrane</th>
+                <th>Membrane Evidence</th>
+                <th>N-Glyc</th>
+                <th>Erret</th>
+                <th>PFAM</th>
+                <th>PANTHER</th>
+                <th>Interpro</th>
+                <th>Gene Ontology</th>
+            </tr>
+            <tr>
+                <th><input class="filter-custom" type="text" id="IdFilter" placeholder="Filter by ID"></th>
+                <th><input class="filter-custom" type="text" id="HeaderFilter" placeholder="Filter by Header"></th>
+                <th><input class="filter-custom" type="text" id="SequenceFilter" placeholder="Filter by Sequence"></th>
+                <th></th>
+                <th></th>
+                <th>
+                    <select class="filter-custom" id="SubcellularLocalizationFilter" multiple></select>
+                </th>
+                <th><select class="filter-custom" id="TMFilter" multiple></select></th>
+                <th><select class="filter-custom" id="PhobiusTMFilter" multiple></select></th>
+                <th><select class="filter-custom" id="SignalPFilter" multiple></select></th>
+                <th><select class="filter-custom" id="PhobiusSPFilter" multiple></select></th>
+                <th><input class="filter-custom" type="text" id="AlignmentFilter" placeholder="Filter by Alignment hit">
+                </th>
+                <th><select class="filter-custom" id="GPIFilter" multiple></select></th>
+                <th><select class="filter-custom" id="MembraneFilter" multiple></select></th>
+                <th><input class="filter-custom" type="text" id="MembraneEvidenceFilter"
+                           placeholder="Filter by Membrane Evidence"></th>
+                <th><select class="filter-custom" id="NGLYCFilter" multiple></select></th>
+                <th><select class="filter-custom" id="ErretFilter" multiple></select></th>
+                <th><input class="filter-custom" type="text" id="PFAMFilter"
+                           placeholder="Filter by Membrane Complete Evidence"></th>
+                <th><input class="filter-custom" type="text" id="PANTHERFilter"
+                           placeholder="Filter by Membrane Complete Evidence"></th>
+                <th><input class="filter-custom" type="text" id="IPRIdFilter"
+                           placeholder="Filter by Membrane Complete Evidence"></th>
+                <th><input class="filter-custom" type="text" id="GOIdFilter"
+                           placeholder="Filter by Membrane Complete Evidence"></th>
+            </tr>
+            </thead>
+            {% include 'view/tbody.html' %}
+        </table>
+    </div>
+    <div>
+        <input id="filteredIds" type="hidden"></input>
+    </div>
+</div>

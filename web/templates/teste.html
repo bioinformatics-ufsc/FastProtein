@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link with Button and Icon</title>
+    
+    <!-- Styles -->
+    {% include 'styles.html' %}
+    <style>
+        .btn-custom {
+            background-color: #007bff; /* Cor de fundo personalizada */
+            color: white; /* Cor do texto personalizada */
+        }
+        .btn-custom:hover {
+            background-color: #0056b3; /* Cor de fundo ao passar o mouse */
+        }
+        .btn-custom .fas {
+            margin-right: 0.5rem;
+            color: white
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <a href="https://www.example.com" class="btn btn-custom d-flex align-items-center">
+        <i class="fas fa-rocket" style="color: white;"></i>
+        <span>Go to Example</span>
+    </a>
+</div>
+
+<script src="static/js/jquery-3.5.1.slim.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+<script src="static/js/popper.min.js"></script>
+
+</body>
+</html>

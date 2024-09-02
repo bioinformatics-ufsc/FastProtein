@@ -1,0 +1,135 @@
+form {
+    margin-bottom: 5% !important; /* Ajuste conforme necessário */
+}
+/* Loader Overlay */
+#loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8); /* Background color and transparency */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Make sure it is on top of everything */
+}
+
+/* Loader Animation */
+.loader {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #6AA5D9; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.header {
+    background-color: #6AA5D9 !important;
+    color: white !important;
+}
+
+/* Ajusta o layout da tabela para preencher o contêiner pai */
+.table th, .table td {
+    white-space: nowrap; /* Impede que o texto quebre a linha */
+    padding: 8px; /* Ajuste o padding conforme necessário */
+}
+
+.content {
+    margin-top: 5% !important; /* Ajuste a altura conforme necessário */
+} 
+
+.text-container {
+    position: relative;
+}
+
+.text-truncated {
+    display: inline-block;
+    max-width: 300px; /* Ajuste conforme necessário */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.full-text {
+    display: none;
+}
+
+.show-more-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.show-more-btn i {
+    color: #6AA5D9; /* Define a cor dos ícones para #6AA5D9 */
+}
+
+.full-text {
+    display: none; /* Inicialmente escondido */
+    margin-top: 5px;
+    word-wrap: break-word;
+}
+
+.show-more-btn i {
+    color: #6AA5D9; /* Define a cor dos ícones para #6AA5D9 */
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #6AA5D9;
+    border-color: #6AA5D9;
+}
+
+.btn-custom{
+    background-color: #6AA5D9;
+    color: white;
+    border-color: #6AA5D9; /* Para garantir que a borda também tenha a mesma cor */
+}
+
+.btn-primary-custom, .btn-primary-custom i {
+    color: white; !important; /* Cor do texto e ícone do botão */
+}
+
+.btn-custom:hover {
+    background-color: #5a8fd4; /* Cor mais escura para o efeito de hover */
+    border-color: #5a8fd4;
+    color: white;
+}
+
+.mt-5, .my-5 {
+    margin-top: 0rem !important;
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 100% !important;
+        max-width: none !important; /* Remove qualquer largura máxima */
+        padding: 2 !important; /* Remove o padding se necessário */
+        margin: 2 !important; /* Remove as margens se necessário */
+    }
+}
+
+label, h6{
+    font-weight: bold;
+}
+
+i {
+    color:#6AA5D9 !important;
+}
+
+.btn-primary {
+    background-color: #6AA5D9 !important;
+    border-color: #6AA5D9 !important;
+    color: white !important;
+}
