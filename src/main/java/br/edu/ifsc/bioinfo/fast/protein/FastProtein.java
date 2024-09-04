@@ -260,7 +260,7 @@ public class FastProtein {
             //Executing InteproScan
             if (interpro) {
 
-                InterProscanConverter iprScan = new InterProscanConverter(cleanFasta, proteins);
+                InterproScanConverter iprScan = new InterproScanConverter(cleanFasta, proteins);
 //                iprScan.executeLocal();
                 iprScan.updateProteins(proteins);
 

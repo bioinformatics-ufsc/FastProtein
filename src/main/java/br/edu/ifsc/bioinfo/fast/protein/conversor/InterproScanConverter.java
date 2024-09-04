@@ -36,7 +36,7 @@ import static br.edu.ifsc.bioinfo.fast.util.log.LoggerUtil.*;
 /**
  * @author renato
  */
-public class InterProScanConverter {
+public class InterproScanConverter {
     private ArrayList<Protein> proteins;
     private int limit;
     public static final String PROTEIN_ACCESSION = "Protein_accession";
@@ -59,7 +59,7 @@ public class InterProScanConverter {
     private File fasta;
     private static String[] header = {PROTEIN_ACCESSION, SEQUENCE_MD5_DIGEST, SEQUENCE_LENGTH, ANALYSIS, SIGNATURE_ACCESSION, SIGNATURE_DESCRIPTION, START_LOCATION, STOP_LOCATION, SCORE, STATUS, DATE, INTERPRO_ANNOTATIONS_ACCESSION, INTERPRO_ANNOTATIONS_DESCRIPTION, GO_ANNOTATIONS};
 
-    public InterProScanConverter(File fasta, ArrayList<Protein> proteins) {
+    public InterproScanConverter(File fasta, ArrayList<Protein> proteins) {
         this.proteins = proteins;
         this.fasta = fasta;
     }
