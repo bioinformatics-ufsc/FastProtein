@@ -56,10 +56,26 @@ function fetchProcessData() {
 
             data.forEach(process => {
                 const row = document.createElement('tr');
+
+
+                // Construindo a barra de progresso
+                let progressBar = '<div class="progress-bar" style="display: flex;">';
+                const progress = process.progress;
+
+                for (const key in progress) {
+                    if (progress.hasOwnProperty(key)) {
+                        const isCompleted = progress[key];
+                        const colorClass = isCompleted ? 'green' : 'red';
+                        progressBar += `<div class="column" style="width: 10px; height: 20px; margin-right: 2px; background-color: ${colorClass};"></div>`;
+                    }
+                }
+                progressBar += '</div>';
+
                 row.innerHTML = `
                         <td>${process.pid}</td>
                         <td>${process.name}</td>
                         <td>${process.elapsed_time}</td>
+                        <td style="text-align: center;">${process.progress}%</td>
                         <td>
                             <a href="#" onclick="killProcess(${process.pid})" title="Kill process ${process.pid}"><i class="fas fa-times"></i></a>
                             <a href="#" onclick="viewLog('${process.name}')" title="View log for ${process.name}"><i class="fas fa-eye"/></i></a>
@@ -70,6 +86,8 @@ function fetchProcessData() {
         })
         .catch(error => console.error('Erro ao buscar dados do processo:', error));
 }
+
+
 
 function killProcess(pid) {
     fetch(`/kill/${pid}`, {method: 'POST'})

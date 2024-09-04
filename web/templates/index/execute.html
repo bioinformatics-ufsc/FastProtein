@@ -59,7 +59,7 @@
                                         <div class="mt-3">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="yes"
-                                                       name="interpro" id="interpro">
+                                                       name="interpro" id="interpro"  {% if not interpro %}disabled {% endif %}>
                                                 <label class="form-check-label" for="interpro">
                                                     Run <a href="https://www.ebi.ac.uk/interpro/"
                                                            target="_blank">InterProScan</a>

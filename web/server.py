@@ -48,9 +48,6 @@ FLASK_DEBUG = app.config['DEBUG']
 
 # Database controls
 ALLOWED_EXTENSIONS = {'.fa', '.fas', '.fasta', '.faa', '.dmnd'}
-# os.makedirs(output_folder, exist_ok=True)
-
-# app.static_folder=flask_home+'/static'
 errors = []
 
 #filtered_lines = [
@@ -59,22 +56,39 @@ errors = []
 filtered_lines = []
 
 static_bp = Blueprint('runs', __name__,
-                      static_folder='/runs',
+                      static_folder='runs',
                       static_url_path='/runs')
 
 app.register_blueprint(static_bp, url_prefix='/')
-
 app.secret_key = os.urandom(24)
 
 
 @app.route('/static/<path:filename>')
 def serve_static(filename):
-    return send_from_directory(app.static_folder, filename)
+    return send_from_directory(app.static_folder, filename,as_attachment=True)
 
 
 @app.route('/runs/<path:filename>')
-def serve_runs(filename):
-    return send_from_directory(static_bp.static_folder, filename)
+def download_file(filename):
+    return send_from_directory(static_bp.static_folder, filename,as_attachment=True)
+
+
+def is_interproscan_installed():
+    try:
+        # Tenta executar o comando 'interproscan' com a flag '--version' ou algo similar
+        result = subprocess.run(['interproscan', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # Se o retorno for 0, o comando foi executado com sucesso
+        if result.returncode == 0:
+            return True
+        else:
+            return False
+    except FileNotFoundError:
+        # Se o comando não for encontrado, o subprocess gera um FileNotFoundError
+        return False
+    except Exception as e:
+        # Captura outras exceções, se necessário
+        print(f"An error occurred: {e}")
+        return False
 
 
 @app.route('/')
@@ -82,9 +96,52 @@ def index():
     session['type'] = 'new'
     auto_login()
     # render the template with the file list
-    return render_template('index.html', dbs=load_db_list(), session=session)
+    return render_template('index.html', dbs=load_db_list(), session=session, interpro=is_interproscan_installed())
 
+def load_all_db_list():
+    dbs = [file for file in os.listdir(DB_PATH) if file.endswith('.dmnd') or file.endswith('.fasta')]
+    print(dbs)
+    files_to_keep = set()
 
+    # Itera sobre a lista de arquivos
+    for db_name in dbs:
+        base_name, ext = os.path.splitext(db_name)
+        ext = ext.lstrip('.')
+        # Se o arquivo for .dmnd, adiciona o nome base ao conjunto
+        if ext == 'dmnd':
+            files_to_keep.add(base_name)
+    db_list = []
+    print(files_to_keep)
+    print(dbs)
+    for db_name in dbs:
+        base_name, ext = os.path.splitext(db_name)
+        ext = ext.lstrip('.')
+
+        # Adiciona o arquivo à lista apenas se o nome base estiver no conjunto de arquivos a manter
+
+        # Verifica se o arquivo é .fasta e remove se já houver um .dmnd
+        print('TENTANDO', base_name)
+        if ext == 'fasta' and base_name in files_to_keep:
+            continue
+        print('PASSOU', base_name)
+        db_path = os.path.join(DB_PATH, db_name)
+        db_stat = os.stat(db_path)
+        formatted_date = datetime.fromtimestamp(db_stat.st_ctime).strftime('%Y-%m-%d %H:%M')
+        file_size_mb = os.path.getsize(db_path) / (1024 * 1024)
+        _, ext = os.path.splitext(db_name)
+        ext = ext.lstrip('.')
+
+        db_dict = {
+            'name': db_name,
+            'date': formatted_date,
+            'path': db_path,
+            'size_mb': f"{file_size_mb:.2f} MB",
+            'ext': ext,
+        }
+        db_list.append(db_dict)
+
+    db_list.sort(key=lambda x: x['name'], reverse=True)
+    return db_list
 def load_db_list():
     dbs = [file for file in os.listdir(DB_PATH) if file.endswith('.dmnd')]
 
@@ -124,28 +181,24 @@ def run():
     run_id = f'{user}-{name_run}-{timestamp}'
     print('run-id', run_id)
     params = []
-
-    print('FORMULARIO', request.form)
-
     if not request.form.get('example'):
         file = request.files['fasta']
         if file.filename != '':
             inputFasta = OUTPUT_PATH + '/' + run_id + '.fasta'
             file.save(inputFasta)
             print('File saved: ' + inputFasta)
-
             if is_fasta_file(inputFasta):
                 params.extend(['-i', inputFasta])
             else:
                 error = 'Input file is not a FASTA file. Please check the file and try again.'
                 os.remove(inputFasta)
                 flash(error, 'danger')
-                return render_template('index.html', session=session, dbs=db_list)
+                return render_template('index.html', session=session, dbs=db_list, interpro=is_interproscan_installed())
     elif request.form.get('example'):
         params.extend(['-i', FLASK_HOME + '/example.fasta'])
     else:
         flash('Error: Inform a FASTA file', 'error')
-        return render_template('index.html', session=session, dbs=db_list)
+        return render_template('index.html', session=session, dbs=db_list, interpro=is_interproscan_installed())
 
     subcell = request.form.get('subcell')
     if subcell:
@@ -173,7 +226,7 @@ def run():
                 flash('Inform a FASTA or Diamond DB to continue', 'error')
                 if os.path.exists(inputFasta):
                     os.remove(inputFasta)
-                return render_template('index.html', session=session, dbs=db_list)
+                return render_template('index.html', session=session, dbs=db_list, interpro=is_interproscan_installed())
         elif selectDB == 'database':
             filename = request.form.get('selectDBFile')
             if filename:
@@ -181,32 +234,19 @@ def run():
                 params.extend(['-db', inputDB])
         else:
             flash('Inform a FASTA or Diamond DB to continue', 'error')
-            return render_template('index.html', session=session, dbs=db_list)
+            return render_template('index.html', session=session, dbs=db_list, interpro=is_interproscan_installed())
     params.extend(['-zip'])
     folder = OUTPUT_PATH + "/" + run_id + '_results'
     params.extend(['-o', folder])
     params.extend(['-log', 'ALL'])
-    # params.extend(['>', f"{OUTPUT_PATH}/{run_id}.log"])
 
-    # subprocess.run(['fastprotein'] + params)
-    # print('Result files: ' +  folder +".zip")
-    # print('Removing input files')
-    # subprocess.run(['rm', inputFasta])
-    # if local_search:
-    #     subprocess.run(['rm', inputDB])
-    # subprocess.run(['rm', '-r', folder])
-
-    # if os.path.exists(inputFasta):
-    #     os.remove(inputFasta)
-    # if os.path.exists(inputDB):
-    #     os.remove(inputDB)
     thread = threading.Thread(target=run_fastprotein_task, args=(params, folder, inputFasta, inputDB, local_search, run_id))
     thread.start()
 
     print(params)
     #filtered_lines.append(generate_line(params))
     flash('Your process is running under id ' + run_id, 'success')
-    return render_template('index.html', session=session, dbs=db_list)
+    return render_template('index.html', session=session, dbs=db_list, interpro=is_interproscan_installed())
 
 
 def run_fastprotein_task(params, folder, inputFasta, inputDB, local_search, run_id):
@@ -214,13 +254,6 @@ def run_fastprotein_task(params, folder, inputFasta, inputDB, local_search, run_
     with open(f"{OUTPUT_PATH}/{run_id}.log", 'w') as log_file:
         subprocess.run(['fastprotein'] + params, stdout=log_file, stderr=log_file)
 
-    # subprocess.run(['fastprotein'] + params)
-    # print('Result files: ' + folder + ".zip")
-    # print('Removing input files')
-    # subprocess.run(['rm', inputFasta])
-    # if local_search:
-    #     subprocess.run(['rm', inputDB])
-    # subprocess.run(['rm', '-r', folder])
 
 
 def generate_line(params):
@@ -239,10 +272,11 @@ def generate_line(params):
     return line
 
 
-@app.route('/remove_file', methods=['GET'])
+@app.route('/remove_file', methods=['POST'])
 def remove_file():
     session['type'] = 'view'
-    file_name = request.args.get('file')
+    file = request.form.get('file')
+    file_name = file
     if not file_name:
         return render_template('view.html', session=session)
 
@@ -261,7 +295,7 @@ def remove_file():
     if os.path.isdir(directory_path):
         shutil.rmtree(directory_path)
 
-    return render_template('view.html', session=session)
+    return render_template('view.html', files=load_execution_file(), session=session)
 
 
 def is_fasta_file(filepath):
@@ -284,27 +318,9 @@ def is_fasta_file(filepath):
         return False
 
 
-@app.route('/view', methods=['GET'])
-def view():
+def view_file(file):
     session['type'] = 'view'
-    files = os.listdir(OUTPUT_PATH)
-    file_list = []
-    for file_name in files:
-        if file_name.endswith(".zip"):
-            file_path = os.path.join(OUTPUT_PATH, file_name)
-            file_stat = os.stat(file_path)
-            file_dict = {
-                'name': file_name,
-                'seconds': file_stat.st_mtime,
-                'date': datetime.fromtimestamp(file_stat.st_mtime).strftime("%A, %B %d, %Y %I:%M:%S"),
-                'path': file_name,
-            }
-            file_list.append(file_dict)
-    file_list.sort(key=lambda x: x['seconds'], reverse=True)
 
-    proteins = []
-    # file = os.path.join(output_folder, filename)
-    file = request.args.get('file')
     if file:
         file = os.path.join(OUTPUT_PATH, file)
         if not os.path.isfile(file):
@@ -318,6 +334,7 @@ def view():
 
             base_name = os.path.splitext(destination_file_path)[0]
 
+            result_folder = '/runs/'+os.path.basename(base_name)
             if not os.path.exists(base_name):
                 os.makedirs(base_name)
                 print('UNZIP FILE', destination_file_path)
@@ -339,9 +356,39 @@ def view():
             df['local_alignment_description'] = df['local_alignment_description'].apply(extract_name)
             json_result = df.to_json(orient='records', indent=4)
             proteins = json.loads(json_result)
-            return render_template('view.html', files=file_list, proteins=proteins, session=session)
-    return render_template('view.html', files=file_list, proteins=proteins, session=session)
+            with open(base_name+'/summary.json') as f:
+                summary_data = json.load(f)
+            return render_template('view.html', files=load_execution_file(), proteins=proteins, session=session, result_folder=result_folder, summary_data=summary_data)
+    flash('Select a file to visualize', 'error')
+    return render_template('view.html', files=load_execution_file())
 
+@app.route('/view', methods=['GET', 'POST'])
+def view():
+    session['type'] = 'view'
+    if request.method == 'POST':
+        file = request.form.get('file')
+        return view_file(file)
+    return render_template('view.html', files=load_execution_file())
+
+def load_execution_file():
+    files = os.listdir(OUTPUT_PATH)
+    files = [f for f in files if f.startswith(get_logged_user()['user']) and f.endswith('.zip')]
+
+    file_list = []
+
+    for file_name in files:
+        if file_name.endswith(".zip"):
+            file_path = os.path.join(OUTPUT_PATH, file_name)
+            file_stat = os.stat(file_path)
+            file_dict = {
+                'name': file_name,
+                'seconds': file_stat.st_mtime,
+                'date': datetime.fromtimestamp(file_stat.st_mtime).strftime("%A, %B %d, %Y %I:%M:%S"),
+                'path': file_name,
+            }
+            file_list.append(file_dict)
+    file_list.sort(key=lambda x: x['seconds'], reverse=True)
+    return file_list
 
 def unzip_file(zip_file_path):
     base_name = os.path.splitext(os.path.basename(zip_file_path))[0]
@@ -430,8 +477,8 @@ def get_process_info():
 
                     # Extraia apenas o nome do processo
                     process_name = cmd.split('/')[-1]  # Isso extrai apenas o nome do comando
-
-                    process_info.append({'pid': pid, 'name': process_name, 'elapsed_time': elapsed_str})
+                    progress = view_progress(process_name)
+                    process_info.append({'pid': pid, 'name': process_name, 'elapsed_time': elapsed_str, 'progress':progress})
 
         return process_info
 
@@ -465,8 +512,36 @@ def view_log(run_id):
     except Exception as e:
         return f"Erro ao abrir o log: {str(e)}", 500
 
+@app.route('/view-progress/<run_id>')
+def view_progress(run_id):
+    try:
+        log_file_path = f"{OUTPUT_PATH}/{run_id}.log"
+        log_content = ''
+        with open(log_file_path, 'r') as file:
+            log_content  = file.read()
 
-##End process management
+        progress = {
+            'sample': 'Proteins viable for analysis' in log_content,
+            'erret': 'Executing ERRet' in log_content,
+            'nglyc': 'Executing N-Glyc' in log_content,
+            'wolfpsort': 'Executing WoLFPSORT' in log_content,
+            'tmhmm': 'Executing TMHMM-2.0c' in log_content,
+            'signalp': 'Executing SignalP-5' in log_content,
+            'phobius': 'Executing Phobius' in log_content,
+            'interpro': 'Executing InterproScan' in log_content,
+            'diamond': 'Executing Diamond' in log_content,
+            'output': 'Creating output files' in log_content,
+        }
+        true_count = 0
+        for value in progress.values():
+            if value:
+                true_count += 10
+        return true_count
+    except Exception as e:
+        print(f"Erro ao abrir o log: {str(e)}", 500)
+        return 0
+##End pr#ocess management
+
 
 @app.route('/teste')
 def teste():
@@ -505,7 +580,6 @@ def download():
 
         proteins_final = []
         for protein in proteins:
-            # Adiciona o campo 'description' com o resultado da chamada do método
             protein['header'] = extract_name(protein.get('header', ''))
             protein['local_alignment_hit'] = extract_name(protein.get('local_alignment_hit', ''))
             protein['tm'] = 0 if (protein.get('tm') == '-' or protein.get('tm') is None) else int(protein.get('tm'))
@@ -522,7 +596,6 @@ def download():
     print(df)
     content_type = "text/plain"
     output = StringIO()
-    output_excel = BytesIO()
 
     if file_extension == 'csv':
         df.to_csv(output, index=False)
@@ -570,7 +643,7 @@ def get_logged_user():
 
 def auto_login():
 
-    print("ESTA DEBUGANDO?", (FLASK_DEBUG == True))
+    print("DEBUG?", (FLASK_DEBUG == True))
     if FLASK_DEBUG:
         default_user = {
             'user': 'dev',
@@ -602,13 +675,13 @@ def login():
                 session['logged_in'] = True
                 session['user'] = users[username]
                 session['type'] = 'new'
-                return render_template('index.html', session=session)
+                return render_template('index.html', session=session, dbs=load_db_list(), interpro=is_interproscan_installed())
             else:
                 flash('Incorrect username or password. Please try again.', 'error')
         else:
             flash('Incorrect username or password. Please try again.', 'error')
 
-    return render_template('login.html')
+    return render_template('login.html', debug=FLASK_DEBUG)
 
 
 @app.route('/logout')
@@ -776,7 +849,7 @@ def dbs():
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('No file provided.', 'error')
-            return render_template('dbs.html', session=session)
+            return render_template('dbs.html', files=load_all_db_list(),session=session)
         file = request.files['file']
         name = request.form.get('name')
         try:
@@ -784,10 +857,10 @@ def dbs():
             flash('Database created successfuly.', "success")
         except FileProcessingError as e:
             flash(f"{e}", "error")
-            return render_template('dbs.html', files=load_db_list(), session=session)
+            return render_template('dbs.html', files=load_all_db_list(), session=session)
     # List .dmnd files in DB_PATH
 
-    return render_template('dbs.html', files=load_db_list(), session=session)
+    return render_template('dbs.html', files=load_all_db_list(), session=session)
 
 
 def convert_size(size_bytes):
@@ -855,7 +928,32 @@ def delete_db(filename):
     else:
         flash('File not found.', 'error')
     return redirect(url_for('dbs'))
+@app.route('/convert_db/<filename>', methods=['POST'])
+def convert_db(filename):
+    session['type'] = 'dbs'
+    file_path = os.path.join(DB_PATH, filename)
+    file_name_with_ext = os.path.basename(file_path)
+    dmnd_filename, _ = os.path.splitext(file_name_with_ext)
+    dmnd_file_path = os.path.join(DB_PATH, dmnd_filename)
+    try:
+        result = subprocess.run(
+            ['diamond', 'makedb', '--in', file_path, '-d', dmnd_file_path],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        print(result)
+        print("Output:", result.stdout)
+        print("Error Output:", result.stderr)
+        flash(f'File {filename} converted successfully. But don''t worry, your FASTA file is still there! :D', 'success')
+    except subprocess.CalledProcessError as e:
+        print("Error Output:", result.stderr)
+        print("Warning: Command returned 1, but the process will continue.")
+        flash('Error converting ' + filename, 'error')
 
+
+    return redirect(url_for('dbs'))
 
 if __name__ == '__main__':
     app.run(debug=True)

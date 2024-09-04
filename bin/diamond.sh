@@ -29,7 +29,7 @@ echo "FASTA: $1"
 echo "DB: $DIAMOND_DB"
 echo "OUTPUT: $OUTPUT_FILE"
 
-diamond blastp --query $1 --db $DIAMOND_DB --out $OUTPUT_FILE --outfmt 6 qseqid sseqid pident qcovhsp positive evalue bitscore sseqid stitle
+diamond blastp --ultra-sensitive --query $1 --db $DIAMOND_DB --out $OUTPUT_FILE --outfmt 6 qseqid sseqid pident qcovhsp positive evalue bitscore sseqid stitle
 
 sed -i '1i qseqid\tsseqid\tpident\tqcovhsp\tpositive\tevalue\tbitscore\tsseqid\tstitle' $OUTPUT_FILE
 

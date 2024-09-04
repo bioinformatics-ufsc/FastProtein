@@ -21,6 +21,8 @@ RUN apt-get install -y nano
 RUN apt-get install -y wget
 RUN apt-get install -y maven
 RUN apt-get install -y procps=2:3.3.17-5
+RUN apt-get install -y aria2
+RUN apt-get install -y pigz
 
 #Dependency for wolfpsort
 RUN apt-get install -y libfindbin-libs-perl

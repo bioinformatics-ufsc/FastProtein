@@ -41,7 +41,8 @@
                         <input type="file" class="form-control" id="file" name="file" required>
                     </div>
                     <div class="mb-3">
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Database name" required>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Database name"
+                               required>
                     </div>
                     <button type="submit" class="btn btn-primary">Create Dabatase!</button>
                 </form>
@@ -62,10 +63,24 @@
                             <td>{{ file.date }}</td>
                             <td>{{ file.size_mb }}</td>
                             <td>
-                                <form method="POST" action="/delete_db/{{ file.name }}" style="display:inline-block;"
-                                      onsubmit="return confirm('Are you sure you want to delete this file?');">
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
+                                {% if file.ext == 'dmnd' %}
+                                    <form method="POST" action="/delete_db/{{ file.name }}"
+                                          style="display:inline-block;"
+                                          onsubmit="return confirm('Are you sure you want to delete this file?');">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                {% endif %}
+                                {% if file.ext == 'fasta' %}
+                                    <form method="POST" action="/convert_db/{{ file.name }}"
+                                          style="display:inline-block;"
+                                          onsubmit="return confirm('Are you sure you want to convert this file into Diamond DB?');">
+                                        <button type="submit" class="btn btn-primary btn-sm">Convert to Diamond DB
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="/convert_db/{{ file.name }}" style="display:inline-block;" onsubmit="openModal('/convert_db/{{ file.name }}'); return false;">
+                                        <button type="submit" class="btn btn-primary btn-sm">Convert to Diamond DB</button>
+                                    </form>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
@@ -75,23 +90,50 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirm Conversion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to convert this file into Diamond DB?
+            </div>
+            <div class="modal-footer">
+                <form id="confirmForm" method="POST" style="display:inline-block;">
+                    <button type="submit" class="btn btn-primary">Convert</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
+<script src="static/js/jquery-3.7.1.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+<script src="static/js/datatables.min.js"></script>
+<script src="static/js/popper.min.js"></script>
 
-    <script src="static/js/jquery-3.7.1.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
-    <script src="static/js/datatables.min.js"></script>
-    <script src="static/js/popper.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            $('#fileTable').DataTable({
-                "paging": false,
-                "searching": false,
-                "info": false
-            });
+<script>
+    $(document).ready(function () {
+        $('#fileTable').DataTable({
+            "paging": false,
+            "searching": false,
+            "info": false
         });
+    });
 
-        $('.alert').alert()
-    </script>
+    document.getElementById('triggerModalButton').addEventListener('click', function() {
+        $('#confirmModal').modal('show');
+    });
+
+    function openModal(actionUrl) {
+        document.getElementById('confirmForm').action = actionUrl;
+        $('#confirmModal').modal('show');
+    }
+</script>
 </body>
 </html>

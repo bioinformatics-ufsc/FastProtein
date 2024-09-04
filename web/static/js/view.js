@@ -8,144 +8,6 @@ $(document).ready(function () {
 
     });
 
-    function plotScatterPlot() {
-        var filteredData = table.rows({filter: 'applied'}).data().toArray();
-        var x = [];
-        var y = [];
-
-        // Preenche os arrays x e y com base nos dados filtrados
-        filteredData.forEach(row => {
-            x.push(parseFloat(row[4])); // ponto_isoeletrico
-            y.push(parseFloat(row[3])); // kda
-        });
-
-        var trace1 = {
-            x: x,
-            y: y,
-            type: 'histogram2dcontour',
-            colorbar: {
-                title: 'Density'
-            },
-            colorscale: [
-                [0, 'rgb(255,255,255)'],    // Branco
-                [0.2, 'rgb(200,220,255)'],   // Azul claro
-                [0.4, 'rgb(150,190,255)'],   // Azul médio claro
-                [0.6, 'rgb(100,150,255)'],   // Azul médio
-                [0.8, 'rgb(50,100,255)'],    // Azul mais escuro
-                [1, 'rgb(0,50,255)']         // Azul escuro
-            ],
-            reversescale: false
-        };
-
-        var trace2 = {
-            x: x,
-            y: y,
-            mode: 'markers',
-            type: 'scatter',
-            marker: {
-                size: 10,
-                color: 'rgba(17, 157, 255, 0.7)',
-                line: {
-                    width: 1,
-                    color: 'rgba(17, 157, 255, 0.9)'
-                }
-            }
-        };
-
-        var layout = {
-            xaxis: {
-                title: 'Isoelectric Point (p.H)',
-                range: [0, 14]
-            },
-            yaxis: {
-                title: 'Molecular Massa (kDa)',
-                rangemode: 'tozero'
-            },
-            title: 'Molecular mass (kDa) vs Isoelectric Point (p.H)',
-            paper_bgcolor: '#e0e0e0',
-            plot_bgcolor: '#ffffff'
-        };
-
-        Plotly.newPlot('scatterPlot', [trace1, trace2], layout);
-    }
-
-    // Atualizar gráfico ao aplicar filtros
-    table.on('draw', plotScatterPlot);
-
-    function generateChart() {
-        // Coletando os dados filtrados da coluna 'subcellular_localization'
-        var data = table.column(5, {search: 'applied'}).data().toArray();
-
-        // Contando as ocorrências de cada categoria
-        var counts = {};
-        data.forEach(function (value) {
-            counts[value] = (counts[value] || 0) + 1;
-        });
-
-        // Convertendo os dados para Chart.js
-        var labels = Object.keys(counts);
-        var chartData = Object.values(counts);
-
-        // Destruindo o gráfico anterior, se houver
-        if (window.myPieChart) {
-            window.myPieChart.destroy();
-        }
-
-        var backgroundColors = [
-            'rgba(173, 216, 230, 0.6)', // LightBlue
-            'rgba(135, 206, 250, 0.6)', // SkyBlue
-            'rgba(70, 130, 180, 0.6)',  // SteelBlue
-            'rgba(0, 0, 255, 0.6)',     // Blue
-            'rgba(0, 0, 139, 0.6)',     // DarkBlue
-            'rgba(25, 25, 112, 0.6)'    // MidnightBlue
-        ];
-
-        var borderColors = [
-            'rgba(173, 216, 230, 1)', // LightBlue
-            'rgba(135, 206, 250, 1)', // SkyBlue
-            'rgba(70, 130, 180, 1)',  // SteelBlue
-            'rgba(0, 0, 255, 1)',     // Blue
-            'rgba(0, 0, 139, 1)',     // DarkBlue
-            'rgba(25, 25, 112, 1)'    // MidnightBlue
-        ];
-
-        // Gerando o novo gráfico de pizza
-        var ctx = document.getElementById('myChart').getContext('2d');
-        window.myPieChart = new Chart(ctx, {
-            height: 400,
-            width: 500,
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Occurrences',
-                    data: chartData,
-                    backgroundColor: backgroundColors.slice(0, labels.length),
-                    borderColor: borderColors.slice(0, labels.length),
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                    },
-                    title: {
-                        display: true,   // Exibe o título
-                        text: 'Subcellular Localization Occurrences',  // Texto do título
-                        font: {
-                            size: 18      // Tamanho da fonte do título
-                        }
-                    }
-                },
-                responsive: true,
-                maintainAspectRatio: true
-
-            }
-        });
-    }
-
     function setTextFilter(idx, filtername) {
         $(filtername).on('keyup', function () {
             table.column(idx).search(this.value).draw();
@@ -156,8 +18,7 @@ $(document).ready(function () {
             $('#filteredIds').val(filteredIds.join(','));
 
             console.log($('#filteredIds').val())
-            generateChart();
-            plotScatterPlot();
+
         });
     }
 
@@ -181,8 +42,7 @@ $(document).ready(function () {
             $('#filteredIds').val(filteredIds.join(','));
 
             console.log($('#filteredIds').val())
-            generateChart();
-            plotScatterPlot();
+
         });
     }
 
@@ -231,15 +91,9 @@ $(document).ready(function () {
         table.search('').columns().search('').draw();
 
     });
-    var canvas = document.getElementById('myChart');
-    canvas.width = 50; // Largura desejada
-    canvas.height = 50; // Altura desejada
-
-    generateChart();
-    plotScatterPlot();
-
 
     $('#downloadBtn').on('click', function () {
+        alert('Clicou')
         // Cria um objeto FormData para enviar os dados
         var formData = new FormData();
 
@@ -300,6 +154,7 @@ $(document).ready(function () {
 
                 var a = document.createElement('a');
                 a.href = 'data:' + mimeType + ';charset=utf-8,' + encodeURIComponent(data);
+                console.log(fileName)
                 a.download = fileName;
                 document.body.appendChild(a);
                 a.click();
@@ -320,3 +175,21 @@ $(document).ready(function () {
         handleDownload('fasta', 'proteins.fasta');
     });
 });
+
+function loadLogFile(url, title) {
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(text => {
+            document.getElementById('fileTitle').textContent = title;
+            document.getElementById('outputAreaModal').textContent = text;
+            document.getElementById('downloadFile').href = url;
+        })
+        .catch(error => {
+            document.getElementById('outputAreaModal').textContent = 'Failed to load file: ' + error.message;
+        });
+}

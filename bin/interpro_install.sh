@@ -2,19 +2,32 @@
 echo 'Starting InterProScan installation'
 START_TIME=$(date +%s)
 
+command_path="/usr/local/bin/interproscan"
+
+# Verificar se o comando existe
+if [ -x "$command_path" ]; then
+    echo "InterProScan is installed."
+    exit 0
+else
+    echo "InterProScan is not installed."
+fi
+
 if [ -d "/bioinformatic/interproscan-5.61-93.0" ]; then
+    echo "We are trying to configure"
     echo "The directory already exists. Try to execute command 'interproscan --help'"
     exit 1
 fi
 
 if [ ! -f "/bioinformatic/interproscan-5.61-93.0-64-bit.tar.gz" ]; then
     echo 'File interproscan-5.61-93.0-64-bit.tar.gz not found, downloading'
-    wget https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.61-93.0/interproscan-5.61-93.0-64-bit.tar.gz -P /bioinformatic/
+    aria2c --continue=true --max-connection-per-server=8 --min-split-size=2M -d /bioinformatic https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.61-93.0/interproscan-5.61-93.0-64-bit.tar.gz
+    echo 'interproscan-5.61-93.0-64-bit.tar.gz downloaded'
 fi
 
 if [ -f "/bioinformatic/interproscan-5.61-93.0-64-bit.tar.gz" ]; then
     echo 'File interproscan-5.61-93.0-64-bit.tar.gz found. Unpacking. This process my take minutes (20~30min).'
-    tar -pxzf /bioinformatic/interproscan-5.61-93.0-64-bit.tar.gz -C /bioinformatic/
+    tar --use-compress-program=pigz -xvf interproscan-5.61-93.0-64-bit.tar.gz -C /bioinformatic
+
     echo "export INTERPRO_HOME=/bioinformatic/interproscan-5.61-93.0" >> ~/.bashrc
     source  ~/.bashrc
 
