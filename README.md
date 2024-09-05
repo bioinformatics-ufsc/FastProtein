@@ -346,36 +346,6 @@ fastprotein -i /example/input.fasta -db /example/db.fasta --interpro -o result_t
 ```
 ---
 
-### **BioLib**
-
-<p>FastProtein has an online service for small datasets (~100 proteins). 
-This limitation is not from FastProtein, but rather from the web service that can generate a timeout.
-</p>
-
-This service is available at: (<a href="https://biolib.com/UFSC/FastProtein" target='_blank'>https://biolib.com/UFSC/FastProtein</a>)
-
-#### **Running BioLib locally using the command line**
-
-Alternatively, you can run FastProtein via biolib through the command line. To do this, install biolib and execute the command.
-Required python 3 and pip3.
-
-```bash
-##Installing BioLib before Run
-pip3 install -U pybiolib
-##Running help - This process will download a customized docker image in your host (~50GB) to execute FastProtein
-biolib run UFSC/FastProtein --help
-```
-
-<p>&ensp;</p>
-
-BioLib has a specific syntax and the flags `--interpro` needed a `true` or `false` value in the command line. 
-The default BioLib output is `biolib_results/` in the current folder
-Check the Example:
-
-```bash
-biolib run UFSC/FastProtein -i input.fasta --interpro true
-```
-
 ##Output console
 It is possible to see all the commands running using the flag -log ALL in command line.
 
