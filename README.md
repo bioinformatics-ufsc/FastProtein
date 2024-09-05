@@ -296,15 +296,7 @@ A list of zip files is showed in the web page.
 </p>
 
 ### **Server Screen**
-<p align="center">
-  <a>
-    <img src=".img/login.png" width="800"/>
-  </a>
-</p>
-```bash
-   Login: admin
-   Password: admin
-```
+
 <p align="center">
   <a>
     <img src=".img/Figure2.png" width="800"/>
