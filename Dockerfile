@@ -95,7 +95,7 @@ ARG CACHEBUST=1
 RUN mvn -f /FastProtein/pom.xml clean install
 
 #Install interproscan
-RUN if [ "$INTERPRO_INSTALL" = "Y" ]; then ./interpro_install.sh; fi
+RUN if [ "$INTERPRO_INSTALL" = "Y" ]; then /FastProtein/bin/interpro_install.sh; fi
 
 #Optional if you want to run a Flask server. Access it via browser at localhost:5000
 RUN pip3 install Flask==3.0.3
