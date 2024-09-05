@@ -1,1 +1,1 @@
-docker build -t bioinfoufsc/fastprotein:latest .
+docker build --no-cache --tag bioinfoufsc/fastprotein:latest .
