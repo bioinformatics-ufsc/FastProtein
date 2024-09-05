@@ -202,7 +202,9 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    docker build --build-arg INTERPRO_INSTALL=Y -t bioinfoufsc/fastprotein-interproscan:latest .
    ```
 
-#
+   > _If you are using the version with InterProScan, ensure that your Docker has at least 10GB of available RAM to run the program._
+
+
 
 ### **Get a image from DockerHub (recommended)**
 
@@ -223,9 +225,11 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    docker run -it --name FastProtein -p 5000:5000 bioinfoufsc/fastprotein:latest
 ```
 Now, access the url http://127.0.0.1:5000 and enjoy!
-Default user:
+```bash
    Login: admin
    Password: admin
+```
+<img src=".img/login.png">
 
 ### **Advanced running sets (CLI mode)**
     
@@ -280,8 +284,6 @@ Default user:
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- USAGE ----------------------------------------------------------------- -->
----
 ## **Usage**
 ### **FastProtein Web Server**
 
@@ -289,11 +291,20 @@ Default user:
 
 Just open the following link in a browser and FastProtein local service will be up and running: (<a href="http://127.0.0.1:5000" target='_blank'>127.0.0.1:5000</a>)
 
-Results will be redirect to directory `/fastproteins/runs` linked with the local folder `~/fastproteins/runs`.
+Results will be redirect to directory `/FastProtein/runs` linked with the local folder `~/FastProteins/runs`.
 A list of zip files is showed in the web page.
 </p>
 
 ### **Server Screen**
+<p align="center">
+  <a>
+    <img src=".img/login.png" width="800"/>
+  </a>
+</p>
+```bash
+   Login: admin
+   Password: admin
+```
 <p align="center">
   <a>
     <img src=".img/Figure2.png" width="800"/>
