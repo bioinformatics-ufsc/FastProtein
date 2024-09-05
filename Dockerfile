@@ -1,47 +1,46 @@
-#docker build -t bioinfoufsc/fastprotein:latest .
-#docker build --build-arg INTERPRO_INSTALL=Y -t bioinfoufsc/fastprotein-ipr:latest .
+# docker build --no-cache --tag bioinfoufsc/fastprotein:latest .
+# docker build --no-cache --build-arg INTERPRO_INSTALL=Y --tag bioinfoufsc/fastprotein-interpro:latest .
 FROM debian:bullseye
 ARG INTERPRO_INSTALL=N
-###################################
+
 LABEL base_image="debian:bullseye"
 LABEL version="1"
 LABEL software="FastProtein"
 LABEL software.version="1.1"
-LABEL about.summary="FastProtein – An automated software for in silico proteomic analysis."
+LABEL about.summary="FastProtein - An automated software for in silico proteomic analysis"
 LABEL about.home="https://github.com/bioinformatics-ufsc/FastProtein/"
 LABEL about.documentation="https://github.com/bioinformatics-ufsc/FastProtein/"
 LABEL about.tags="Proteomics"
-###################################
 
-RUN apt-get update
-RUN apt-get install -y apt-utils
-RUN apt-get install -y git
-RUN apt-get install -y unzip
-RUN apt-get install -y zip
-RUN apt-get install -y nano
-RUN apt-get install -y wget
-RUN apt-get install -y maven
-RUN apt-get install -y procps=2:3.3.17-5
-RUN apt-get install -y aria2
-RUN apt-get install -y pigz
+# dependencies
+# wolfpsort - libfindbin-libs-perl
+RUN apt-get update && apt-get install -y \
+    apt-utils \
+    aria2 \
+    diamond-aligner=2.0.7-1 \
+    git \
+    libfindbin-libs-perl \
+    maven \
+    nano \
+    openjdk-17-jdk \
+    pigz \
+    procps=2:3.3.17-5 \
+    python3 \
+    python3-pip \
+    unzip \
+    wget \
+    zip
 
-#Dependency for wolfpsort
-RUN apt-get install -y libfindbin-libs-perl
+# python libraries
+# charts          - matplotlib, pandas and seaborn
+# interpro online - requests and xmltramp2
+# predgpi         - numpy
 
-RUN apt-get install -y python3
-RUN apt-get install -y python3-pip
-RUN apt-get install -y openjdk-17-jdk
-
-RUN apt-get install -y diamond-aligner=2.0.7-1
-
-#Dependency for predgpi
 RUN pip3 install numpy==1.23.1
 
-#Dependencies for interpro online
 RUN pip3 install requests==2.32.3
 RUN pip3 install xmltramp2==3.1.1
 
-#Dependencies for charts
 RUN pip3 install pandas==2.2.2
 RUN pip3 install matplotlib==3.9.2
 RUN pip3 install seaborn==0.13.2
@@ -53,7 +52,7 @@ RUN git clone https://github.com/bioinformatics-ufsc/FastProtein.git
 RUN mkdir /bioinformatic/
 RUN mkdir /FastProtein/temp
 
-# Dezipando arquivos
+# unzip third-party software
 RUN unzip -q /FastProtein/third-party/predgpi.zip -d /bioinformatic/ \
     && unzip -q /FastProtein/third-party/tmhmm-2.0c.zip -d /bioinformatic/ \
     && unzip -q /FastProtein/third-party/signalp-5.0b.zip -d /bioinformatic/ \
@@ -76,7 +75,7 @@ ENV PREDGPI_HOME='/bioinformatic/predgpi'
 ENV FASTPROTEIN_HOME='/FastProtein'
 ENV DATABASE_HOME=$FASTPROTEIN_HOME""'/db'
 
-# Givin permission
+# allow script execution
 RUN chmod +x /FastProtein/bin/signalp5.sh
 RUN chmod +x /FastProtein/bin/predgpi.sh
 RUN chmod +x /FastProtein/bin/tmhmm2.sh
@@ -94,7 +93,7 @@ RUN ln -s /FastProtein/bin/fastprotein.sh /usr/local/bin/fastprotein
 ARG CACHEBUST=1
 RUN mvn -f /FastProtein/pom.xml clean install
 
-#Install interproscan
+# install interproscan
 RUN if [ "$INTERPRO_INSTALL" = "Y" ]; then /FastProtein/bin/interpro_install.sh; fi
 
 #Optional if you want to run a Flask server. Access it via browser at localhost:5000
@@ -125,4 +124,3 @@ WORKDIR /FastProtein
 #docker exec -it FastProtein interpro_install
 
 # Exibindo mensagem de sucessoRUN echo "The server is available at http://127.0.0.1:5000"
-
