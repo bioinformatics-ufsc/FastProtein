@@ -1,1 +1,1 @@
-docker build --build-arg INTERPRO_INSTALL=Y -t bioinfoufsc/fastprotein-ipr:latest .
+docker build --no-cache --build-arg INTERPRO_INSTALL=Y --tag bioinfoufsc/fastprotein-interpro:latest .
