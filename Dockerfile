@@ -1,5 +1,8 @@
 #docker build -t bioinfoufsc/fastprotein:latest .
+#docker build --build-arg INTERPRO_INSTALL=Y -t bioinfoufsc/fastprotein-ipr:latest .
 FROM debian:bullseye
+
+ARG INTERPRO_INSTALL=N
 
 ###################################
 LABEL base_image="debian:bullseye"
@@ -92,6 +95,8 @@ RUN ln -s /FastProtein/bin/fastprotein.sh /usr/local/bin/fastprotein
 
 ARG CACHEBUST=1
 RUN mvn -f /FastProtein/pom.xml clean install
+
+RUN if [ "$INTERPRO_INSTALL" = "Y" ]; then ./interpro_install.sh; fi
 
 #Optional if you want to run a Flask server. Access it via browser at localhost:5000
 RUN pip3 install Flask==3.0.3
