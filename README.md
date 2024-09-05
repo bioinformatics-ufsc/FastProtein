@@ -117,7 +117,15 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 - **and much more**...
 
+
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+---
+## **The workflow**
+<p>
+   <img src=".img/Figure1.png"  height="500"/>
+</p>
+
 
 ---
 ## **Technologies**
@@ -184,9 +192,16 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 2. Change directory and build container
 
    ```bash
-   cd FastProtein/docker
+   cd FastProtein
    docker build -t bioinfoufsc/fastprotein:latest .
    ```
+   or if you want to install InterProScan
+
+   ```bash
+   cd FastProtein
+   docker build --build-arg INTERPRO_INSTALL=Y -t bioinfoufsc/fastprotein-interproscan:latest .
+   ```
+
 #
 
 ### **Get a image from DockerHub (recommended)**
@@ -202,14 +217,24 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    docker pull bioinfoufsc/fastprotein-interpro
 ```
 
-### **Controlling Docker container (mandatory)**
+### **Basic running (recommended)**
+1. This is the easiest way to run FastProtein
+```bash   
+   docker run -it --name FastProtein -p 5000:5000 bioinfoufsc/fastprotein:latest
+```
+Now, access the url http://127.0.0.1:5000 and enjoy!
+Default user:
+   Login: admin
+   Password: admin
+
+### **Advanced running sets (CLI mode)**
     
    ```bash
-   # Step 1 - Create a local directory that will be used to exchange files with Docker (example fastprotein/ inside user home)
-   #          ~/fastprotein is the work directory
-   #          ~/fastprotein/runs the directory that stores the FastProtein web server requests
+   # Step 1 - Create a local directory that will be used to exchange files with Docker (example FastProtein/ inside user home)
+   #          ~/FastProtein is the work directory
+   #          ~/FastProtein/runs the directory that stores the FastProtein web server requests
    #          
-   mkdir -p <your_home>/fastprotein/runs
+   mkdir -p <your_home>/FastProtein/runs
    
    # Step 2 - File sharing - If you are using MacOS you have to share your folder before go to Step 3
   ```
@@ -223,10 +248,10 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    # Step 3 - Create a container named FastProtein that will have the volume associated with the locally created directory. 
    #          Port 5000 is used to access the FastProtein web server.
    #          PS 1: this command is executed only one time and it will create and start your container
-   docker run -d -it --name FastProtein -p 5000:5000 -v <your_home>/fastprotein:/fastprotein bioinfoufsc/fastprotein:latest
+   docker run -it --name FastProtein -p 5000:5000 -v <your_directory_output>:/FastProtein/runs bioinfoufsc/fastprotein:latest
    # Step 3.1 - If you have InterProScan on your host, you can direct it to the FastProtein Docker InterProScan directory as follows.
    #          The supported version is interproscan-5.61-93.0 (http://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.61-93.0/interproscan-5.61-93.0-64-bit.tar.gz)
-   docker run -d -it --name FastProtein -p 5000:5000 -v <your_home>/fastprotein:/fastprotein -v <your_interpro_home>:/bioinformatic/interproscan-5.61-93.0 bioinfoufsc/fastprotein:latest
+   docker run -it --name FastProtein -p 5000:5000 -v <your_directory_output>:/FastProtein/runs -v <your_interpro_home>:/bioinformatic/interproscan-5.61-93.0 bioinfoufsc/fastprotein:latest
    #
    # Step 4 - InterProScan installation
    #          This step may take ~1 hour total
@@ -246,10 +271,10 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    docker exec -it FastProtein /bin/bash 
   # To exchange files between the host and the container without using a volume, use the command:
   # docker cp <local_file> <container_id>:<container_file>
-  # E.g: copy a fasta file test/human.fasta to /fastprotein (or other directory if you need)
-  docker cp test/human.fasta FastProtein:/fastprotein
+  # E.g: copy a fasta file test/human.fasta to /FastProtein (or other directory if you need)
+  docker cp test/human.fasta FastProtein:/FastProtein
   # E.g: copy the folder runs from container to local runs folder
-  docker cp FastProtein:/fastprotein/runs ./runs
+  docker cp FastProtein:/FastProtein/runs ./runs
 ```
 
 
@@ -271,7 +296,17 @@ A list of zip files is showed in the web page.
 ### **Server Screen**
 <p align="center">
   <a>
-    <img src=".img/screen.png" width="800" height="500"/>
+    <img src=".img/Figure2.png" width="800"/>
+  </a>
+</p>
+<p align="center">
+  <a>
+    <img src=".img/Figure3.png" width="800"/>
+  </a>
+</p>
+<p align="center">
+  <a>
+    <img src=".img/Figure4.png" width="800"/>
   </a>
 </p>
 
@@ -349,15 +384,15 @@ In the FastProtein container, it is possible to run the software used within the
 
 ```bash
   ## WoLFPSORT (output = <local_execution_folder>/wolfsort.out)
-  docker exec -it FastProtein2 wolfpsort animal /example/input.fasta > wolfpsort.out
+  docker exec -it FastProtein wolfpsort animal /example/input.fasta > wolfpsort.out
   ## SignalP5 (output = <local_execution_folder>/signalp.out)
-  docker exec -it FastProtein2 signalp -fasta /example/input.fasta -stdout > signalp.out
+  docker exec -it FastProtein signalp -fasta /example/input.fasta -stdout > signalp.out
   ##Phobius (output = <local_execution_folder>/phobius.out)
-  docker exec -it FastProtein2 phobius -short /example/input.fasta > phobius.out
+  docker exec -it FastProtein phobius -short /example/input.fasta > phobius.out
   #TMHMM2 (output = <local_execution_folder>/tmhmm.out)
-  docker exec -it FastProtein2 tmhmm2 /example/input.fasta > tmhmm2.out
+  docker exec -it FastProtein tmhmm2 /example/input.fasta > tmhmm2.out
   #PredGPI (output = <local_execution_folder>/predgpi.out)
-  docker exec -it FastProtein2 predgpi /example/input.fasta > predgpi.out
+  docker exec -it FastProtein predgpi /example/input.fasta > predgpi.out
   #InterProScan5 (output = <shared_folder>/interpro.out)
   docker exec -it FastProtein interproscan -i /example/input.fasta -f tsv -o interpro.out --goterms
 ```
