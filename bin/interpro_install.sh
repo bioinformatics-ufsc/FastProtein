@@ -26,7 +26,7 @@ fi
 
 if [ -f "/bioinformatic/interproscan-5.61-93.0-64-bit.tar.gz" ]; then
     echo 'File interproscan-5.61-93.0-64-bit.tar.gz found. Unpacking. This process my take minutes (20~30min).'
-    tar --use-compress-program=pigz -xvf interproscan-5.61-93.0-64-bit.tar.gz -C /bioinformatic
+    tar --use-compress-program=pigz -xvf /bioinformatic/interproscan-5.61-93.0-64-bit.tar.gz -C /bioinformatic
 
     echo "export INTERPRO_HOME=/bioinformatic/interproscan-5.61-93.0" >> ~/.bashrc
     source  ~/.bashrc
