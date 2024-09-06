@@ -34,7 +34,6 @@ if DB_PATH is None:
     # Define DB_PATH como o diretório 'db' na raiz da aplicação
     DB_PATH = os.path.join(BASE_DIR, 'db')
 
-
 OUTPUT_PATH = FLASK_HOME + '/runs'
 USERS_PATH = FLASK_HOME + '/users.json'
 
@@ -50,7 +49,7 @@ FLASK_DEBUG = app.config['DEBUG']
 ALLOWED_EXTENSIONS = {'.fa', '.fas', '.fasta', '.faa', '.dmnd'}
 errors = []
 
-#filtered_lines = [
+# filtered_lines = [
 #    '503 Thu Aug 22 16:37:45 2024 /bin/bash /usr/local/bin/fastprotein -i /fastprotein/runs/testefastprotein-1724344665.fasta -s animal -zip -o /fastprotein/runs/testefastprotein-1724344665_results -log ALL',
 #    '608 Thu Aug 22 16:47:44 2024 /bin/bash /usr/local/bin/fastprotein -i /fastprotein/runs/fastprotein2-1724345264.fasta -s animal -zip -o /fastprotein/runs/fastprotein2-1724345264_results -log ALL']
 filtered_lines = []
@@ -65,12 +64,12 @@ app.secret_key = os.urandom(24)
 
 @app.route('/static/<path:filename>')
 def serve_static(filename):
-    return send_from_directory(app.static_folder, filename,as_attachment=True)
+    return send_from_directory(app.static_folder, filename, as_attachment=True)
 
 
 @app.route('/runs/<path:filename>')
 def download_file(filename):
-    return send_from_directory(static_bp.static_folder, filename,as_attachment=True)
+    return send_from_directory(static_bp.static_folder, filename, as_attachment=True)
 
 
 def is_interproscan_installed():
@@ -97,6 +96,7 @@ def index():
     auto_login()
     # render the template with the file list
     return render_template('index.html', dbs=load_db_list(), session=session, interpro=is_interproscan_installed())
+
 
 def load_all_db_list():
     dbs = [file for file in os.listdir(DB_PATH) if file.endswith('.dmnd') or file.endswith('.fasta')]
@@ -142,6 +142,8 @@ def load_all_db_list():
 
     db_list.sort(key=lambda x: x['name'], reverse=True)
     return db_list
+
+
 def load_db_list():
     dbs = [file for file in os.listdir(DB_PATH) if file.endswith('.dmnd')]
 
@@ -164,6 +166,7 @@ def load_db_list():
 
     db_list.sort(key=lambda x: x['name'], reverse=True)
     return db_list
+
 
 @app.route('/run', methods=['POST'])
 def run():
@@ -240,20 +243,19 @@ def run():
     params.extend(['-o', folder])
     params.extend(['-log', 'ALL'])
 
-    thread = threading.Thread(target=run_fastprotein_task, args=(params, folder, inputFasta, inputDB, local_search, run_id))
+    thread = threading.Thread(target=run_fastprotein_task,
+                              args=(params, folder, inputFasta, inputDB, local_search, run_id))
     thread.start()
 
     print(params)
-    #filtered_lines.append(generate_line(params))
+    # filtered_lines.append(generate_line(params))
     flash('Your process is running under id ' + run_id, 'success')
     return render_template('index.html', session=session, dbs=db_list, interpro=is_interproscan_installed())
 
 
 def run_fastprotein_task(params, folder, inputFasta, inputDB, local_search, run_id):
-
     with open(f"{OUTPUT_PATH}/{run_id}.log", 'w') as log_file:
         subprocess.run(['fastprotein'] + params, stdout=log_file, stderr=log_file)
-
 
 
 def generate_line(params):
@@ -329,12 +331,11 @@ def view_file(file):
         if file.endswith('.zip'):
             destination_file_path = os.path.join(OUTPUT_PATH, os.path.basename(file))
 
-
             print('destination_file_path', destination_file_path)
 
             base_name = os.path.splitext(destination_file_path)[0]
 
-            result_folder = '/runs/'+os.path.basename(base_name)
+            result_folder = '/runs/' + os.path.basename(base_name)
             if not os.path.exists(base_name):
                 os.makedirs(base_name)
                 print('UNZIP FILE', destination_file_path)
@@ -356,11 +357,13 @@ def view_file(file):
             df['local_alignment_description'] = df['local_alignment_description'].apply(extract_name)
             json_result = df.to_json(orient='records', indent=4)
             proteins = json.loads(json_result)
-            with open(base_name+'/summary.json') as f:
+            with open(base_name + '/summary.json') as f:
                 summary_data = json.load(f)
-            return render_template('view.html', files=load_execution_file(), proteins=proteins, session=session, result_folder=result_folder, summary_data=summary_data)
+            return render_template('view.html', files=load_execution_file(), proteins=proteins, session=session,
+                                   result_folder=result_folder, summary_data=summary_data, file=os.path.basename(file))
     flash('Select a file to visualize', 'error')
     return render_template('view.html', files=load_execution_file())
+
 
 @app.route('/view', methods=['GET', 'POST'])
 def view():
@@ -369,6 +372,7 @@ def view():
         file = request.form.get('file')
         return view_file(file)
     return render_template('view.html', files=load_execution_file())
+
 
 def load_execution_file():
     files = os.listdir(OUTPUT_PATH)
@@ -389,6 +393,7 @@ def load_execution_file():
             file_list.append(file_dict)
     file_list.sort(key=lambda x: x['seconds'], reverse=True)
     return file_list
+
 
 def unzip_file(zip_file_path):
     base_name = os.path.splitext(os.path.basename(zip_file_path))[0]
@@ -442,7 +447,8 @@ def get_process_info():
 
         filtered_lines = [
             line for line in process_list.splitlines()
-            if '/bin/bash /usr/local/bin/fastprotein' in line and '-o /FastProtein/web/runs/'+get_logged_user()['user'] in line
+            if '/bin/bash /usr/local/bin/fastprotein' in line and '-o /FastProtein/web/runs/' + get_logged_user()[
+                'user'] in line
         ]
         print(filtered_lines)
         process_info = []
@@ -478,7 +484,8 @@ def get_process_info():
                     # Extraia apenas o nome do processo
                     process_name = cmd.split('/')[-1]  # Isso extrai apenas o nome do comando
                     progress = view_progress(process_name)
-                    process_info.append({'pid': pid, 'name': process_name, 'elapsed_time': elapsed_str, 'progress':progress})
+                    process_info.append(
+                        {'pid': pid, 'name': process_name, 'elapsed_time': elapsed_str, 'progress': progress})
 
         return process_info
 
@@ -512,13 +519,14 @@ def view_log(run_id):
     except Exception as e:
         return f"Erro ao abrir o log: {str(e)}", 500
 
+
 @app.route('/view-progress/<run_id>')
 def view_progress(run_id):
     try:
         log_file_path = f"{OUTPUT_PATH}/{run_id}.log"
         log_content = ''
         with open(log_file_path, 'r') as file:
-            log_content  = file.read()
+            log_content = file.read()
 
         progress = {
             'sample': 'Proteins viable for analysis' in log_content,
@@ -540,6 +548,8 @@ def view_progress(run_id):
     except Exception as e:
         print(f"Erro ao abrir o log: {str(e)}", 500)
         return 0
+
+
 ##End pr#ocess management
 
 
@@ -564,36 +574,13 @@ def download():
 
     base_folder = "{}/{}".format(OUTPUT_PATH, os.path.splitext(uploaded_file)[0])
 
-    json_path = os.path.join(base_folder, 'summary.json')
+    tsv_path = os.path.join(base_folder, 'output.tsv')
 
-    print('jsonpath', json_path)
-    print(json_path)
-    if not os.path.exists(json_path):
-        return jsonify({"error": "summary.json not found in the zip file"}), 400
-
-    with open(json_path, 'r') as json_file:
-        data = json.load(json_file)
-        proteins = data.get('proteins', [])
-
-        if filtered_ids_list:
-            proteins = [protein for protein in proteins if protein['id'] in filtered_ids_list]
-
-        proteins_final = []
-        for protein in proteins:
-            protein['header'] = extract_name(protein.get('header', ''))
-            protein['local_alignment_hit'] = extract_name(protein.get('local_alignment_hit', ''))
-            protein['tm'] = 0 if (protein.get('tm') == '-' or protein.get('tm') is None) else int(protein.get('tm'))
-            proteins_final.append(protein.values())
-
-    header = [
-        "ID", "Header", "Sequence", "Subcellular Localization", "TMHMM", "Phobius TM",
-        "SignalP5", "Phobius SP", "Local Alignment Hit", "GPI-Anchored",
-        "GPI-Anchored Evidence", "Membrane", "Membrane Evidence", "Membrane Evidence Complete",
-        "N-Glyc", "Erret", "PFAM", "PANTHER", "InterPro ID", "InterPro Description",
-        "GO ID", "GO Description"
-    ]
-    df = pd.DataFrame(proteins_final, columns=header);
-    print(df)
+    df = pd.read_csv(tsv_path, delimiter='\t')
+    if not filtered_ids_list:
+        filtered_df = df
+    else:
+        filtered_df = df[df['Id'].isin(filtered_ids_list)]
     content_type = "text/plain"
     output = StringIO()
 
@@ -604,14 +591,15 @@ def download():
         df.to_csv(output, index=False, sep='\t')
         content_type = "text/tsv"
     elif file_extension == 'fasta':
+        print('Creating FASTA')
         fasta = ""
         for index, row in df.iterrows():
-            fasta += f">{row['ID']} {row['Header']}\n"
+            fasta += f">{row['Id']} {row['Header']}\n"
             fasta += format_sequence(row['Sequence'])
             fasta += "\n"
         print(fasta)
         output.write(fasta)
-
+        print('Endind Creating FASTA')
     output.seek(0)
 
     response = make_response(output.read())
@@ -637,12 +625,13 @@ def require_login():
     if not session.get('logged_in') and request.endpoint != 'login':
         return redirect(url_for('login'))
 
+
 def get_logged_user():
     if session['logged_in']:
         return session['user']
 
-def auto_login():
 
+def auto_login():
     print("DEBUG?", (FLASK_DEBUG == True))
     if FLASK_DEBUG:
         default_user = {
@@ -675,7 +664,8 @@ def login():
                 session['logged_in'] = True
                 session['user'] = users[username]
                 session['type'] = 'new'
-                return render_template('index.html', session=session, dbs=load_db_list(), interpro=is_interproscan_installed())
+                return render_template('index.html', session=session, dbs=load_db_list(),
+                                       interpro=is_interproscan_installed())
             else:
                 flash('Incorrect username or password. Please try again.', 'error')
         else:
@@ -692,7 +682,6 @@ def logout():
 
 
 # Users module
-
 
 
 def load_users():
@@ -849,7 +838,7 @@ def dbs():
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('No file provided.', 'error')
-            return render_template('dbs.html', files=load_all_db_list(),session=session)
+            return render_template('dbs.html', files=load_all_db_list(), session=session)
         file = request.files['file']
         name = request.form.get('name')
         try:
@@ -912,10 +901,11 @@ def add_db_file(file, dbname):
         os.remove(file_path)
         return 'Database created successfuly.'
     except subprocess.CalledProcessError as e:
-            os.remove(file_path)
-            print("Error Output:", result.stderr)
-            print("Warning: Command returned 1, but the process will continue.")
-            raise
+        os.remove(file_path)
+        print("Error Output:", result.stderr)
+        print("Warning: Command returned 1, but the process will continue.")
+        raise
+
 
 # Route for deleting files
 @app.route('/delete_db/<filename>', methods=['POST'])
@@ -928,6 +918,8 @@ def delete_db(filename):
     else:
         flash('File not found.', 'error')
     return redirect(url_for('dbs'))
+
+
 @app.route('/convert_db/<filename>', methods=['POST'])
 def convert_db(filename):
     session['type'] = 'dbs'
@@ -946,14 +938,15 @@ def convert_db(filename):
         print(result)
         print("Output:", result.stdout)
         print("Error Output:", result.stderr)
-        flash(f'File {filename} converted successfully. But don''t worry, your FASTA file is still there! :D', 'success')
+        flash(f'File {filename} converted successfully. But don''t worry, your FASTA file is still there! :D',
+              'success')
     except subprocess.CalledProcessError as e:
         print("Error Output:", result.stderr)
         print("Warning: Command returned 1, but the process will continue.")
         flash('Error converting ' + filename, 'error')
 
-
     return redirect(url_for('dbs'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

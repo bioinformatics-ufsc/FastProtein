@@ -1,3 +1,5 @@
+pkill -f "flask"
+
 export FLASK_RUN_HOST=0.0.0.0
 export FLASK_DEBUG=True
 export FLASK_HOME='/FastProtein/web'
