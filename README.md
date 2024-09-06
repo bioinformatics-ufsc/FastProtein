@@ -216,7 +216,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 ### **Basic running (recommended)**
 1. This is the easiest way to run FastProtein
 ```bash   
-   docker run -it --name FastProtein -p 5000:5000 bioinfoufsc/fastprotein:latest
+   docker run -d -it --name FastProtein -p 5000:5000 bioinfoufsc/fastprotein:latest
 ```
 Now, access the url http://127.0.0.1:5000 and enjoy!
 ```bash
