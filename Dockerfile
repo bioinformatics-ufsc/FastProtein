@@ -17,7 +17,7 @@ LABEL base_image="debian:bullseye" \
 
 # dependencies and clean apt cache
 # wolfpsort - libfindbin-libs-perl
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install --no-install-recommends -y \
     apt-utils \
     aria2 \
     diamond-aligner=2.0.7-1 \
