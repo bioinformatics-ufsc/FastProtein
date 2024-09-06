@@ -1,12 +1,12 @@
 # docker build --no-cache --tag bioinfoufsc/fastprotein:latest .
 # docker build --no-cache --build-arg INTERPRO_INSTALL=Y --tag bioinfoufsc/fastprotein-interpro:latest .
-FROM debian:bullseye
+FROM debian:bullseye-slim
 
 # build arguments
 ARG INTERPRO_INSTALL=N
 ARG CACHEBUST=1
 
-LABEL base_image="debian:bullseye" \
+LABEL base_image="debian:bullseye-slim" \
     version="1" \
     software="FastProtein" \
     software.version="1.1" \
