@@ -1,18 +1,21 @@
 # docker build --no-cache --tag bioinfoufsc/fastprotein:latest .
 # docker build --no-cache --build-arg INTERPRO_INSTALL=Y --tag bioinfoufsc/fastprotein-interpro:latest .
 FROM debian:bullseye
+
+# build arguments
 ARG INTERPRO_INSTALL=N
+ARG CACHEBUST=1
 
-LABEL base_image="debian:bullseye"
-LABEL version="1"
-LABEL software="FastProtein"
-LABEL software.version="1.1"
-LABEL about.summary="FastProtein - An automated software for in silico proteomic analysis"
-LABEL about.home="https://github.com/bioinformatics-ufsc/FastProtein/"
-LABEL about.documentation="https://github.com/bioinformatics-ufsc/FastProtein/"
-LABEL about.tags="Proteomics"
+LABEL base_image="debian:bullseye" \
+    version="1" \
+    software="FastProtein" \
+    software.version="1.1" \
+    about.summary="FastProtein - An automated software for in silico proteomic analysis" \
+    about.home="https://github.com/bioinformatics-ufsc/FastProtein/" \
+    about.documentation="https://github.com/bioinformatics-ufsc/FastProtein/" \
+    about.tags="Proteomics"
 
-# dependencies
+# dependencies and clean apt cache
 # wolfpsort - libfindbin-libs-perl
 RUN apt-get update && apt-get install -y \
     apt-utils \
@@ -29,98 +32,69 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     unzip \
     wget \
-    zip
+    zip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # python libraries
-# charts          - matplotlib, pandas and seaborn
-# interpro online - requests and xmltramp2
-# predgpi         - numpy
+COPY requirements.txt /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
 
-RUN pip3 install numpy==1.23.1
-
-RUN pip3 install requests==2.32.3
-RUN pip3 install xmltramp2==3.1.1
-
-RUN pip3 install pandas==2.2.2
-RUN pip3 install matplotlib==3.9.2
-RUN pip3 install seaborn==0.13.2
-
-ARG CACHEBUST=1
 RUN git clone https://github.com/bioinformatics-ufsc/FastProtein.git
 
 # Criando diretório bioinformatic e copiando arquivos
-RUN mkdir /bioinformatic/
-RUN mkdir /FastProtein/temp
+RUN mkdir -p /bioinformatic/ /FastProtein/temp
 
 # unzip third-party software
-RUN unzip -q /FastProtein/third-party/predgpi.zip -d /bioinformatic/ \
-    && unzip -q /FastProtein/third-party/tmhmm-2.0c.zip -d /bioinformatic/ \
-    && unzip -q /FastProtein/third-party/signalp-5.0b.zip -d /bioinformatic/ \
-    && unzip -q /FastProtein/third-party/wolfpsort.zip -d /bioinformatic/ \
-    && unzip -q /FastProtein/third-party/phobius-1.01.zip -d /bioinformatic/ \
-    && unzip -q /FastProtein/third-party/ncbi-blast-2.10.0.zip -d /bioinformatic/
+RUN unzip -q "/FastProtein/third-party/*.zip" -d /bioinformatic/ \
+    && ln -s /bioinformatic/ncbi-blast-2.10.0/bin/blastp /usr/local/bin/blastp \
+    && ln -s /bioinformatic/ncbi-blast-2.10.0/bin/makeblastdb /usr/local/bin/makeblastdb \
+    && ln -s /bioinformatic/signalp-5.0b/bin/signalp /usr/local/bin/signalp \
+    && ln -s /bioinformatic/signalp-5.0b/lib/libtensorflow.so /usr/local/lib/libtensorflow.so \
+    && ln -s /bioinformatic/signalp-5.0b/lib/libtensorflow_framework.so /usr/local/lib/libtensorflow_framework.so \
+    && ln -s /bioinformatic/predgpi/predgpi.sh /usr/local/bin/predgpi \
+    && ln -s /bioinformatic/phobius-1.01/phobius.pl /usr/local/bin/phobius \
+    && ln -s /bioinformatic/tmhmm-2.0c/bin/tmhmm /usr/local/bin/tmhmm2 \
+    && ln -s /bioinformatic/wolfpsort/bin/wolfpsort.sh /usr/local/bin/wolfpsort \
+    && ln -s /FastProtein/bin/interpro_install.sh /usr/local/bin/interpro_install
 
-RUN ln -s /bioinformatic/ncbi-blast-2.10.0/bin/blastp /usr/local/bin/blastp
-RUN ln -s /bioinformatic/ncbi-blast-2.10.0/bin/makeblastdb /usr/local/bin/makeblastdb
-RUN ln -s /bioinformatic/signalp-5.0b/bin/signalp /usr/local/bin/signalp
-RUN ln -s /bioinformatic/signalp-5.0b/lib/libtensorflow.so /usr/local/lib/libtensorflow.so
-RUN ln -s /bioinformatic/signalp-5.0b/lib/libtensorflow_framework.so /usr/local/lib/libtensorflow_framework.so
-RUN ln -s /bioinformatic/predgpi/predgpi.sh /usr/local/bin/predgpi
-RUN ln -s /bioinformatic/phobius-1.01/phobius.pl /usr/local/bin/phobius
-RUN ln -s /bioinformatic/tmhmm-2.0c/bin/tmhmm /usr/local/bin/tmhmm2
-RUN ln -s /bioinformatic/wolfpsort/bin/wolfpsort.sh /usr/local/bin/wolfpsort
-RUN ln -s /FastProtein/bin/interpro_install.sh /usr/local/bin/interpro_install
-
-ENV PREDGPI_HOME='/bioinformatic/predgpi'
-ENV FASTPROTEIN_HOME='/FastProtein'
-ENV DATABASE_HOME=$FASTPROTEIN_HOME""'/db'
+# set environment variables
+ENV PREDGPI_HOME="/bioinformatic/predgpi" \
+    FASTPROTEIN_HOME="/FastProtein" \
+    DATABASE_HOME="/FastProtein/db" \
+    FLASK_RUN_HOST="0.0.0.0" \
+    FLASK_DEBUG="False" \
+    FLASK_HOME="/FastProtein/web" \
+    FLASK_APP="/FastProtein/web/server.py" \
+    FLASK_REMOVE_RESULT_DIR="Yes"
 
 # allow script execution
-RUN chmod +x /FastProtein/bin/signalp5.sh
-RUN chmod +x /FastProtein/bin/predgpi.sh
-RUN chmod +x /FastProtein/bin/tmhmm2.sh
-RUN chmod +x /FastProtein/bin/wolfpsort.sh
-RUN chmod +x /FastProtein/bin/phobius.sh
-RUN chmod +x /FastProtein/bin/blastp.sh
-RUN chmod +x /FastProtein/bin/diamond.sh
-RUN chmod +x /FastProtein/bin/fastprotein.sh
-RUN chmod +x /FastProtein/bin/interproscan.sh
-RUN chmod +x /FastProtein/bin/interpro_install.sh
-RUN chmod +x /FastProtein/web/server.sh
+RUN chmod +x /FastProtein/bin/*.sh /FastProtein/web/server.sh \
+    && ln -s /FastProtein/bin/fastprotein.sh /usr/local/bin/fastprotein \
+    && ln -s /FastProtein/web/server.sh /usr/local/bin/server \
+    && echo "source server" >> ~/.bashrc
 
-RUN ln -s /FastProtein/bin/fastprotein.sh /usr/local/bin/fastprotein
-
-ARG CACHEBUST=1
+# build fastprotein
 RUN mvn -f /FastProtein/pom.xml clean install
 
 # install interproscan
 RUN if [ "$INTERPRO_INSTALL" = "Y" ]; then /FastProtein/bin/interpro_install.sh; fi
 
-#Optional if you want to run a Flask server. Access it via browser at localhost:5000
-RUN pip3 install Flask==3.0.3
-RUN pip3 install biopython==1.84
-RUN pip3 install Werkzeug==3.0.4
-
+# required directory for runs
 RUN mkdir -p /FastProtein/runs
 
+# expose the application port
 EXPOSE 5000
 
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_DEBUG=False
-ENV FLASK_HOME='/FastProtein/web'
-ENV FLASK_APP=$FLASK_HOME""'/server.py'
-ENV FLASK_REMOVE_RESULT_DIR=Yes
-RUN ln -s /FastProtein/web/server.sh /usr/local/bin/server
-RUN echo 'source server' >> ~/.bashrc
-
+# set volume for fastprotein runs and working directory
 VOLUME /FastProtein/runs
 WORKDIR /FastProtein
 
+# success message
+# RUN echo "The server is available at http://127.0.0.1:5000"
 
-#INSTALLATION INTERPROSCAN
-#Docker size before InterProScan = 1.8GB
-#Docker size after InterProScan = 49GB
-#Confirm before you continue if your docker supports this size
-#docker exec -it FastProtein interpro_install
-
-# Exibindo mensagem de sucessoRUN echo "The server is available at http://127.0.0.1:5000"
+# interproscan
+#   Docker image before InterProScan = 1.8GB
+#   Docker image after InterProScan = 49GB
+# make sure you machine supports this image size!
+# docker exec -it FastProtein interpro_install

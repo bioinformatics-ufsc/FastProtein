@@ -1,0 +1,37 @@
+# charts             matplotlib, pandas and seaborn
+# flask server       biopython, flask and werkzeug
+#                    localhost:5000
+# interpro online    requests and xmltramp2
+# predgpi            numpy
+biopython==1.84
+blinker==1.8.2
+certifi==2024.8.30
+charset-normalizer==3.3.2
+click==8.1.7
+contourpy==1.3.0
+cycler==0.12.1
+flask==3.0.3
+fonttools==4.53.1
+idna==3.8
+importlib-metadata==8.4.0
+importlib-resources==6.4.4
+itsdangerous==2.2.0
+jinja2==3.1.4
+kiwisolver==1.4.7
+MarkupSafe==2.1.5
+matplotlib==3.9.2
+numpy==1.23.1
+packaging==24.1
+pandas==2.2.2
+pillow==10.4.0
+pyparsing==3.1.4
+python-dateutil==2.9.0.post0
+pytz==2024.1
+requests==2.32.3
+seaborn==0.13.2
+six==1.16.0
+tzdata==2024.1
+urllib3==2.2.2
+werkzeug==3.0.4
+xmltramp2==3.1.1
+zipp==3.20.1
