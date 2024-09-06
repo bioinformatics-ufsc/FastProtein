@@ -74,6 +74,7 @@ RUN chmod -R +x /bioinformatic/* /FastProtein/bin/*.sh /FastProtein/web/server.s
     && ln -s /FastProtein/web/server.sh /usr/local/bin/server \
     && echo "source server" >> ~/.bashrc
 
+RUN chmod 777 /bioinformatic/phobius-1.01/phobius.pl
 # build fastprotein
 RUN mvn -f /FastProtein/pom.xml clean install
 
