@@ -69,12 +69,12 @@ ENV PREDGPI_HOME="/bioinformatic/predgpi" \
     FLASK_REMOVE_RESULT_DIR="Yes"
 
 # allow script execution
-RUN chmod -R +x /bioinformatic/* /FastProtein/bin/*.sh /FastProtein/web/server.sh \
+RUN chmod 777 /bioinformatic/phobius-1.01/phobius.pl
+RUN chmod +x /FastProtein/bin/*.sh /FastProtein/web/server.sh \
     && ln -s /FastProtein/bin/fastprotein.sh /usr/local/bin/fastprotein \
     && ln -s /FastProtein/web/server.sh /usr/local/bin/server \
     && echo "source server" >> ~/.bashrc
 
-RUN chmod 777 /bioinformatic/phobius-1.01/phobius.pl
 # build fastprotein
 RUN mvn -f /FastProtein/pom.xml clean install
 
