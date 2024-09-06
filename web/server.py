@@ -583,7 +583,7 @@ def download():
         filtered_df = df[df['Id'].isin(filtered_ids_list)]
     content_type = "text/plain"
     output = StringIO()
-
+    
     if file_extension == 'csv':
         df.to_csv(output, index=False)
         content_type = "text/csv"
@@ -591,15 +591,13 @@ def download():
         df.to_csv(output, index=False, sep='\t')
         content_type = "text/tsv"
     elif file_extension == 'fasta':
-        print('Creating FASTA')
         fasta = ""
         for index, row in df.iterrows():
             fasta += f">{row['Id']} {row['Header']}\n"
             fasta += format_sequence(row['Sequence'])
             fasta += "\n"
-        print(fasta)
         output.write(fasta)
-        print('Endind Creating FASTA')
+
     output.seek(0)
 
     response = make_response(output.read())
