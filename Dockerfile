@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y \
 
 # python libraries
 COPY requirements.txt /tmp/requirements.txt
-RUN pip3 install -r /tmp/requirements.txt
+RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 
 RUN git clone https://github.com/bioinformatics-ufsc/FastProtein.git
 
