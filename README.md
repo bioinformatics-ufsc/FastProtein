@@ -2,12 +2,10 @@
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [![License][apache-shield]][apache-url]
-[![BioLib][biolib-shield]][biolib-url]
 
 [apache-url]: https://opensource.org/licenses/Apache-2.0
 [apache-shield]: https://img.shields.io/badge/License-Apache_2.0-blue.svg
-[biolib-url]: https://biolib.com/ufsc/FastProtein
-[biolib-shield]: https://img.shields.io/badge/Online%20Server-BioLib-brightgreen
+
 
 <font color="#4682b4">
 
@@ -46,7 +44,6 @@
       <a href="#usage">Usage</a>
       <ul>
         <li><a href="#Docker">Docker</a></li>
-        <li><a href="#biolib">BioLib</a></li>
       </ul>
     </li>
     <li><a href="#contact-info">Contact Info</a></li>
@@ -166,9 +163,6 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
   </a><a>&ensp;</a>
     <a href="https://biojava.org/">
     <img src="https://biojava.org/images/logo/logo_800.png" width="100" height="30"/>
-  </a><a>&ensp;</a>
-    <a href="https://biolib.com/">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDx2Oto5TiJ0WjidYTHUJ819-cnPaZZiX8yVsa8dXxSaMlsv7D" width="100" height="30"/>
   </a><a>&ensp;</a>
 </p>
 <!--blank line-->
@@ -435,9 +429,7 @@ In the FastProtein container, it is possible to run the software used within the
 
 ### **Project Links:**
 <p align="center">
-  <a href="https://biolib.com/ufsc/FastProtein">
-    <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F51168%3Fs%3D200%26v%3D4&f=1&nofb=1&ipt=4dce28babba31bf34b7b7e72629ef9169d8bb49487f030e6978adb1df8b5facb&ipo=images" width="80" height="80"/>
-  </a>
+  
   <a href="https://github.com/bioinformatics-ufsc/FastProtein">
     <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" width="100" height="30"/>
   </a>
