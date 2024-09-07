@@ -1,12 +1,12 @@
 # docker build --no-cache --tag bioinfoufsc/fastprotein:latest .
 # docker build --no-cache --build-arg INTERPRO_INSTALL=Y --tag bioinfoufsc/fastprotein-interpro:latest .
-FROM debian:bullseye
+FROM debian:bullseye-slim
 
 # build arguments
 ARG INTERPRO_INSTALL=N
 ARG CACHEBUST=1
 
-LABEL base_image="debian:bullseye" \
+LABEL base_image="debian:bullseye-slim" \
     version="1" \
     software="FastProtein" \
     software.version="1.1" \
@@ -17,7 +17,8 @@ LABEL base_image="debian:bullseye" \
 
 # dependencies and clean apt cache
 # wolfpsort - libfindbin-libs-perl
-RUN apt-get update && apt-get install -y \
+RUN apt-get update -y \
+    && apt-get install --no-install-recommends -y \
     apt-utils \
     aria2 \
     diamond-aligner=2.0.7-1 \
@@ -69,12 +70,12 @@ ENV PREDGPI_HOME="/bioinformatic/predgpi" \
     FLASK_REMOVE_RESULT_DIR="Yes"
 
 # allow script execution
-RUN chmod -R +x /bioinformatic/* /FastProtein/bin/*.sh /FastProtein/web/server.sh \
+RUN chmod 777 /bioinformatic/phobius-1.01/phobius.pl
+RUN chmod +x /FastProtein/bin/*.sh /FastProtein/web/server.sh \
     && ln -s /FastProtein/bin/fastprotein.sh /usr/local/bin/fastprotein \
     && ln -s /FastProtein/web/server.sh /usr/local/bin/server \
     && echo "source server" >> ~/.bashrc
 
-RUN chmod 777 /bioinformatic/phobius-1.01/phobius.pl
 # build fastprotein
 RUN mvn -f /FastProtein/pom.xml clean install
 
