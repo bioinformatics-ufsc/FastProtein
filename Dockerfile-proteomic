@@ -1,0 +1,42 @@
+FROM debian:bullseye
+
+RUN apt-get update -y \
+    && apt-get install --no-install-recommends -y \
+    apt-utils \
+    diamond-aligner=2.0.7-1 \
+    git \
+    libfindbin-libs-perl \
+    procps=2:3.3.17-5 \
+    python3 \
+    python3-pip \
+    unzip \
+    zip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN git clone https://github.com/bioinformatics-ufsc/FastProtein.git
+
+# unzip third-party software
+RUN unzip -q "/FastProtein/third-party/*.zip" -d /bioinformatic/ \
+    && ln -s /bioinformatic/ncbi-blast-2.10.0/bin/blastp /usr/local/bin/blastp \
+    && ln -s /bioinformatic/ncbi-blast-2.10.0/bin/makeblastdb /usr/local/bin/makeblastdb \
+    && ln -s /bioinformatic/signalp-5.0b/bin/signalp /usr/local/bin/signalp \
+    && ln -s /bioinformatic/signalp-5.0b/lib/libtensorflow.so /usr/local/lib/libtensorflow.so \
+    && ln -s /bioinformatic/signalp-5.0b/lib/libtensorflow_framework.so /usr/local/lib/libtensorflow_framework.so \
+    && ln -s /bioinformatic/predgpi/predgpi.sh /usr/local/bin/predgpi \
+    && ln -s /bioinformatic/phobius-1.01/phobius.pl /usr/local/bin/phobius \
+    && ln -s /bioinformatic/tmhmm-2.0c/bin/tmhmm /usr/local/bin/tmhmm2 \
+    && ln -s /bioinformatic/wolfpsort/bin/wolfpsort.sh /usr/local/bin/wolfpsort
+
+RUN rm -r /FastProtein
+
+# set environment variables
+ENV PREDGPI_HOME="/bioinformatic/predgpi"
+
+# allow script execution
+RUN chmod 777 /bioinformatic/phobius-1.01/phobius.pl
+
+WORKDIR /data
+
+
+

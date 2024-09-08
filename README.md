@@ -187,13 +187,13 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
    ```bash
    cd FastProtein
-   docker build -t bioinfoufsc/fastprotein:latest .
+   ./build.sh
    ```
    or if you want to install InterProScan
 
    ```bash
    cd FastProtein
-   docker build --build-arg INTERPRO_INSTALL=Y -t bioinfoufsc/fastprotein-interproscan:latest .
+   ./build_interpro.sh
    ```
 
    > _If you are using the version with InterProScan, ensure that your Docker has at least 10GB of available RAM to run the program._
@@ -205,12 +205,12 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 1. Pull an image to host (clean, without InterProScan) - 
 ```bash
    #Light version 900Mb compressed
-   docker pull bioinfoufsc/fastprotein
+   docker pull bioinfoufsc/fastprotein:latest
 ```
 2. Pull a image to host (with InterProScan)
 ```bash
-   #Full version with interpro installed (don't need to execute Step 4, just change the image name in the end of the command)
-   docker pull bioinfoufsc/fastprotein-interpro
+   #Full version with interpro installed
+   docker pull bioinfoufsc/fastprotein-interpro:latest
 ```
 
 ### **Basic running (recommended)**
@@ -218,6 +218,13 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 ```bash   
    docker run -d -it --name FastProtein -p 5000:5000 bioinfoufsc/fastprotein:latest
 ```
+
+or
+
+```bash   
+   docker run -d -it --name FastProtein -p 5000:5000 bioinfoufsc/fastprotein-interpro:latest
+```
+
 Now, access the url http://127.0.0.1:5000 and enjoy!
 ```bash
    Login: admin
@@ -231,6 +238,7 @@ Now, access the url http://127.0.0.1:5000 and enjoy!
    # Step 1 - Create a local directory that will be used to exchange files with Docker (example FastProtein/ inside user home)
    #          ~/FastProtein is the work directory
    #          ~/FastProtein/runs the directory that stores the FastProtein web server requests
+   # FastProtein generates a temp directory with all executions: /FastProtein/temp (it is possible to use as docker volume)
    #          
    mkdir -p <your_home>/FastProtein/runs
    
@@ -248,8 +256,8 @@ Now, access the url http://127.0.0.1:5000 and enjoy!
    #          PS 1: this command is executed only one time and it will create and start your container
    docker run -it --name FastProtein -p 5000:5000 -v <your_directory_output>:/FastProtein/runs bioinfoufsc/fastprotein:latest
    # Step 3.1 - If you have InterProScan on your host, you can direct it to the FastProtein Docker InterProScan directory as follows.
-   #          The supported version is interproscan-5.61-93.0 (http://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.61-93.0/interproscan-5.61-93.0-64-bit.tar.gz)
-   docker run -it --name FastProtein -p 5000:5000 -v <your_directory_output>:/FastProtein/runs -v <your_interpro_home>:/bioinformatic/interproscan-5.61-93.0 bioinfoufsc/fastprotein:latest
+   #          The supported version is the latest: interproscan-5.69-101.0 (https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.69-101.0/interproscan-5.69-101.0-64-bit.tar.gz)
+   docker run -it --name FastProtein -p 5000:5000 -v <your_directory_output>:/FastProtein/runs -v <your_interpro_home>:/bioinformatic/interproscan-5.69-101.0 bioinfoufsc/fastprotein:latest
    #
    # Step 4 - InterProScan installation
    #          This step may take ~1 hour total
@@ -285,8 +293,9 @@ Now, access the url http://127.0.0.1:5000 and enjoy!
 
 Just open the following link in a browser and FastProtein local service will be up and running: (<a href="http://127.0.0.1:5000" target='_blank'>127.0.0.1:5000</a>)
 
-Results will be redirect to directory `/FastProtein/runs` linked with the local folder `~/FastProteins/runs`.
-A list of zip files is showed in the web page.
+Results will be redirected to directory `/FastProtein/runs` linked with the local folder `~/FastProteins/runs`.
+
+A list of zip files is shown in the web page.
 </p>
 
 ### **Server Screen**
@@ -337,9 +346,11 @@ fastprotein -i /example/input.fasta -db /example/db.fasta --interpro -o result_t
 ##
 ## Example of a complete execution (with InterproScan and BlastP) with output in folder result_test
 fastprotein -i /example/input.fasta -db /example/db.fasta -am blastp --interpro -o result_test
+fastprotein -i /example/input.fasta -db /example/db -am blastp --interpro -o result_test
 ##
 ## The same example but with output in zip mode
 fastprotein -i /example/input.fasta -db /example/db.fasta --interpro -o result_test --zip
+fastprotein -i /example/input.fasta -db /example/db.dmnd --interpro -o result_test --zip
 ```
 ---
 
