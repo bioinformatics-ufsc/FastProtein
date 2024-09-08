@@ -106,7 +106,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 - **Header:** Protein header
 
-- **Gene Ontology, Panther, and Pfam:** Protein function and annotation using [InterProScan5](https://www.ebi.ac.uk/interpro)
+- **Gene Ontology, Panther, and Pfam:** Protein function and annotation using [InterProScan5](https://www.ebi.ac.uk/interpro) version [5.69-101.0](https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.69-101.0/interproscan-5.69-101.0-64-bit.tar.gz)
 
 - **Charts**
 
