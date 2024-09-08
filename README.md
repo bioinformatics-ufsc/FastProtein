@@ -453,11 +453,16 @@ In the FastProtein container, it is possible to run the software used within the
 
 ## **Citation and Acknowledgments**
 
-This software was developed using Java 17 (please cite [BioJava](https://biojava.org)) and Python 3.
+This software was developed using the follow programming languages: Java 17 (please cite [BioJava](https://biojava.org)) and Python 3.
 
-Please cite us: 
+**Please cite us:** 
 
-FastProtein also uses a suite of software, please cite them too:
+FastProtein – An automated software for in silico proteomic analysis.
+Renato Simões Moreira, Vilmar Benetti Filho, Guilherme Augusto Maia, Tatiany Aparecida Teixeira Soratto, Eric Kazuo Kawagoe,
+Bruna Caroline Russi, Luiz Claudio Miletti, Glauber Wagner.
+bioRxiv 2023.12.19.572382; doi:[10.1101/2023.12.19.572382](https://doi.org/10.1101/2023.12.19.572382)
+
+**FastProtein also uses a suite of software, please cite them too:**
 
 - WoLF PSORT - [Horton et al., 2007](https://doi.org/10.1093/nar/gkm259)
 - TMHMM-2.0 - [Krogh et al., 2001](https://doi.org/10.1006/jmbi.2000.4315)
