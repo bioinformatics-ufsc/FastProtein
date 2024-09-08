@@ -14,9 +14,6 @@ RUN git clone https://github.com/bioinformatics-ufsc/FastProtein.git
 WORKDIR /FastProtein
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Criando diretório bioinformatic e copiando arquivosRUN mkdir temp
-RUN mkdir /FastProtein/temp
-
 # set environment variables
 ENV FASTPROTEIN_HOME="/FastProtein" \
     DATABASE_HOME="/FastProtein/db" \
@@ -31,11 +28,15 @@ RUN chmod +x /FastProtein/bin/*.sh /FastProtein/web/server.sh \
     && ln -s /FastProtein/web/server.sh /usr/local/bin/server \
     && echo "source server" >> ~/.bashrc
 
+RUN echo "Updating GO-OBO from http://geneontology.org/docs/download-ontology/"
+RUN aria2c --continue=true --max-connection-per-server=8 --min-split-size=2M -d $FASTPROTEIN_HOME/data/ http://purl.obolibrary.org/obo/go.obo
+
 # build fastprotein
 RUN mvn -f /FastProtein/pom.xml clean install
 
 # required directory for runs
 RUN mkdir -p /FastProtein/runs
+RUN mkdir -p /FastProtein/temp
 
 # expose the application port
 EXPOSE 5000
