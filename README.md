@@ -123,9 +123,12 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    <img src=".img/Figure1.png"  height="500"/>
 </p>
 
+<p>
+   <img src=".img/docker_schema.png"  />
+</p>
 
 ---
-## **Technologies**
+## **Main technologies**
 
 <!--
 [debian-url]: https://www.debian.org
@@ -136,7 +139,6 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 [java-shield]: https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white
 [python-url]: https://www.python.org
 [python-shield]: https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white
-
 
 [![Debian][debian-shield]][debian-url]
 
