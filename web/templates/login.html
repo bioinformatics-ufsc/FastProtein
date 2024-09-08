@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FastProtein-1.0</title>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>FastProtein-1.0 - Login</title>
 
     <!-- Styles -->
     {% include 'styles.html' %}
@@ -11,14 +11,16 @@
         .login-container {
             margin-top: 7rem; /* Aumentado para garantir que o formulário fique abaixo da navbar */
         }
+
         .login-form {
             max-width: 400px;
             margin: auto;
             padding: 1.5rem;
             border-radius: 0.5rem;
-            box-shadow: 0 0 1rem rgba(0,0,0,0.1);
+            box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
             background-color: white; /* Removido cinza claro, configurado para branco */
         }
+
         .login-button {
             background-color: #6AA5D9;
             color: white;
@@ -28,55 +30,103 @@
             background-color: #6AA5D9; /* Mantém a mesma cor no hover */
             color: white;
         }
+
         .login-button:focus, .login-button:active {
             box-shadow: none; /* Remove o contorno ao focar ou clicar */
             outline: none; /* Remove o contorno padrão */
         }
     </style>
 
-  </head>
-  <body class="d-flex flex-column min-vh-100">
+</head>
+<body class="d-flex flex-column min-vh-100">
 
-    <!-- Navbar -->
-    {% include 'navbar.html' %}
+<!-- Navbar -->
+{% include 'navbar.html' %}
+<h5 class="custom-header" style="padding-top:80px; text-align: center">FastProtein – An automated software for <em>in
+    silico</em> proteomic analysis</h5>
+<!-- Login Form -->
+<div class="login-container d-flex justify-content-center">
 
-    <!-- Login Form -->
-    <div class="login-container d-flex justify-content-center">
-        <form method="POST" action="{{ url_for('login') }}" class="login-form">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-            <div class="alert alert-danger">
-                {% for category, message in messages %} {{ message }} {% endfor %}
-            </div>
-            {% endif %}
-            {% endwith %}
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input
+    <form method="POST" action="{{ url_for('login') }}" class="login-form">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="alert alert-danger">
+            {% for category, message in messages %} {{ message }} {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input
                     type="text"
                     id="username"
                     name="username"
                     class="form-control"
                     placeholder="Username"
-                    value="{% if debug %}dev{% endif %}"
+                    value="{% if debug %}admin{% endif %}"
                     required
-                />
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input
+            />
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input
                     type="password"
                     id="password"
                     name="password"
                     class="form-control"
                     placeholder="Password"
-                    value="{% if debug %}dev{% endif %}"
+                    value="{% if debug %}admin{% endif %}"
                     required
-                />
+            />
+        </div>
+        <button type="submit" class="btn login-button w-100">Login</button>
+    </form>
+</div>
+<div class="row justify-content-center align-items-center">
+    <div class="d-flex justify-content-center">
+
+        <div class="container text-center">
+            <div>
+                <span class="custom-text-color"><p>FastProtein is developed by</p></span>
             </div>
-            <button type="submit" class="btn login-button w-100">Login</button>
-        </form>
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="">
+                    <a href="https://github.com/bioinformatics-ufsc" target="_blank">
+                        <img src="static/images/bioufsc.png" alt="Developer 1">
+                    </a>
+                </div>
+                <div>
+                    <a href="https://www.ifsc.edu.br" target="_blank">
+                        <img src="static/images/ifsc.png" alt="Developer 2">
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="col-md-8 d-flex justify-content-center  align-items-start">
+        <div style="text-align: center; width: 100%;">
+            <p class="mb-0" style="font-size: 0.8rem;">
+                <strong>Please cite us:</strong><br>
+                FastProtein – An automated software for in silico proteomic analysis.<br>
+                Renato Simões Moreira, Vilmar Benetti Filho, Guilherme Augusto Maia, Tatiany Aparecida Teixeira
+                Soratto, Eric Kazuo Kawagoe, <br> Bruna Caroline Russi, Luiz Claudio Miletti, Glauber Wagner.<br>
+                bioRxiv 2023.12.19.572382; <a href="https://doi.org/10.1101/2023.12.19.572382" target="_blank">doi:
+                https://doi.org/10.1101/2023.12.19.572382</a>
+            </p>
+            <p>
+            <p class="mb-0" style="font-size: 0.8rem;">
+                <strong>For questions and suggestions:</strong> <br>
+
+                <span>Professor Renato Simões Moreira - <a href="mailto:renato.simoes@ifsc.edu.br" target="_blank">renato.simoes@ifsc.edu.br</a></span>
+                <br/>
+                <span>Project issues on GitHub (<a href="https://github.com/bioinformatics-ufsc/FastProtein/issues"
+                                                   target="_blank">https://github.com/bioinformatics-ufsc/FastProtein</a>)
+                </span>
+
+            </p>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

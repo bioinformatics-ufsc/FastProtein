@@ -7,7 +7,7 @@ RUN apt-get update -y \
     openjdk-17-jdk \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-#RUN aria2c --continue=true --max-connection-per-server=8 --min-split-size=2M -d /bioinformatic https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.61-93.0/interproscan-5.61-93.0-64-bit.tar.gz
+
 RUN aria2c --continue=true --max-connection-per-server=8 --min-split-size=2M -d /bioinformatic https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.69-101.0/interproscan-5.69-101.0-64-bit.tar.gz
 RUN tar --use-compress-program=pigz -xvf /bioinformatic/interproscan-5.69-101.0-64-bit.tar.gz -C /bioinformatic
 

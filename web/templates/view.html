@@ -47,7 +47,10 @@
 </div>
 
 {% include 'view/last_executions.html' %}
+<div>
+    <h5 class="custom-header" style=" text-align: center">Results for {{file}}</h5>
 
+</div>
 <!-- Table of proteins -->
 {% include 'view/table.html' %}
 
@@ -99,5 +102,35 @@
 ></script>
 <script type="text/javascript" src="static/js/view.js"></script>
 <script type="text/javascript" src="static/js/scripts.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initializing DataTables for the 3 tables
+        $('#go-c-table').DataTable({
+            "pageLength": 20,  // Default to 20 rows per page
+            "lengthMenu": [10, 20, 30, 40, 50],  // Options for the user to choose from
+            "ordering": true,
+            "paging": true,  // Ensure pagination is enabled
+            "info": true,     // Display table information (e.g., showing 1-20 of X entries)
+            "order": [[3, 'desc']]
+        });
+        $('#go-f-table').DataTable({
+            "pageLength": 20,
+            "lengthMenu": [10, 20, 30, 40, 50],
+            "ordering": true,
+            "paging": true,
+            "info": true,
+            "order": [[3, 'desc']]
+        });
+        $('#go-p-table').DataTable({
+            "pageLength": 20,
+            "lengthMenu": [10, 20, 30, 40, 50],
+            "ordering": true,
+            "paging": true,
+            "info": true,
+            "order": [[3, 'desc']]
+        });
+    });
+</script>
 </body>
 </html>

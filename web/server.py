@@ -19,6 +19,7 @@ from datetime import timedelta
 import random
 import base64
 import threading
+import csv
 
 app = Flask(__name__)
 FLASK_HOME = os.getenv('FLASK_HOME')
@@ -359,8 +360,40 @@ def view_file(file):
             proteins = json.loads(json_result)
             with open(base_name + '/summary.json') as f:
                 summary_data = json.load(f)
+            go_c_data = []
+            go_f_data = []
+            go_p_data = []
+            if (summary_data['go']):
+                def load_go_data(file_name):
+                    file_path = os.path.join(base_name, file_name)
+                    data = []
+                    if os.path.exists(file_path):
+                        with open(file_path, 'r') as f:
+                            reader = csv.reader(f, delimiter='\t')  # Assuming tab as separator
+                            next(reader)  # Skip header
+                            for row in reader:
+                                go_value = row[0]
+                                description = row[1]
+                                total = int(row[2])
+
+                                # Extract GO number and source
+                                go_number = re.match(r'GO:(\d+)', go_value).group(1)
+                                source = re.search(r'\((.*?)\)', go_value)
+                                source = source.group(1) if source else ""
+
+                                formatted_go_value = f"GO:{go_number}"
+
+                                data.append([formatted_go_value, source, description, total])
+                        data.sort(key=lambda x: x[3], reverse=True)
+                    return data
+                go_c_data = load_go_data('go-C.txt')
+                go_f_data = load_go_data('go-F.txt')
+                go_p_data = load_go_data('go-P.txt')
+                print(go_c_data)
+
             return render_template('view.html', files=load_execution_file(), proteins=proteins, session=session,
-                                   result_folder=result_folder, summary_data=summary_data, file=os.path.basename(file))
+                                   result_folder=result_folder, summary_data=summary_data, file=os.path.basename(file),
+                                   go_c_data=go_c_data, go_f_data=go_f_data, go_p_data=go_p_data)
     flash('Select a file to visualize', 'error')
     return render_template('view.html', files=load_execution_file())
 
@@ -583,7 +616,7 @@ def download():
         filtered_df = df[df['Id'].isin(filtered_ids_list)]
     content_type = "text/plain"
     output = StringIO()
-    
+
     if file_extension == 'csv':
         df.to_csv(output, index=False)
         content_type = "text/csv"
@@ -633,8 +666,8 @@ def auto_login():
     print("DEBUG?", (FLASK_DEBUG == True))
     if FLASK_DEBUG:
         default_user = {
-            'user': 'dev',
-            'password': base64.b64encode('dev'.encode()).decode(),
+            'user': 'admin',
+            'password': base64.b64encode('admin'.encode()).decode(),
             'name': 'Administrator Dev - Debug',
             'role': 'ADMIN'
         }

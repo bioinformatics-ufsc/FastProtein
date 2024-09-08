@@ -8,7 +8,10 @@
     {% if session.get('user') and session['user'].get('role') %}
         <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
             <div class="container-fluid">
-                <img src="static/images/logo-small.png" alt="FastProtein Logo" style=" padding:1rem">
+                <a class="nav-link" href="{{ url_for('about') }}">
+                    <img src="static/images/logo-small.png" alt="FastProtein Logo" style=" padding:1rem">
+                </a>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarNavDropdown"
                         aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,16 +77,6 @@
                             </li>
                         {% endif %}
 
-                        <li class="nav-item">
-                            {% if session.get('type') == 'about' %}
-                                <a class="nav-link btn-primary" href="{{ url_for('about') }}"><i class="fas fa-info"
-                                                                                                 style="color: white !important; margin-right: 5px;"></i>
-                                    About</a>
-                            {% else %}
-                                <a class="nav-link" href="{{ url_for('about') }}"><i class="fas fa-info"></i>
-                                    About</a>
-                            {% endif %}
-                        </li>
                         <li class="nav-item">
 
                             {% if session.get('type') == 'profile' %}

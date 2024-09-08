@@ -209,6 +209,92 @@
         <div>
             <input id="filteredIds" type="hidden"></input>
         </div>
+        <div style="visibility:{% if go_c_data or go_p_data or go_f_data %} visible {% else %} hidden {% endif %};">
+        </div>
+
+        <div class="container mt-4" style="visibility:{% if go_c_data or go_p_data or go_f_data %} visible {% else %} hidden {% endif %};">
+            <div class="row">
+                <div class="col-12">
+                    <h5 class="text-center custom-header">Gene Ontology Analysis</h5>
+                    <div class="table-container">
+                        <!-- Cell Component Table -->
+                        <div>
+                            <h5 class="text-center custom-text-color">Cellular Component (C)</h5>
+                            <table id="go-c-table" class="display">
+                                <thead>
+                                <tr>
+                                    <th>GO</th>
+                                    <th>Source</th>
+                                    <th>Description</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for row in go_c_data %}
+                                <tr>
+                                    <td>{{ row[0] }}</td>
+                                    <td>{{ row[1] }}</td>
+                                    <td>{{ row[2] }}</td>
+                                    <td>{{ row[3] }}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Molecular Function Table -->
+                        <div>
+                            <h5 class="text-center custom-text-color">Molecular Function (MF)</h5>
+                            <table id="go-f-table" class="display">
+                                <thead>
+                                <tr>
+                                    <th>GO</th>
+                                    <th>Source</th>
+                                    <th>Description</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for row in go_f_data %}
+                                <tr>
+                                    <td>{{ row[0] }}</td>
+                                    <td>{{ row[1] }}</td>
+                                    <td>{{ row[2] }}</td>
+                                    <td>{{ row[3] }}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Biological Process Table -->
+                        <div>
+                            <h5 class="text-center custom-text-color">Biological Process (BP)</h5>
+                            <table id="go-p-table" class="display">
+                                <thead>
+                                <tr>
+                                    <th>GO</th>
+                                    <th>Source</th>
+                                    <th>Description</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for row in go_p_data %}
+                                <tr>
+                                    <td>{{ row[0] }}</td>
+                                    <td>{{ row[1] }}</td>
+                                    <td>{{ row[2] }}</td>
+                                    <td>{{ row[3] }}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- Modal -->
     <div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="logModalLabel" aria-hidden="true">
