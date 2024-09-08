@@ -25,8 +25,7 @@ import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "FastProtein-1", requiredOptionMarker = '*', abbreviateSynopsis = true,
         description = "Fast and simple way to know more about your proteins! :)\n"
-        + "Explore the project in https://github.com/bioinformatics-ufsc/FastProtein\n"
-        + "Run online in https://biolib.com/UFSC/FastProtein\n\n",
+        + "Explore the project in https://github.com/bioinformatics-ufsc/FastProtein\n",
         version = "1.0", sortOptions = false)
 public class Main implements Callable<Integer> {
 

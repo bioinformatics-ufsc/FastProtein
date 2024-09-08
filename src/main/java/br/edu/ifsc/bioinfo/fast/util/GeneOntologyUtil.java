@@ -13,6 +13,8 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.biojava.nbio.ontology.Ontology;
 import org.biojava.nbio.ontology.Term;
@@ -71,7 +73,10 @@ public class GeneOntologyUtil {
     }
 
     public static Type getType(String go) {
+        go = cleanGONumber(go);
+
         try {
+
             Term term = ontology.getTerm(go);
             if (term != null) {
                 switch ((String) term.getAnnotation().getProperty("namespace")) {
@@ -92,6 +97,8 @@ public class GeneOntologyUtil {
     }
 
     public static String getOntology(String go) {
+        go = cleanGONumber(go);
+
         try {
             Term term = ontology.getTerm(go);
 
@@ -102,17 +109,20 @@ public class GeneOntologyUtil {
             return "";
         } catch (Exception e) {
             debug(String.format("GO %s not found: %s\n", go, e.getMessage()));
-            debug("To avoid this error, update the file /bioinformatic/fastprotein/data/obo.obo:");
-            debug("   /bioinformatic/fastprotein/bin/update_gos.sh");
+            debug("To avoid this error, update the file "+Parameters.FAST_PROTEIN_HOME+"/data/obo.obo:");
+            debug(Parameters.FAST_PROTEIN_HOME+"/bin/update_gos.sh");
             return "";
         }
     }
 
     public static Term getTerm(String go) {
+        go = cleanGONumber(go);
+
         return ontology.getTerm(go);
     }
 
     public static String getFullOntology(String go) {
+        go = cleanGONumber(go);
         Term term = ontology.getTerm(go);
         if (term != null) {
             String type = "";
@@ -130,6 +140,18 @@ public class GeneOntologyUtil {
             return String.format("%s:%s - %s", type, go, term.getDescription());
         }
         return "";
+    }
+
+    public static String cleanGONumber(String input) {
+        String regex = "GO:\\d+";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+
+        if (matcher.find()) {
+            return matcher.group();
+        }
+
+        return "-";
     }
 
 }

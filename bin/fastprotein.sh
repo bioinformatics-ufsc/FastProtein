@@ -8,12 +8,4 @@ ln -sf /bioinformatic/predgpi/predgpi.sh /usr/local/bin/predgpi
 ln -sf /bioinformatic/phobius-1.01/phobius.pl /usr/local/bin/phobius
 ln -sf /bioinformatic/tmhmm-2.0c/bin/tmhmm /usr/local/bin/tmhmm2
 ln -sf /bioinformatic/wolfpsort/bin/wolfpsort.sh /usr/local/bin/wolfpsort
-if [ -d "/bioinformatic/interproscan-5.61-93.0" ]; then
-    export INTERPRO_HOME='/bioinformatic/interproscan-5.61-93.0'
-else
-    echo "Directory /bioinformatic/interproscan-5.61-93.0 does not exist."
-fi
-
-
-
 java -jar $FASTPROTEIN_HOME/bin/FastProtein.jar $@
