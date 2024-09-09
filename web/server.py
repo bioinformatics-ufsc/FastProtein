@@ -28,7 +28,7 @@ if FLASK_HOME is None:
     FLASK_HOME = os.path.abspath(os.path.dirname(__file__))
 
 DB_PATH = os.getenv('DATABASE_HOME')
-
+INTERPRO_HOME = os.getenv('INTERPRO_HOME')
 if DB_PATH is None:
     # Obtenha o caminho raiz da aplicação Flask
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -76,7 +76,7 @@ def download_file(filename):
 def is_interproscan_installed():
     try:
         # Tenta executar o comando 'interproscan' com a flag '--version' ou algo similar
-        result = subprocess.run(['interproscan', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run([INTERPRO_HOME+'/interproscan.sh', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # Se o retorno for 0, o comando foi executado com sucesso
         if result.returncode == 0:
             return True
