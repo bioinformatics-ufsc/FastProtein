@@ -68,6 +68,7 @@ We use Docker technology for the development of a Linux image (based on Debian) 
 If you have questions, suggestions or difficulties regarding the pipeline, please do not hesitate to contact our team here on GitHub or by <a mailto="labioinfo.genome@gmail.com">Bioinformatics Lab (UFSC)</a>.
 </p>
 
+### FOR MORE INFORMATIONS CHECK THE [PROJECT WIKI](https://github.com/bioinformatics-ufsc/FastProtein/wiki)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
