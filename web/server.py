@@ -389,7 +389,6 @@ def view_file(file):
                 go_c_data = load_go_data('go-C.txt')
                 go_f_data = load_go_data('go-F.txt')
                 go_p_data = load_go_data('go-P.txt')
-                print(go_c_data)
 
             return render_template('view.html', files=load_execution_file(), proteins=proteins, session=session,
                                    result_folder=result_folder, summary_data=summary_data, file=os.path.basename(file),
