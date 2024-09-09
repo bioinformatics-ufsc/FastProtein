@@ -1,0 +1,14 @@
+{
+    "admin": {
+        "user": "admin",
+        "password": "YWRtaW4=",
+        "name": "administrator",
+        "role": "ADMIN"
+    },
+    "peerj": {
+        "user": "peerj",
+        "password": "cGVlcmo=",
+        "name": "Peerj Reviewer",
+        "role": "ADMIN"
+    }
+}
