@@ -113,9 +113,9 @@ public class GeneOntologyUtil {
 
             return "";
         } catch (Exception e) {
-            debug(String.format("GO %s not found: %s\n", go, e.getMessage()));
-            debug("To avoid this error, update the file " + Parameters.FAST_PROTEIN_HOME + "/data/obo.obo:");
-            debug(Parameters.FAST_PROTEIN_HOME + "/bin/update_gos.sh");
+            error(String.format("GO %s not found: %s\n", go, e.getMessage()));
+            error("To avoid this error, update the file " + Parameters.FAST_PROTEIN_HOME + "/data/obo.obo:");
+            error(Parameters.FAST_PROTEIN_HOME + "/bin/update_gos.sh");
             return "";
         }
     }
@@ -201,7 +201,9 @@ public class GeneOntologyUtil {
         System.out.println(getOntology("GO:0036439"));
         System.out.println(getType("GO:0004367"));
         System.out.println(getFullOntology("GO:0004367"));
-        System.out.println(getOntology("GO:0004367"));
+        System.out.println(getOntology("GO:0170056"));
+        System.out.println(getFullOntology("GO:0170056"));
+        System.out.println(getOntology("GO:0170056"));
     }
 
 

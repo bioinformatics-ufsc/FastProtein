@@ -84,7 +84,10 @@ public class Protein {
         TreeSet<String> gos = getSeparatedGO();
         TreeSet<String> newGos = getSeparatedGO();
         for (String go1 : gos) {
-            newGos.add(String.format("%s:%s - %s", GeneOntologyUtil.getType(go1), go1, GeneOntologyUtil.getOntology(go1)));
+            GeneOntologyUtil.Type type = GeneOntologyUtil.getType(go1);
+            if(type!=null) {
+                newGos.add(String.format("%s:%s - %s", type, go1, GeneOntologyUtil.getOntology(go1)));
+            }
         }
 
         return newGos;
