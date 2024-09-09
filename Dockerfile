@@ -8,18 +8,23 @@ RUN apt-get update -y \
     openjdk-17-jdk \
     unzip \
     zip \
+    aria2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # python libraries
 WORKDIR /
-ARG CACHE_BUST=1
+ARG CACHE_BUST=5
 RUN git clone https://github.com/bioinformatics-ufsc/FastProtein.git
 WORKDIR /FastProtein
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 # unzip third-party software
-RUN ln -s /FastProtein/bin/interpro_insta/home/renato/FastProtein/third-party/InterProScanll.sh /usr/local/bin/interpro_install
+RUN ln -s /FastProtein/bin/interpro_install.sh /usr/local/bin/interpro_install
+# required directory for runs, dbs and executions
+RUN mkdir -p /FastProtein/runs
+RUN mkdir -p /FastProtein/temp
+RUN mkdir -p /FastProtein/db
 
 # set environment variables
 ENV FASTPROTEIN_HOME="/FastProtein" \
@@ -38,9 +43,11 @@ RUN chmod +x /FastProtein/bin/*.sh /FastProtein/web/server.sh \
 # build fastprotein
 RUN mvn -f /FastProtein/pom.xml clean install
 
-# required directory for runs
-RUN mkdir -p /FastProtein/runs
-RUN mkdir -p /FastProtein/temp
+#Creating a database - uniprot_sprot
+RUN aria2c --continue=true --max-connection-per-server=8 --min-split-size=2M -d $DATABASE_HOME https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
+RUN gzip -d $DATABASE_HOME/uniprot_sprot.fasta.gz
+RUN diamond makedb --in $DATABASE_HOME/uniprot_sprot.fasta -d $DATABASE_HOME/uniprot_sprot
+RUN rm $DATABASE_HOME/uniprot_sprot.fasta
 
 # expose the application port
 EXPOSE 5000

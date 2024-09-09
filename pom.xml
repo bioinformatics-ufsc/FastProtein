@@ -159,7 +159,7 @@
                                 <exec executable="cp">
                                     <arg value="-p"/>
                                     <arg value="target/FastProtein-1.0-jar-with-dependencies.jar"/>
-                                    <arg value="/FastProtein/bin/FastProtein.jar"/>
+                                    <arg value="bin/FastProtein.jar"/>
                                 </exec>
                             </target>
                         </configuration>
