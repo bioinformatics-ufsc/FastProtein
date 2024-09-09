@@ -69,6 +69,7 @@ public class GeneOntologyUtil {
     }
 
     public static boolean isGOMembrane(String go) {
+        go = cleanGONumber(go);
         return goMembrane.get(go) != null;
     }
 
@@ -154,4 +155,11 @@ public class GeneOntologyUtil {
         return "-";
     }
 
+    public static void main(String[] args) {
+        Parameters.FAST_PROTEIN_HOME = "/home/renato/FastProtein";
+        System.out.println(getType("GO:0004518(INTERPRO)"));
+        System.out.println(getOntology("GO:0004518"));
+        System.out.println(getFullOntology("GO:0004518"));
+
+    }
 }
