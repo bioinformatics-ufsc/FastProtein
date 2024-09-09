@@ -50,7 +50,7 @@ public class AlignerLocalConverter {
 
             File searchResults = FileUtils.hasFileOnTemp(String.format("%1$s_local/%1$s-firsthit.txt", aligner));
             if (searchResults == null) {
-                debug("Starting Blast local execution");
+                debug("Starting similarity searching execution");
                 String command = String.format("%s/bin/%s %s %s %s", Parameters.FAST_PROTEIN_HOME, aligner.command,
                         inputFasta.getAbsolutePath(), dbFasta, Parameters.TEMP_DIR);
                 debug("Command: " + command);
