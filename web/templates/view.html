@@ -47,10 +47,11 @@
 </div>
 
 {% include 'view/last_executions.html' %}
+{% if file_clean %}
 <div>
-    <h5 class="custom-header" style=" text-align: center">Results {{file_clean}}</h5>
-
+    <h5 class="custom-header" style=" text-align: center">Results for {{file_clean}}</h5>
 </div>
+{% endif %}
 <!-- Table of proteins -->
 {% include 'view/table.html' %}
 
