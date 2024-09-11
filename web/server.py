@@ -74,23 +74,26 @@ def download_file(filename):
 
 
 def is_interproscan_installed():
-    try:
-        # Tenta executar o comando 'interproscan' com a flag '--version' ou algo similar
-        result = subprocess.run([INTERPRO_HOME + '/interproscan.sh', '--version'], stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE)
-        # Se o retorno for 0, o comando foi executado com sucesso
-        if result.returncode == 0:
-            return True
-        else:
+    if INTERPRO_HOME is None:
+        return False
+    else:
+        try:
+            # Tenta executar o comando 'interproscan' com a flag '--version' ou algo similar
+            result = subprocess.run([INTERPRO_HOME + '/interproscan.sh', '--version'], stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE)
+            # Se o retorno for 0, o comando foi executado com sucesso
+            if result.returncode == 0:
+                return True
+            else:
+                return False
+        except FileNotFoundError:
+            # Se o comando não for encontrado, o subprocess gera um FileNotFoundError
+            print(f"An error occurred testing interproscan: {e}")
             return False
-    except FileNotFoundError:
-        # Se o comando não for encontrado, o subprocess gera um FileNotFoundError
-        return False
-    except Exception as e:
-        # Captura outras exceções, se necessário
-        print(f"An error occurred: {e}")
-        return False
-
+        except Exception as e:
+            # Captura outras exceções, se necessário
+            print(f"An error occurred testing interproscan: {e}")
+            return False
 
 @app.route('/')
 def index():
@@ -664,7 +667,6 @@ def get_logged_user():
 
 
 def auto_login():
-    print("DEBUG?", (FLASK_DEBUG == True))
     if FLASK_DEBUG:
         default_user = {
             'user': 'admin',
