@@ -200,6 +200,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
    ```
 
    > _If you are using the version with InterProScan, ensure that your Docker has at least 10GB of available RAM to run the program._
+   > The tag fastprotein:latest contains InterProScan installed
 
 
 
@@ -207,13 +208,13 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 
 1. Pull an image to host (clean, without InterProScan) - 
 ```bash
-   #Light version 900Mb compressed
-   docker pull bioinfoufsc/fastprotein:latest
+   #Light version 1.6GB compressed
+   docker pull bioinfoufsc/fastprotein:clean-latest
 ```
 2. Pull a image to host (with InterProScan)
 ```bash
-   #Full version with interpro installed
-   docker pull bioinfoufsc/fastprotein-interpro:latest
+   #Full version with interpro installed (20GB compressed)
+   docker pull bioinfoufsc/fastprotein:latest
 ```
 
 ### **Basic running (recommended)**
@@ -225,7 +226,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 or
 
 ```bash   
-   docker run -d -it --name FastProtein -p 5000:5000 bioinfoufsc/fastprotein-interpro:latest
+   docker run -d -it --name FastProtein -p 5000:5000 bioinfoufsc/fastprotein:clean-latest
 ```
 
 Now, access the url http://127.0.0.1:5000 and enjoy!
@@ -257,10 +258,10 @@ Now, access the url http://127.0.0.1:5000 and enjoy!
    # Step 3 - Create a container named FastProtein that will have the volume associated with the locally created directory. 
    #          Port 5000 is used to access the FastProtein web server.
    #          PS 1: this command is executed only one time and it will create and start your container
-   docker run -it --name FastProtein -p 5000:5000 -v <your_directory_output>:/FastProtein/runs bioinfoufsc/fastprotein:latest
+   docker run -it --name FastProtein -p 5000:5000 -v <your_directory_output>:/FastProtein/runs bioinfoufsc/fastprotein:clean-latest
    # Step 3.1 - If you have InterProScan on your host, you can direct it to the FastProtein Docker InterProScan directory as follows.
    #          The supported version is the latest: interproscan-5.69-101.0 (https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.69-101.0/interproscan-5.69-101.0-64-bit.tar.gz)
-   docker run -it --name FastProtein -p 5000:5000 -v <your_directory_output>:/FastProtein/runs -v <your_interpro_home>:/bioinformatic/interproscan-5.69-101.0 bioinfoufsc/fastprotein:latest
+   docker run -it --name FastProtein -p 5000:5000 -v <your_directory_output>:/FastProtein/runs -v <your_interpro_home>:/bioinformatic/interproscan-5.69-101.0 bioinfoufsc/fastprotein:clean-latest
    #
    # Step 4 - InterProScan installation
    #          This step may take ~1 hour total
