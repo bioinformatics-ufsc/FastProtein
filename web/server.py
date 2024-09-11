@@ -76,7 +76,8 @@ def download_file(filename):
 def is_interproscan_installed():
     try:
         # Tenta executar o comando 'interproscan' com a flag '--version' ou algo similar
-        result = subprocess.run([INTERPRO_HOME+'/interproscan.sh', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run([INTERPRO_HOME + '/interproscan.sh', '--version'], stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
         # Se o retorno for 0, o comando foi executado com sucesso
         if result.returncode == 0:
             return True
@@ -386,12 +387,15 @@ def view_file(file):
                                 data.append([formatted_go_value, source, description, total])
                         data.sort(key=lambda x: x[3], reverse=True)
                     return data
+
                 go_c_data = load_go_data('go-C.txt')
                 go_f_data = load_go_data('go-F.txt')
                 go_p_data = load_go_data('go-P.txt')
+            file_clean = file.replace('_results.zip', '')
 
             return render_template('view.html', files=load_execution_file(), proteins=proteins, session=session,
                                    result_folder=result_folder, summary_data=summary_data, file=os.path.basename(file),
+                                   file_clean=file_clean,
                                    go_c_data=go_c_data, go_f_data=go_f_data, go_p_data=go_p_data)
     flash('Select a file to visualize', 'error')
     return render_template('view.html', files=load_execution_file())
@@ -489,15 +493,15 @@ def get_process_info():
         for line in filtered_lines:
             # print('--------------')
             parts = line.strip().split(" ")  # Divida em 3 partes: PID, tempo de início, e comando
-            #print('Parts', parts)
+            # print('Parts', parts)
 
             pid = parts[0]
             start_time_str = ' '.join(parts[1:6])  # Captura o tempo de início
             cmd = (' '.join(parts[6:len(parts)])).replace('_results -log ALL', '').strip()
 
-            #print('id', pid)
-            #print('time', start_time_str)
-            #print('cmd', cmd)
+            # print('id', pid)
+            # print('time', start_time_str)
+            # print('cmd', cmd)
 
             try:
                 start_time = datetime.strptime(start_time_str, '%a %b %d %H:%M:%S %Y')
@@ -514,7 +518,7 @@ def get_process_info():
             progress = view_progress(process_name)
             process_info.append(
                 {'pid': pid, 'name': process_name, 'elapsed_time': elapsed_str, 'progress': progress})
-        #print('processos?', process_info)
+        # print('processos?', process_info)
         return process_info
 
     except Exception as e:
