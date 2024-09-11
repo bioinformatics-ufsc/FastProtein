@@ -213,7 +213,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 2. Pull a image to host (with InterProScan)
 ```bash
    #Full version with interpro installed
-   docker pull bioinfoufsc/fastprotein-interpro:latest
+   docker pull bioinfoufsc/fastprotein:interpro
 ```
 
 ### **Basic running (recommended)**
@@ -225,7 +225,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 or
 
 ```bash   
-   docker run -d -it --name FastProtein -p 5000:5000 bioinfoufsc/fastprotein-interpro:latest
+   docker run -d -it --name FastProtein -p 5000:5000 bioinfoufsc/fastprotein:latest
 ```
 
 Now, access the url http://127.0.0.1:5000 and enjoy!
