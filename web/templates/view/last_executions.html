@@ -1,12 +1,12 @@
 <div class="card">
     <div class="card-header custom-header">
-        <b>Last Executions</b>
+        <b>Executed Tasks</b>
     </div>
     <div class="card-body p-3 card-scrollable">
         <table id="previousRunsTable" class="table table-striped table-bordered">
             <thead class="header">
             <tr>
-                <th>File</th>
+                <th>Task</th>
                 <th>Date</th>
                 <th>Actions</th>
             </tr>
@@ -16,10 +16,10 @@
                 <tr>
                     <td>
 
-                        <form id="viewFormPost" action="{{ url_for('view') }}" method="post" style="display: inline;">
+                        <form id="viewFormPost{{file.name}}" action="{{ url_for('view') }}" method="post" style="display: inline;">
                             <input type="hidden" name="file" value="{{ file.path }}">
-                            <a role="button"  href="#" onclick="document.getElementById('viewFormPost').submit(); return false;" title="View job">
-                                {{ file.name }}
+                            <a role="button"  href="#" onclick="document.getElementById('viewFormPost{{file.name}}').submit(); return false;" title="View job">
+                                {{ file.name_clean }}
                             </a>
                         </form>
 
@@ -31,15 +31,15 @@
                                title="Download file">
                                 <i class="fas fa-download"></i>
                             </a>
-                            <form id="viewFormDelete" action="{{ url_for('remove_file') }}" method="post" style="display: inline;">
+                            <form id="viewFormDelete{{file.name}}" action="{{ url_for('remove_file') }}" method="post" style="display: inline;">
                                 <input type="hidden" name="file" value="{{ file.path }}">
-                                <a role="button" href="#" onclick="document.getElementById('viewFormDelete').submit(); return false;" title="Remove file">
+                                <a role="button" href="#" onclick="document.getElementById('viewFormDelete{{file.name}}').submit(); return false;" title="Remove file">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </form>
-                            <form id="viewFormPost" action="{{ url_for('view') }}" method="post" style="display: inline;">
+                            <form id="viewFormPost{{file.name}}" action="{{ url_for('view') }}" method="post" style="display: inline;">
                                 <input type="hidden" name="file" value="{{ file.path }}">
-                                <a role="button"  href="#" onclick="document.getElementById('viewFormPost').submit(); return false;" title="View job">
+                                <a role="button"  href="#" onclick="document.getElementById('viewFormPost{{file.name}}').submit(); return false;" title="View job">
                                     <i class="fas fa-eye"></i>
                                 </a>
                             </form>

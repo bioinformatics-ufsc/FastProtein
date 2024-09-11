@@ -6,43 +6,47 @@
                     <b>New submission</b>
                 </div>
                 <div class="card-body">
-                    <form class="mb-0" action="/run" method="POST" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
+                    <form class="mb-0" action="/run" method="POST" enctype="multipart/form-data"
+                          onsubmit="handleFormSubmit(event)">
                         {% with messages = get_flashed_messages(with_categories=true) %}
-                            {% if messages %}
-                                {% for category, message in messages %}
-                                    <div class="alert alert-{{ category }} alert-dismissible fade show mt-3"
-                                         role="alert">
-                                        {{ message }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
+                        {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show mt-3"
+                             role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
                         {% endwith %}
 
                         <div class="row justify-content-center mb-3">
                             <div class="col-6">
                                 <div class="card" style="height: 370px">
                                     <div class="card-header custom-header">
-                                        <b>Basic information</b>
+                                        <b>Basic task information</b>
                                     </div>
                                     <input type="hidden" name="user" value="{{ session['user']['user'] }}"/>
                                     <div class="card-body p-3">
                                         <div class="mb-3">
-                                            <label for="run-name" class="form-label">Your job name:</label>
+                                            <label for="run-name" class="form-label">Your task name:</label>
                                             <input
                                                     type="text"
                                                     class="form-control"
                                                     name="run-name"
                                                     id="run-name"
                                                     value="fastprotein" placeholder="Job name"
-                                           required/>
+                                                    required/>
                                         </div>
-                                        <div class="mb-3">
+                                        <div class="mb-3 ">
                                             <label for="fasta" class="form-label">FASTA file to process:</label>
-                                            <input type="file" class="form-control" id="fasta" name="fasta" required/>
-                                            <input type="hidden" id="example" name="example"/>
-                                            <a class="mt-2" href="#" onclick="setFile()">Example file</a>
+                                            <div class="d-flex align-items-center">
+                                                <input type="file" class="form-control me-3" id="fasta" name="fasta"
+                                                       required/>
+                                                <input type="hidden" id="example" name="example"/>
+                                                <a class="mt-2" href="#" onclick="setFile()">Example</a>
+                                            </div>
                                         </div>
                                         <label for="subcell" class="form-label">Select an
                                             organism</label>
@@ -59,7 +63,8 @@
                                         <div class="mt-3">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="yes"
-                                                       name="interpro" id="interpro"  {% if not interpro %}disabled {% endif %}>
+                                                       name="interpro" id="interpro" {% if not interpro %}disabled {%
+                                                       endif %}>
                                                 <label class="form-check-label" for="interpro">
                                                     Run <a href="https://www.ebi.ac.uk/interpro/"
                                                            target="_blank">InterProScan</a>
@@ -67,7 +72,8 @@
                                             </div>
                                             <div>
                                                 <small>
-                                                    <i class="fas fa-info-circle"></i> This option significantly increases the execution time.
+                                                    <i class="fas fa-info-circle"></i> This option significantly
+                                                    increases the execution time.
                                                 </small>
                                             </div>
                                             <div>
@@ -85,7 +91,7 @@
                             </div>
                             <div class="col-6">
                                 <!-- Coluna que ocupa 4/12 da largura -->
-                                <div class="card"  style="height: 370px" >
+                                <div class="card" style="height: 370px">
                                     <div class="card-header custom-header">
                                         <b>Optional</b>
                                     </div>
@@ -102,7 +108,7 @@
                                             <!-- Div que será habilitada/desabilitada -->
                                             <div id="optionsDiv" class="mt-3 mb-0 disabled-div">
                                                 <div class="col-8 mt-3 mb-3" style="margin-left:30px">
-                                                    <div class="form-check" >
+                                                    <div class="form-check">
                                                         <input type="radio" class="form-check-input"
                                                                name="selectDB"
                                                                id="selectDB" value="database" checked>
@@ -113,7 +119,7 @@
                                                         <select name="selectDBFile" id="files"
                                                                 class="form-control">
                                                             {% for db in dbs %}
-                                                                <option value="{{ db.path }}">{{ db.name }}</option>
+                                                            <option value="{{ db.path }}">{{ db.name }}</option>
                                                             {% endfor %}
                                                         </select>
                                                     </div>
@@ -122,8 +128,9 @@
                                                     <div class="form-check">
                                                         <input type="radio" class="form-check-input"
                                                                name="selectDB" value="fasta_diamond"
-                                                               id="fastaDB" >
-                                                        <label class="form-check-label" for="fastaDB">Database file</label>
+                                                               id="fastaDB">
+                                                        <label class="form-check-label" for="fastaDB">Database
+                                                            file</label>
                                                         <div class="mt-2 mb-3" style="margin-left:10px">
                                                             <input
                                                                     type="file"
@@ -152,11 +159,13 @@
                                                     displayed in
                                                     separate columns and associated with the query.
                                                 </small>
-                                            </div><div>
-                                            <small>
-                                                <i class="fas fa-info-circle"></i>Accepted database file formats: FASTA (.fasta) and Diamond (.dmnd).
-                                            </small>
-                                        </div>
+                                            </div>
+                                            <div>
+                                                <small>
+                                                    <i class="fas fa-info-circle"></i>Accepted database file formats:
+                                                    FASTA (.fasta) and Diamond (.dmnd).
+                                                </small>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -183,7 +192,7 @@
     function setFile() {
         const fileInput = document.getElementById('fasta');
         document.getElementById('example').value = 'example.fasta';
-        const file = new File([""], "example.fasta", { type: "text/plain" });
+        const file = new File([""], "example.fasta", {type: "text/plain"});
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         fileInput.files = dataTransfer.files;
@@ -193,7 +202,7 @@
         document.getElementById('example').value = '';
     }
 
-    function handleFormSubmit(event){
+    function handleFormSubmit(event) {
         demo = document.getElementById('example');
         if (demo.value == '')
             demo.remove()

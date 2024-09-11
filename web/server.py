@@ -415,12 +415,14 @@ def load_execution_file():
     for file_name in files:
         if file_name.endswith(".zip"):
             file_path = os.path.join(OUTPUT_PATH, file_name)
+            file_name_clean = file_name.replace('_results.zip', '')
             file_stat = os.stat(file_path)
             file_dict = {
                 'name': file_name,
                 'seconds': file_stat.st_mtime,
                 'date': datetime.fromtimestamp(file_stat.st_mtime).strftime("%A, %B %d, %Y %I:%M:%S"),
                 'path': file_name,
+                'name_clean': file_name_clean,
             }
             file_list.append(file_dict)
     file_list.sort(key=lambda x: x['seconds'], reverse=True)
@@ -487,38 +489,32 @@ def get_process_info():
         for line in filtered_lines:
             # print('--------------')
             parts = line.strip().split(" ")  # Divida em 3 partes: PID, tempo de início, e comando
-            if len(parts) > 2:
-                pid = parts[0]
-                start_time_str = ' '.join(parts[1:7])  # Captura o tempo de início
-                cmd = (' '.join(parts[7:len(parts)])).replace('_results -log ALL', '').strip()
+            #print('Parts', parts)
 
-                print('id', pid)
-                print('time', start_time_str)
-                print('cmd', cmd)
-                if cmd.startswith('/bin/bash /usr/local/bin/fastprotein'):
+            pid = parts[0]
+            start_time_str = ' '.join(parts[1:6])  # Captura o tempo de início
+            cmd = (' '.join(parts[6:len(parts)])).replace('_results -log ALL', '').strip()
 
-                    # print(pid)
-                    # print(start_time_str)
-                    # print(cmd)
-                    # print('--------------')
+            #print('id', pid)
+            #print('time', start_time_str)
+            #print('cmd', cmd)
 
-                    # Converte o tempo de início para um objeto datetime
-                    try:
-                        start_time = datetime.strptime(start_time_str, '%a %b %d %H:%M:%S %Y')
-                        current_time = datetime.now()
-                        elapsed_time = current_time - start_time
+            try:
+                start_time = datetime.strptime(start_time_str, '%a %b %d %H:%M:%S %Y')
+                current_time = datetime.now()
+                elapsed_time = current_time - start_time
 
-                        # Formata o tempo de execução como uma string
-                        elapsed_str = str(elapsed_time).split('.')[0]  # Remove fração de segundos
-                    except ValueError:
-                        elapsed_str = 'N/A'
+                # Formata o tempo de execução como uma string
+                elapsed_str = str(elapsed_time).split('.')[0]  # Remove fração de segundos
+            except ValueError:
+                elapsed_str = 'N/A'
 
-                    # Extraia apenas o nome do processo
-                    process_name = cmd.split('/')[-1]  # Isso extrai apenas o nome do comando
-                    progress = view_progress(process_name)
-                    process_info.append(
-                        {'pid': pid, 'name': process_name, 'elapsed_time': elapsed_str, 'progress': progress})
-
+            # Extraia apenas o nome do processo
+            process_name = cmd.split('/')[-1]
+            progress = view_progress(process_name)
+            process_info.append(
+                {'pid': pid, 'name': process_name, 'elapsed_time': elapsed_str, 'progress': progress})
+        #print('processos?', process_info)
         return process_info
 
     except Exception as e:
