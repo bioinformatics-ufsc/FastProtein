@@ -1,54 +1,53 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0" version="24.7.12">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0" version="24.7.13">
   <diagram name="Page-1" id="U4Y1XURnxECECY8q9T-a">
-    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1434" dy="759" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="0Yhq80YsiAuYgCd_MVuz-5" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="130" y="25" width="500" height="375" as="geometry" />
+        <mxCell id="0Yhq80YsiAuYgCd_MVuz-5" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="130" y="25" width="500" height="465" as="geometry" />
         </mxCell>
-        <mxCell id="kN9hd65t5oOU79cgbcg4-1" value="bioinfoufsc/proteomic" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="310" y="110" width="140" height="60" as="geometry" />
+        <mxCell id="kN9hd65t5oOU79cgbcg4-1" value="bioinfoufsc/proteomic:clean-latest&lt;div&gt;Size ~480MB&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="280" y="110" width="200" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="kN9hd65t5oOU79cgbcg4-2" value="bioinfoufsc/proteomic-interpro" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="400" y="215" width="200" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="kN9hd65t5oOU79cgbcg4-4" value="bioinfoufsc/fastprotein" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="160" y="215" width="140" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="0Yhq80YsiAuYgCd_MVuz-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="kN9hd65t5oOU79cgbcg4-6" target="kN9hd65t5oOU79cgbcg4-2">
+        <mxCell id="HwHFQP2F9WlOjY4L94AI-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" parent="1" source="kN9hd65t5oOU79cgbcg4-2" target="kN9hd65t5oOU79cgbcg4-1" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="kN9hd65t5oOU79cgbcg4-6" value="bioinfoufsc/fastprotein-interpro" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="kN9hd65t5oOU79cgbcg4-2" value="bioinfoufsc/proteomic:latest&lt;br&gt;Size ~19.5GB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="400" y="215" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HwHFQP2F9WlOjY4L94AI-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="kN9hd65t5oOU79cgbcg4-4" target="kN9hd65t5oOU79cgbcg4-1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kN9hd65t5oOU79cgbcg4-4" value="&lt;div&gt;bioinfoufsc/fastprotein:clean-latest&lt;/div&gt;&lt;div&gt;Size ~1.63GB&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="160" y="215" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="0Yhq80YsiAuYgCd_MVuz-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="kN9hd65t5oOU79cgbcg4-6" target="kN9hd65t5oOU79cgbcg4-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kN9hd65t5oOU79cgbcg4-6" value="&lt;div&gt;bioinfoufsc/fastprotein:latest&lt;/div&gt;&lt;div&gt;Size ~20.01GB&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="400" y="320" width="200" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="0Yhq80YsiAuYgCd_MVuz-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.436;entryY=1.033;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="kN9hd65t5oOU79cgbcg4-4" target="kN9hd65t5oOU79cgbcg4-1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="230" y="190" />
-              <mxPoint x="371" y="190" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="0Yhq80YsiAuYgCd_MVuz-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.579;entryY=1.033;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="kN9hd65t5oOU79cgbcg4-2" target="kN9hd65t5oOU79cgbcg4-1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="500" y="190" />
-              <mxPoint x="391" y="190" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="0Yhq80YsiAuYgCd_MVuz-3" value="Docker schema" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;fontStyle=1" vertex="1" parent="1">
+        <mxCell id="0Yhq80YsiAuYgCd_MVuz-3" value="Docker schema" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="160" y="40" width="440" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="0Yhq80YsiAuYgCd_MVuz-9" value="build.sh" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="161" y="316" width="60" height="30" as="geometry" />
+        <mxCell id="0Yhq80YsiAuYgCd_MVuz-9" value="Installed: TMHMM, WolF PSORT, PredGPI, SignalP,Phobius, Diamond, BlastP" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="160" y="420" width="200" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="0Yhq80YsiAuYgCd_MVuz-11" value="build_interpro.sh" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="161" y="361" width="112" height="30" as="geometry" />
+        <mxCell id="0Yhq80YsiAuYgCd_MVuz-11" value="Installed: TMHMM, WolF PSORT, PredGPI, SignalP,Phobius, Diamond, BlastP and &lt;b&gt;InterProScan&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="400" y="420" width="200" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="0Yhq80YsiAuYgCd_MVuz-12" value="Scripts" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="150" y="286" width="60" height="30" as="geometry" />
+        <mxCell id="HwHFQP2F9WlOjY4L94AI-4" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;exitX=0.997;exitY=0.827;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.827;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="628.5" y="388.55499999999995" as="sourcePoint" />
+            <mxPoint x="130" y="388.55499999999995" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HwHFQP2F9WlOjY4L94AI-5" value="Legend" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="151" y="393" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HwHFQP2F9WlOjY4L94AI-7" value="*Size (compressed)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="160" y="290" width="110" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
