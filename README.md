@@ -225,7 +225,7 @@ If you have questions, suggestions or difficulties regarding the pipeline, pleas
 or
 
 ```bash   
-   docker run -d -it --name FastProtein -p 5000:5000 bioinfoufsc/fastprotein:latest
+   docker run -d -it --name FastProtein -p 5000:5000 bioinfoufsc/fastprotein:interpro
 ```
 
 Now, access the url http://127.0.0.1:5000 and enjoy!
