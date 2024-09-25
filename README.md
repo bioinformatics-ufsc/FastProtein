@@ -6,6 +6,7 @@
 [apache-url]: https://opensource.org/licenses/Apache-2.0
 [apache-shield]: https://img.shields.io/badge/License-Apache_2.0-blue.svg
 
+[![DOI](https://zenodo.org/badge/616586306.svg)](https://zenodo.org/doi/10.5281/zenodo.13838653)
 
 <font color="#4682b4">
 
