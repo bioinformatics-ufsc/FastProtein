@@ -34,10 +34,10 @@ print("Chart created in "+os.path.join(dir_image,'kda-vs-pi-300dpi.png'))
 
 print("Subcellular localization bar")
 df = pd.DataFrame(output['Localization'])
-df = pd.DataFrame({'Localization': df['Localization'].unique(), 'Proteins': df['Localization'].value_counts()})
-df = df.reset_index(drop=True)
+df = df['Localization'].value_counts().reset_index()
+df.columns = ['Localization', 'Proteins']
 df = df.sort_values(by='Localization')
-df = df.reset_index(drop=True)
+
 print(df)
 
 plt.clf()
