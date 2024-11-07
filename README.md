@@ -460,10 +460,8 @@ This software was developed using the follow programming languages: Java 17 (ple
 
 **Please cite us:** 
 
-FastProtein – An automated software for in silico proteomic analysis.
-Renato Simões Moreira, Vilmar Benetti Filho, Guilherme Augusto Maia, Tatiany Aparecida Teixeira Soratto, Eric Kazuo Kawagoe,
-Bruna Caroline Russi, Luiz Claudio Miletti, Glauber Wagner.
-bioRxiv 2023.12.19.572382; doi:[10.1101/2023.12.19.572382](https://doi.org/10.1101/2023.12.19.572382)
+Moreira RS, Benetti Filho V, Maia GA, Soratto TAT, Kawagoe EK, Russi BC, Miletti LC, Wagner G. 2024. FastProtein—an automated software for in silico proteomic analysis. PeerJ 12:e18309 https://doi.org/10.7717/peerj.18309
+
 
 **FastProtein also uses a suite of software, please cite them too:**
 
