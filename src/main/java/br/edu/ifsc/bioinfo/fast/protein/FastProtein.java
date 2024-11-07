@@ -841,6 +841,13 @@ public class FastProtein {
                 "Check out your generated files in " + outputFolder);
         info(
                 "Thank you for using FastProtein, we hope it will be useful for your research. Please, cite us!");
+        info(
+                "\nMoreira RS, Benetti Filho V, Maia GA, Soratto TAT, Kawagoe EK, Russi BC, Miletti LC, Wagner G. 2024.");
+        info(
+                "FastProtein—an automated software for in silico proteomic analysis.");
+        info(
+                "PeerJ 12:e18309 https://doi.org/10.7717/peerj.18309");
+        
         org.apache.commons.io.FileUtils.deleteDirectory(fileTempDir);
 
     }
