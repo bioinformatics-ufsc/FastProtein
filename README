@@ -3,3 +3,6 @@ fastprotein -i input.fasta
 
 #See more arguments in
 fastprotein -h
+
+#Cite this article
+Moreira RS, Benetti Filho V, Maia GA, Soratto TAT, Kawagoe EK, Russi BC, Miletti LC, Wagner G. 2024. FastProtein—an automated software for in silico proteomic analysis. PeerJ 12:e18309 https://doi.org/10.7717/peerj.18309
