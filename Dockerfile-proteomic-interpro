@@ -5,6 +5,7 @@ RUN apt-get update -y \
     && apt-get install --no-install-recommends -y \
     aria2 \
     pigz \
+    libgomp1 \ 
     openjdk-17-jdk \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
